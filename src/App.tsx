@@ -8,6 +8,20 @@ import {
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroImages = [
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+  ];
+
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(slideTimer);
+  }, [heroImages.length]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -107,13 +121,18 @@ export default function App() {
 
       {/* 1. HERO SECTION */}
       <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-            alt="Physiotherapy session" 
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
+        <div className="absolute inset-0 z-0 bg-secondary">
+          {heroImages.map((img, index) => (
+            <img 
+              key={index}
+              src={img} 
+              alt={`Physiotherapy session ${index + 1}`} 
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+              referrerPolicy="no-referrer"
+            />
+          ))}
           <div className="absolute inset-0 bg-secondary/60 mix-blend-multiply"></div>
         </div>
         
