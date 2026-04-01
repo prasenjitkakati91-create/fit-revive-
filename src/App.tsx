@@ -119,7 +119,7 @@ export default function App() {
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-lg animate-fade-in-up">
-            Fitrevive Physiotherapy
+            <span className="text-cyan-400">Fitrevive</span> Physiotherapy
           </h1>
           <p className="text-xl md:text-2xl text-gray-100 mb-10 font-light drop-shadow-md animate-fade-in-up animation-delay-200">
             Your partner in recovery
@@ -138,74 +138,121 @@ export default function App() {
       {/* 2. ABOUT US SECTION */}
       <section id="about" className="py-24 bg-gradient-to-br from-primary to-secondary text-white relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div className="max-w-4xl mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8">About Us</h2>
-            <div className="space-y-6 text-lg text-gray-100 leading-relaxed font-light">
-              <p>
-                At Fitrevive Physiotherapy, we believe that movement is medicine. Our dedicated team of professionals is committed to helping you overcome pain, recover from injuries, and achieve your optimal physical potential.
-              </p>
-              <p>
-                With years of clinical experience and a passion for healing, we utilize evidence-based practices tailored to your unique needs. We don't just treat symptoms; we identify and address the root cause of your discomfort.
-              </p>
-              <p>
-                Whether you're an elite athlete looking to return to sport, or simply wanting to enjoy daily activities without pain, we are here to guide you every step of the way on your journey to wellness.
-              </p>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Text Content */}
+            <div>
+              <div className="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/20 text-cyan-300 font-semibold text-sm tracking-widest mb-6 uppercase">
+                Discover Fitrevive
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                Dedicated to restoring your <span className="text-cyan-400">health & mobility</span>
+              </h2>
+              <div className="space-y-6 text-lg text-gray-100 leading-relaxed font-light mb-10">
+                <p>
+                  At Fitrevive Physiotherapy, we believe that movement is medicine. Our dedicated team of professionals is committed to helping you overcome pain, recover from injuries, and achieve your optimal physical potential.
+                </p>
+                <p>
+                  With years of clinical experience and a passion for healing, we utilize evidence-based practices tailored to your unique needs. We don't just treat symptoms; we identify and address the root cause of your discomfort.
+                </p>
+                <p>
+                  Whether you're an elite athlete looking to return to sport, or simply wanting to enjoy daily activities without pain, we are here to guide you every step of the way on your journey to wellness.
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-8 pt-6 border-t border-white/20">
+                <div className="flex flex-col">
+                  <span className="text-4xl font-bold text-cyan-400">10+</span>
+                  <span className="text-sm text-gray-300 uppercase tracking-wider mt-1 font-medium">Years Experience</span>
+                </div>
+                <div className="w-px h-12 bg-white/20"></div>
+                <div className="flex flex-col">
+                  <span className="text-4xl font-bold text-cyan-400">5k+</span>
+                  <span className="text-sm text-gray-300 uppercase tracking-wider mt-1 font-medium">Happy Patients</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Image Composition */}
+            <div className="relative mt-12 lg:mt-0">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 transform transition-transform hover:scale-[1.02] duration-500">
+                <img 
+                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Physiotherapy treatment" 
+                  className="w-full h-[400px] md:h-[500px] object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent"></div>
+              </div>
+              
+              {/* Floating Badge */}
+              <div className="absolute -bottom-6 -left-6 md:-bottom-10 md:-left-10 bg-white text-secondary p-5 md:p-6 rounded-2xl shadow-xl border border-gray-100 animate-bounce" style={{ animationDuration: '3s' }}>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0">
+                    <Heart size={24} fill="currentColor" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-lg md:text-xl">Expert Care</p>
+                    <p className="text-gray-500 text-sm">Tailored to you</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-8 mt-16 max-w-3xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors text-center">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Heart className="text-white" size={24} />
+          {/* Feature Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 md:mt-32">
+            {/* Mission */}
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-secondary transition-colors">
+                <Heart size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-4">Our Mission</h3>
-              <p className="text-gray-200 text-sm">
+              <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+              <p className="text-gray-200 leading-relaxed">
                 To empower individuals to reclaim their health and mobility through compassionate, expert physiotherapy care.
               </p>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors text-center">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Activity className="text-white" size={24} />
+            {/* What We Offer */}
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-secondary transition-colors">
+                <Activity size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-4">What We Offer</h3>
-              <ul className="space-y-3 text-sm text-gray-200 inline-block text-left">
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
+              <h3 className="text-2xl font-bold mb-4">What We Offer</h3>
+              <ul className="space-y-4 text-gray-200">
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-cyan-400" />
                   <span>Personalized Physiotherapy Plans</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-cyan-400" />
                   <span>Advanced Rehabilitation Techniques</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-cyan-400" />
                   <span>Holistic Wellness Approach</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors text-center">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Shield className="text-white" size={24} />
+            {/* Why Choose Us */}
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-secondary transition-colors">
+                <Shield size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-4">Why Choose Us</h3>
-              <ul className="space-y-3 text-sm text-gray-200 inline-block text-left">
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
+              <h3 className="text-2xl font-bold mb-4">Why Choose Us</h3>
+              <ul className="space-y-4 text-gray-200">
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-cyan-400" />
                   <span>Experienced physiotherapists</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-cyan-400" />
                   <span>Patient-centered care</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Accessible clinic</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle size={16} className="mt-0.5 shrink-0 text-accent" />
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-cyan-400" />
                   <span>Focus on long-term recovery</span>
                 </li>
               </ul>
@@ -759,7 +806,7 @@ export default function App() {
                 </li>
                 <li className="flex items-center gap-3 text-sm text-gray-300">
                   <Calendar size={18} className="text-primary shrink-0" />
-                  <span>Mon - Sat: 9:00 AM - 8:00 PM</span>
+                  <span>Mon - Sun (10:00 AM - 7:00 PM)</span>
                 </li>
               </ul>
             </div>
