@@ -8,4 +8,4 @@ async function getImageUrl(url) {
     console.log("Not found");
   }
 }
-getImageUrl('https://ibb.co/d0m33ng3');
+getImageUrl('https://ibb.co/2wMTDpY');

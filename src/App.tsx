@@ -354,9 +354,9 @@ export default function App() {
             >
               <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
                 <img 
-                  src="https://i.ibb.co/XZYddm8d/Gemini-Generated-Image-wnf0rewnf0rewnf0.png" 
+                  src="https://i.ibb.co/R16qxJ4/Gemini-Generated-Image-wnf0rewnf0rewnf0.jpg" 
                   alt="Dr. Trishnamoni Haloi" 
-                  className="w-full h-full object-cover object-center scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.05]"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
