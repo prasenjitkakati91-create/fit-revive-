@@ -13,12 +13,10 @@ export default function App() {
 
   const heroImages = [
     "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=2000",
+    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=2000",
+    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=2000",
+    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=2000"
   ];
 
   useEffect(() => {
@@ -356,9 +354,9 @@ export default function App() {
             >
               <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
                 <img 
-                  src="https://i.ibb.co/whBB5W6H/Gemini-Generated-Image-iu544oiu544oiu54.png" 
+                  src="https://i.ibb.co/XZYddm8d/Gemini-Generated-Image-wnf0rewnf0rewnf0.png" 
                   alt="Dr. Trishnamoni Haloi" 
-                  className="w-full h-full object-cover scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  className="w-full h-full object-cover object-center scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -575,22 +573,27 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-2 gap-4">
                 <video 
-                  src="https://www.pexels.com/video/30352918/download/"
+                  src="https://www.pexels.com/video/30352918/download/" 
                   autoPlay 
                   loop 
                   muted 
                   playsInline
                   className="rounded-2xl w-full h-64 object-cover shadow-md"
+                  referrerPolicy="no-referrer"
                 />
-                <video 
-                  src="https://www.pexels.com/video/5793445/download/"
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  className="rounded-2xl w-full h-64 object-cover shadow-md"
+                <img 
+                  src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                  alt="Equipment" 
+                  className="rounded-2xl w-full h-64 object-cover shadow-md mt-8"
+                  referrerPolicy="no-referrer"
+                />
+                <img 
+                  src="https://images.unsplash.com/photo-1584516150909-c43483ee7932?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                  alt="Therapy" 
+                  className="rounded-2xl w-full h-48 object-cover shadow-md col-span-2"
+                  referrerPolicy="no-referrer"
                 />
               </div>
             </motion.div>
@@ -864,7 +867,7 @@ export default function App() {
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-4">Follow Us</h4>
                   <div className="flex gap-4">
-                    <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
+                    <a href="https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
                       <Facebook size={20} />
                     </a>
                     <a href="https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
@@ -909,7 +912,7 @@ export default function App() {
                 Dedicated to helping you overcome pain, recover from injuries, and achieve your optimal physical potential through expert physiotherapy care.
               </p>
               <div className="flex gap-4 pt-2">
-                <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
+                <a href="https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
                   <Facebook size={18} />
                 </a>
                 <a href="https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
