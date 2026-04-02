@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { 
   Menu, X, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
@@ -13,7 +14,11 @@ export default function App() {
   const heroImages = [
     "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     "https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    "https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
   ];
 
   useEffect(() => {
@@ -34,8 +39,8 @@ export default function App() {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About Us', href: '#about' },
+    { name: 'Our Team', href: '#team' },
     { name: 'Services', href: '#services' },
-    { name: 'Tips', href: '#tips' },
     { name: 'Testimonials', href: '#testimonials' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -137,20 +142,34 @@ export default function App() {
         </div>
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-lg animate-fade-in-up">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-lg"
+          >
             <span className="text-cyan-400">Fitrevive</span> Physiotherapy
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-100 mb-10 font-light drop-shadow-md animate-fade-in-up animation-delay-200">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-gray-100 mb-10 font-light drop-shadow-md"
+          >
             Your partner in recovery
-          </p>
-          <div className="animate-fade-in-up animation-delay-400">
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             <a 
-              href="#about"
+              href="#team"
               className="inline-flex items-center gap-2 bg-white text-primary hover:bg-gray-50 px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
             >
               OUR TEAM <ChevronRight size={20} />
             </a>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -161,7 +180,12 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Text Content */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
               <div className="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/20 text-cyan-300 font-semibold text-sm tracking-widest mb-6 uppercase">
                 Discover Fitrevive
               </div>
@@ -182,22 +206,28 @@ export default function App() {
               
               <div className="flex items-center gap-8 pt-6 border-t border-white/20">
                 <div className="flex flex-col">
-                  <span className="text-4xl font-bold text-cyan-400">10+</span>
-                  <span className="text-sm text-gray-300 uppercase tracking-wider mt-1 font-medium">Years Experience</span>
+                  <span className="text-4xl font-bold text-cyan-400">1-on-1</span>
+                  <span className="text-sm text-gray-300 uppercase tracking-wider mt-1 font-medium">Personalized Care</span>
                 </div>
                 <div className="w-px h-12 bg-white/20"></div>
                 <div className="flex flex-col">
-                  <span className="text-4xl font-bold text-cyan-400">5k+</span>
-                  <span className="text-sm text-gray-300 uppercase tracking-wider mt-1 font-medium">Happy Patients</span>
+                  <span className="text-4xl font-bold text-cyan-400">Modern</span>
+                  <span className="text-sm text-gray-300 uppercase tracking-wider mt-1 font-medium">Facility & Equipment</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Image Composition */}
-            <div className="relative mt-12 lg:mt-0">
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative mt-12 lg:mt-0"
+            >
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 transform transition-transform hover:scale-[1.02] duration-500">
                 <img 
-                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                  src="https://images.pexels.com/photos/20860621/pexels-photo-20860621.jpeg?auto=compress&cs=tinysrgb&w=1000" 
                   alt="Physiotherapy treatment" 
                   className="w-full h-[400px] md:h-[500px] object-cover"
                   referrerPolicy="no-referrer"
@@ -217,13 +247,19 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Feature Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 md:mt-32">
             {/* Mission */}
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group"
+            >
               <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-secondary transition-colors">
                 <Heart size={32} />
               </div>
@@ -231,10 +267,16 @@ export default function App() {
               <p className="text-gray-200 leading-relaxed">
                 To empower individuals to reclaim their health and mobility through compassionate, expert physiotherapy care.
               </p>
-            </div>
+            </motion.div>
 
             {/* What We Offer */}
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group"
+            >
               <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-secondary transition-colors">
                 <Activity size={32} />
               </div>
@@ -253,10 +295,16 @@ export default function App() {
                   <span>Holistic Wellness Approach</span>
                 </li>
               </ul>
-            </div>
+            </motion.div>
 
             {/* Why Choose Us */}
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group"
+            >
               <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-secondary transition-colors">
                 <Shield size={32} />
               </div>
@@ -275,12 +323,124 @@ export default function App() {
                   <span>Focus on long-term recovery</span>
                 </li>
               </ul>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 3. SERVICES SECTION */}
+      {/* 2.5 OUR TEAM SECTION */}
+      <section id="team" className="py-24 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary mb-4">Meet Our Experts</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+              Our team of dedicated professionals is here to provide you with the best care and support on your journey to recovery.
+            </p>
+            <div className="w-24 h-1.5 bg-primary mx-auto mt-6 rounded-full"></div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Dr. Trishnamoni Haloi */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="group"
+            >
+              <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
+                <img 
+                  src="https://i.ibb.co/whBB5W6H/Gemini-Generated-Image-iu544oiu544oiu54.png" 
+                  alt="Dr. Trishnamoni Haloi" 
+                  className="w-full h-full object-cover scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-secondary mb-1">Dr. Trishnamoni Haloi (P.T.)</h3>
+                <p className="text-primary font-semibold uppercase tracking-wider text-sm mb-4">Founder & CEO</p>
+                <div className="flex justify-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Activity size={18} />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Heart size={18} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Dr. Dorothy Mazumdar */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="group"
+            >
+              <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
+                <img 
+                  src="https://i.ibb.co/LzZwM0Tc/Gemini-Generated-Image-722cds722cds722c.png" 
+                  alt="Dr. Dorothy Mazumdar" 
+                  className="w-full h-full object-cover scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-secondary mb-1">Dr. Dorothy Mazumdar (P.T.)</h3>
+                <p className="text-primary font-semibold uppercase tracking-wider text-sm mb-4">Consultant Physiotherapist</p>
+                <div className="flex justify-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Activity size={18} />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Heart size={18} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Ms. Sumiya anjum */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="group"
+            >
+              <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
+                <img 
+                  src="https://i.ibb.co/8DypZk06/Gemini-Generated-Image-713agx713agx713a.png" 
+                  alt="Ms. Sumiya anjum" 
+                  className="w-full h-full object-cover scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-secondary mb-1">Ms. Sumiya anjum</h3>
+                <p className="text-primary font-semibold uppercase tracking-wider text-sm mb-4">Assistant Physiotherapist cum Clinic Administrator</p>
+                <div className="flex justify-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Shield size={18} />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Activity size={18} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
       <section id="services" className="py-0">
         <div className="text-center py-16 bg-white">
           <h2 className="text-3xl md:text-4xl font-bold text-secondary">Our Services</h2>
@@ -291,28 +451,28 @@ export default function App() {
           {
             title: "Physiotherapy Consultation",
             desc: "Comprehensive assessment to diagnose your condition and create a tailored treatment plan for your specific needs.",
-            img: "https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            img: "https://images.pexels.com/photos/20860586/pexels-photo-20860586.jpeg?auto=compress&cs=tinysrgb&w=1000",
             bg: "bg-[#8B7355]/10", // Brown tone
             textBg: "bg-[#8B7355]"
           },
           {
             title: "Pain Management Therapy",
             desc: "Targeted interventions using manual therapy, modalities, and exercises to alleviate acute and chronic pain effectively.",
-            img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            img: "https://images.pexels.com/photos/20860603/pexels-photo-20860603.jpeg?auto=compress&cs=tinysrgb&w=1000",
             bg: "bg-[#556B2F]/10", // Olive tone
             textBg: "bg-[#556B2F]"
           },
           {
             title: "Orthopedic Rehabilitation",
             desc: "Specialized care for musculoskeletal injuries, joint problems, and bone conditions to restore mobility and strength.",
-            img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            img: "https://images.pexels.com/photos/8376217/pexels-photo-8376217.jpeg?auto=compress&cs=tinysrgb&w=1000",
             bg: "bg-[#0F6C8D]/10", // Teal tone
             textBg: "bg-[#0F6C8D]"
           },
           {
             title: "Neurological Rehabilitation",
             desc: "Dedicated therapy programs for stroke, Parkinson's, MS, and other neurological conditions to improve function and independence.",
-            img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            img: "https://images.pexels.com/photos/7446605/pexels-photo-7446605.jpeg?auto=compress&cs=tinysrgb&w=1000",
             bg: "bg-[#483D8B]/10", // Purple tone
             textBg: "bg-[#483D8B]"
           },
@@ -326,19 +486,26 @@ export default function App() {
           {
             title: "Post-Surgical Rehabilitation",
             desc: "Guided recovery following orthopedic surgeries to ensure proper healing, regain range of motion, and rebuild strength.",
-            img: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            img: "https://images.pexels.com/photos/8460413/pexels-photo-8460413.jpeg?auto=compress&cs=tinysrgb&w=1000",
             bg: "bg-[#8B7355]/10", // Brown tone
             textBg: "bg-[#8B7355]"
           },
           {
             title: "Pediatric Physiotherapy",
             desc: "Gentle and engaging therapy for children to address developmental delays, injuries, and congenital conditions.",
-            img: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            img: "https://images.pexels.com/photos/8460035/pexels-photo-8460035.jpeg?auto=compress&cs=tinysrgb&w=1000",
             bg: "bg-[#0F6C8D]/10", // Teal tone
             textBg: "bg-[#0F6C8D]"
           }
         ].map((service, index) => (
-          <div key={index} className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} ${service.bg} items-center`}>
+          <motion.div 
+            key={index} 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} ${service.bg} items-center`}
+          >
             <div className="w-full md:w-1/2 p-8 md:p-16">
               <img 
                 src={service.img} 
@@ -356,85 +523,21 @@ export default function App() {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </section>
-
-      {/* 4. HEALTH TIPS SECTION */}
-      <section id="tips" className="py-24 bg-primary text-white relative overflow-hidden">
-        {/* Decorative elements */}
-        <Leaf className="absolute top-10 right-10 text-white/10" size={120} />
-        <Leaf className="absolute bottom-10 left-10 text-white/10 transform rotate-180" size={80} />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-16 items-center">
-            <div className="w-full lg:w-1/3">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">Health Tips<br/>For You</h2>
-              <p className="text-accent-100 text-lg mb-8 opacity-90">
-                Incorporate these simple daily habits into your routine to maintain optimal physical health and prevent injuries.
-              </p>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-full font-medium transition-colors">
-                View All Tips
-              </button>
-            </div>
-            
-            <div className="w-full lg:w-2/3">
-              <div className="grid sm:grid-cols-2 gap-6">
-                {[
-                  {
-                    title: "Maintain Good Posture",
-                    desc: "Keep your screen at eye level and sit back in your chair to reduce spinal stress.",
-                    date: "Oct 12, 2023",
-                    img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                  },
-                  {
-                    title: "Eat a Balanced Diet",
-                    desc: "Nutrient-rich foods support tissue repair and reduce inflammation in the body.",
-                    date: "Oct 28, 2023",
-                    img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                  },
-                  {
-                    title: "Stretch Daily",
-                    desc: "Just 10 minutes of stretching improves flexibility and blood flow to muscles.",
-                    date: "Nov 05, 2023",
-                    img: "https://images.unsplash.com/photo-1552286450-37b514b87834?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                  },
-                  {
-                    title: "Stay Active",
-                    desc: "Aim for at least 30 minutes of moderate physical activity most days of the week.",
-                    date: "Nov 18, 2023",
-                    img: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                  }
-                ].map((tip, i) => (
-                  <div key={i} className="bg-white text-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow group">
-                    <div className="h-40 overflow-hidden">
-                      <img 
-                        src={tip.img} 
-                        alt={tip.title} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <h4 className="font-bold text-lg mb-2 text-secondary">{tip.title}</h4>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{tip.desc}</p>
-                      <div className="flex items-center text-xs text-gray-400 font-medium">
-                        <Calendar size={14} className="mr-1" /> {tip.date}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* 5. WHY CHOOSE US (VISUAL SECTION) */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
-            <div className="w-full lg:w-1/2">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-1/2"
+            >
               <div className="border-2 border-gray-100 rounded-3xl p-10 shadow-sm relative">
                 <div className="absolute -top-5 -left-5 w-20 h-20 bg-accent/10 rounded-full z-0"></div>
                 <div className="relative z-10">
@@ -446,40 +549,51 @@ export default function App() {
                       { title: "Comfortable clinic", icon: <Heart className="text-primary" size={24} /> },
                       { title: "Proven results", icon: <CheckCircle className="text-primary" size={24} /> }
                     ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                      <motion.div 
+                        key={i} 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: i * 0.1 }}
+                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100"
+                      >
                         <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
                           {item.icon}
                         </div>
                         <span className="text-lg font-medium text-gray-800">{item.title}</span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
             
-            <div className="w-full lg:w-1/2">
-              <div className="grid grid-cols-2 gap-4">
-                <img 
-                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                  alt="Clinic" 
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-1/2"
+            >
+              <div className="flex flex-col gap-6">
+                <video 
+                  src="https://www.pexels.com/video/30352918/download/"
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
                   className="rounded-2xl w-full h-64 object-cover shadow-md"
-                  referrerPolicy="no-referrer"
                 />
-                <img 
-                  src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                  alt="Equipment" 
-                  className="rounded-2xl w-full h-64 object-cover shadow-md mt-8"
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1584516150909-c43483ee7932?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                  alt="Therapy" 
-                  className="rounded-2xl w-full h-48 object-cover shadow-md col-span-2"
-                  referrerPolicy="no-referrer"
+                <video 
+                  src="https://www.pexels.com/video/5793445/download/"
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  className="rounded-2xl w-full h-64 object-cover shadow-md"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -487,7 +601,15 @@ export default function App() {
       {/* 6. TESTIMONIAL SECTION */}
       <section id="testimonials" className="py-24 bg-gradient-to-b from-secondary to-[#152a42] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-16">Client Testimonials</h2>
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl font-bold mb-16"
+          >
+            Client Testimonials
+          </motion.h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {[
@@ -512,7 +634,14 @@ export default function App() {
                 img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
               }
             ].map((testimonial, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 flex flex-col items-center text-center hover:bg-white/15 transition-colors">
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 flex flex-col items-center text-center hover:bg-white/15 transition-colors"
+              >
                 <img 
                   src={testimonial.img} 
                   alt={testimonial.name} 
@@ -528,23 +657,35 @@ export default function App() {
                 </div>
                 <p className="text-gray-300 text-sm italic mb-6 flex-grow">"{testimonial.text}"</p>
                 <h5 className="font-semibold text-white">{testimonial.name}</h5>
-              </div>
+              </motion.div>
             ))}
           </div>
           
-          <button className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2">
+          <motion.button 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+          >
             Please Share Your Feedback <ChevronRight size={18} />
-          </button>
+          </motion.button>
         </div>
       </section>
 
       {/* 7. GET INVOLVED SECTION */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl md:text-4xl font-bold text-secondary">Get Involved</h2>
             <div className="w-24 h-1 bg-primary mx-auto mt-4 rounded-full"></div>
-          </div>
+          </motion.div>
           
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -567,7 +708,14 @@ export default function App() {
                 btn: "Share"
               }
             ].map((item, i) => (
-              <div key={i} className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-xl transition-shadow group">
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-xl transition-shadow group"
+              >
                 <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/10 transition-colors">
                   {item.icon}
                 </div>
@@ -576,7 +724,7 @@ export default function App() {
                 <button className="text-primary font-semibold border-b-2 border-primary pb-1 hover:text-accent hover:border-accent transition-colors">
                   {item.btn}
                 </button>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -623,7 +771,13 @@ export default function App() {
           <div className="flex flex-col lg:flex-row gap-16">
             
             {/* Contact Form */}
-            <div className="w-full lg:w-3/5">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-3/5"
+            >
               <h2 className="text-3xl font-bold text-secondary mb-8">Send us a message</h2>
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -662,10 +816,16 @@ export default function App() {
                   Submit Message
                 </button>
               </form>
-            </div>
+            </motion.div>
             
             {/* Contact Info */}
-            <div className="w-full lg:w-2/5">
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-2/5"
+            >
               <div className="bg-gray-50 p-10 rounded-3xl h-full border border-gray-100">
                 <h2 className="text-3xl font-bold text-secondary mb-8">Contact Info</h2>
                 
@@ -707,7 +867,7 @@ export default function App() {
                     <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
                       <Facebook size={20} />
                     </a>
-                    <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
+                    <a href="https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
                       <Instagram size={20} />
                     </a>
                     <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
@@ -716,7 +876,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
             
           </div>
         </div>
@@ -752,7 +912,7 @@ export default function App() {
                 <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
                   <Facebook size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
+                <a href="https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
                   <Instagram size={18} />
                 </a>
                 <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
