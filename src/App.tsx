@@ -343,7 +343,7 @@ export default function App() {
             <div className="w-24 h-1.5 bg-primary mx-auto mt-6 rounded-full"></div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {/* Dr. Trishnamoni Haloi */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
@@ -385,9 +385,9 @@ export default function App() {
             >
               <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
                 <img 
-                  src="https://i.ibb.co/LzZwM0Tc/Gemini-Generated-Image-722cds722cds722c.png" 
+                  src="https://i.ibb.co/PzFVSVLp/Gemini-Generated-Image-243nd8243nd8243n.png" 
                   alt="Dr. Dorothy Mazumdar" 
-                  className="w-full h-full object-cover scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.05]"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -406,7 +406,7 @@ export default function App() {
               </div>
             </motion.div>
 
-            {/* Ms. Sumiya anjum */}
+            {/* Dr. Anjuma Akhtar */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -416,9 +416,40 @@ export default function App() {
             >
               <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
                 <img 
-                  src="https://i.ibb.co/8DypZk06/Gemini-Generated-Image-713agx713agx713a.png" 
+                  src="https://i.ibb.co/pvpDzx8m/Gemini-Generated-Image-b0d85mb0d85mb0d8.png" 
+                  alt="Dr. Anjuma Akhtar" 
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.05]"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-secondary mb-1">Dr. Anjuma Akhtar (P.T.)</h3>
+                <p className="text-primary font-semibold uppercase tracking-wider text-sm mb-4">Consultant Physiotherapist</p>
+                <div className="flex justify-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Activity size={18} />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    <Heart size={18} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Ms. Sumiya anjum */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="group"
+            >
+              <div className="relative mb-6 overflow-hidden rounded-3xl aspect-[4/5] shadow-lg">
+                <img 
+                  src="https://i.ibb.co/vCNrC3Xk/Gemini-Generated-Image-kef4pikef4pikef4.png" 
                   alt="Ms. Sumiya anjum" 
-                  className="w-full h-full object-cover scale-[1.08] transition-transform duration-500 group-hover:scale-[1.15]"
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.05]"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -526,9 +557,24 @@ export default function App() {
       </section>
 
       {/* 5. WHY CHOOSE US (VISUAL SECTION) */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-16 items-center">
+      <section className="py-24 bg-gray-50 relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-accent/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-secondary mb-4">Why Choose Fitrevive?</h2>
+            <div className="w-24 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Experience the difference with our comprehensive, patient-centered approach to physiotherapy and rehabilitation.
+            </p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
+            {/* Features List */}
             <motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -536,36 +582,32 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="border-2 border-gray-100 rounded-3xl p-10 shadow-sm relative">
-                <div className="absolute -top-5 -left-5 w-20 h-20 bg-accent/10 rounded-full z-0"></div>
-                <div className="relative z-10">
-                  <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-8">Why Choose Fitrevive?</h2>
-                  <div className="space-y-6">
-                    {[
-                      { title: "Certified physiotherapists", icon: <Shield className="text-primary" size={24} /> },
-                      { title: "Modern equipment", icon: <Activity className="text-primary" size={24} /> },
-                      { title: "Comfortable clinic", icon: <Heart className="text-primary" size={24} /> },
-                      { title: "Proven results", icon: <CheckCircle className="text-primary" size={24} /> }
-                    ].map((item, i) => (
-                      <motion.div 
-                        key={i} 
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: i * 0.1 }}
-                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100"
-                      >
-                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                          {item.icon}
-                        </div>
-                        <span className="text-lg font-medium text-gray-800">{item.title}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {[
+                  { title: "Certified Experts", desc: "Highly qualified physiotherapists", icon: <Shield className="text-white" size={24} />, color: "bg-blue-500" },
+                  { title: "Modern Tech", desc: "Advanced rehabilitation equipment", icon: <Activity className="text-white" size={24} />, color: "bg-primary" },
+                  { title: "Comfortable Care", desc: "Welcoming and relaxing clinic", icon: <Heart className="text-white" size={24} />, color: "bg-rose-500" },
+                  { title: "Proven Results", desc: "Track record of successful recoveries", icon: <CheckCircle className="text-white" size={24} />, color: "bg-emerald-500" }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 group"
+                  >
+                    <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center shrink-0 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
+                      {item.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-secondary mb-2">{item.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
             
+            {/* Image Grid */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -573,28 +615,41 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="grid grid-cols-2 gap-4">
-                <video 
-                  src="https://www.pexels.com/video/30352918/download/" 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  className="rounded-2xl w-full h-64 object-cover shadow-md"
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                  alt="Equipment" 
-                  className="rounded-2xl w-full h-64 object-cover shadow-md mt-8"
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1584516150909-c43483ee7932?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                  alt="Therapy" 
-                  className="rounded-2xl w-full h-48 object-cover shadow-md col-span-2"
-                  referrerPolicy="no-referrer"
-                />
+              <div className="grid grid-cols-12 grid-rows-2 gap-4 h-[500px]">
+                {/* Main large image */}
+                <div className="col-span-7 row-span-2 relative rounded-3xl overflow-hidden shadow-lg group">
+                  <img 
+                    src="https://images.pexels.com/photos/5473182/pexels-photo-5473182.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                    alt="Physiotherapy session" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <span className="text-white font-semibold text-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Expert Care</span>
+                  </div>
+                </div>
+                
+                {/* Top right image */}
+                <div className="col-span-5 row-span-1 relative rounded-3xl overflow-hidden shadow-lg group">
+                  <img 
+                    src="https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                    alt="Modern Equipment" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-300"></div>
+                </div>
+                
+                {/* Bottom right image */}
+                <div className="col-span-5 row-span-1 relative rounded-3xl overflow-hidden shadow-lg group">
+                  <img 
+                    src="https://images.pexels.com/photos/6111616/pexels-photo-6111616.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                    alt="Rehabilitation" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-secondary/20 group-hover:bg-transparent transition-colors duration-300"></div>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -617,24 +672,24 @@ export default function App() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {[
               {
-                name: "Sarah Jenkins",
+                name: "Bikash Sarma",
                 text: "The team at Fitrevive completely cured my chronic back pain. I can finally play with my kids again without wincing.",
-                img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200"
               },
               {
-                name: "Michael Chen",
+                name: "Rimpi Das",
                 text: "Post-surgery rehab was tough, but my physiotherapist was incredibly patient and motivating. Highly recommended!",
-                img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200"
               },
               {
-                name: "Emma Thompson",
+                name: "Pallabi Kalita",
                 text: "Very professional clinic with modern equipment. They explained my injury clearly and gave me great exercises.",
-                img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200"
               },
               {
-                name: "David Rodriguez",
+                name: "Jyotishmaan Baruah",
                 text: "As an amateur runner, their sports injury rehab got me back on the track faster than I expected. Great service.",
-                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                img: "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=200"
               }
             ].map((testimonial, i) => (
               <motion.div 
