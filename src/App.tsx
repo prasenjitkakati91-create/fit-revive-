@@ -259,12 +259,17 @@ export default function App() {
               className="w-full lg:w-1/2 relative"
             >
               <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 border-white">
-                <img 
-                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Physiotherapist performing patient assessment" 
+                <video 
                   className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  preload="auto"
+                  src="https://storage.googleapis.com/static.antigravity.ai/projects/88c885ba-f3de-44d6-b4de-edd75fec5e87/1743785565547.mp4"
+                >
+                  Your browser does not support the video tag.
+                </video>
                 <div className="absolute inset-0 bg-gradient-to-t from-secondary/40 via-transparent to-transparent"></div>
               </div>
               
@@ -581,6 +586,7 @@ export default function App() {
                     loop 
                     muted 
                     playsInline
+                    preload="auto"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
                   <div className="absolute bottom-8 left-8">
