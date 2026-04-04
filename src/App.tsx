@@ -1,16 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Menu, X, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
   Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
-  Building, Award
+  Building, Award, LogIn, Settings
 } from 'lucide-react';
+import AppointmentForm from './components/AppointmentForm';
+import AdminDashboard from './components/AdminDashboard';
+import { auth } from './firebase';
+import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isAdminView, setIsAdminView] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  const ADMIN_EMAIL = "prasenjitkakati91@gmail.com";
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleAdminLogin = async () => {
+    if (user && user.email === ADMIN_EMAIL) {
+      setIsAdminView(true);
+      return;
+    }
+
+    setIsLoggingIn(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      if (result.user.email === ADMIN_EMAIL) {
+        setIsAdminView(true);
+      } else {
+        alert("Access Denied: You are not authorized to access the admin dashboard.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
 
   const heroImages = [
     "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
@@ -79,12 +118,12 @@ export default function App() {
                   {link.name}
                 </a>
               ))}
-              <a 
-                href="#book"
+              <button 
+                onClick={() => setIsFormOpen(true)}
                 className="bg-primary hover:bg-accent text-white px-5 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 Book Now
-              </a>
+              </button>
             </div>
 
             {/* Mobile menu button */}
@@ -112,13 +151,15 @@ export default function App() {
                 {link.name}
               </a>
             ))}
-            <a 
-              href="#book"
-              onClick={() => setMobileMenuOpen(false)}
+            <button 
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsFormOpen(true);
+              }}
               className="bg-primary text-white px-5 py-3 rounded-xl text-center font-medium mt-4"
             >
               Book Appointment
-            </a>
+            </button>
           </div>
         )}
       </nav>
@@ -154,7 +195,7 @@ export default function App() {
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
               Welcome to FitRevive
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-4 md:mb-6 leading-tight">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold text-white mb-6 md:mb-8 leading-[1.1] tracking-tight">
               Reclaim Your Mobility with <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Expert Physiotherapy</span>
             </h1>
             <h2 className="text-lg sm:text-xl md:text-2xl text-gray-200 font-medium mb-4 md:mb-6 border-l-4 border-accent pl-3 md:pl-4">
@@ -164,12 +205,12 @@ export default function App() {
               Experience world-class rehabilitation in Assam. Our certified specialists combine advanced therapeutic techniques with personalized care to treat chronic pain, sports injuries, and post-surgical conditions.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-              <a 
-                href="#contact"
+              <button 
+                onClick={() => setIsFormOpen(true)}
                 className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg hover:shadow-primary/50 transform hover:-translate-y-1"
               >
                 Book Appointment
-              </a>
+              </button>
               <a 
                 href="https://wa.me/918473809386?text=Hello%20FitRevive%20Physiotherapy,%20I%20would%20like%20to%20book%20an%20appointment."
                 target="_blank"
@@ -185,12 +226,13 @@ export default function App() {
       </section>
 
       {/* 2. ABOUT US SECTION */}
-      <section id="about" className="py-24 bg-white relative overflow-hidden">
-        {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50 -skew-x-12 transform origin-top-right -z-10"></div>
+      <section id="about" className="py-32 bg-white relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 transform origin-top-right -z-10"></div>
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-16 items-center">
+          <div className="flex flex-col lg:flex-row gap-20 items-center mb-32">
             
             {/* Image Composition (Left Side) */}
             <motion.div 
@@ -200,28 +242,28 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2 relative"
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/5] max-w-md mx-auto lg:mx-0">
+              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Professional physiotherapy clinic environment" 
+                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Physiotherapist performing patient assessment" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/40 via-transparent to-transparent"></div>
               </div>
               
               {/* Decorative Border */}
-              <div className="absolute -bottom-6 -left-6 w-full h-full border-2 border-primary/20 rounded-2xl -z-10 hidden md:block max-w-md"></div>
+              <div className="absolute -bottom-8 -left-8 w-full h-full border-2 border-primary/20 rounded-[2.5rem] -z-10 hidden md:block max-w-md"></div>
               
               {/* Floating Experience Badge */}
-              <div className="absolute bottom-12 -right-6 md:-right-12 bg-white p-6 rounded-2xl shadow-xl border border-slate-100 z-20 animate-bounce" style={{ animationDuration: '4s' }}>
+              <div className="absolute bottom-12 -right-6 md:-right-12 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 z-20 animate-bounce" style={{ animationDuration: '4s' }}>
                 <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white shrink-0 shadow-lg shadow-primary/30">
-                    <span className="text-2xl font-bold">15+</span>
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-xl shadow-primary/30 rotate-3">
+                    <Shield size={28} />
                   </div>
                   <div>
-                    <p className="font-bold text-xl text-secondary">Years of</p>
-                    <p className="text-primary font-medium">Trusted Care</p>
+                    <p className="font-display font-bold text-xl text-secondary leading-tight">Certified</p>
+                    <p className="text-primary font-semibold tracking-wide text-sm">Clinical Excellence</p>
                   </div>
                 </div>
               </div>
@@ -235,16 +277,16 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <span className="w-12 h-[2px] bg-primary"></span>
-                <span className="text-primary font-bold tracking-widest uppercase text-sm">Discover FitRevive</span>
+              <div className="flex items-center gap-4 mb-8">
+                <span className="w-12 h-[3px] bg-primary rounded-full"></span>
+                <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Discover FitRevive</span>
               </div>
               
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-secondary">
-                Your journey to a <span className="text-primary">pain-free</span> life starts here.
+              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-secondary">
+                Your journey to a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">pain-free</span> life starts here.
               </h2>
               
-              <div className="space-y-5 text-lg text-slate-600 leading-relaxed mb-10">
+              <div className="space-y-6 text-lg text-slate-600 leading-relaxed mb-12">
                 <p>
                   At FitRevive Physiotherapy, we believe that movement is medicine. Our dedicated team of professionals is committed to helping you overcome pain, recover from injuries, and achieve your optimal physical potential.
                 </p>
@@ -253,122 +295,72 @@ export default function App() {
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 pt-8 border-t border-slate-200">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 bg-primary/10 p-1.5 rounded-full text-primary shrink-0">
-                    <CheckCircle size={18} strokeWidth={3} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-10 pt-10 border-t border-slate-100">
+                {[
+                  { title: "Personalized Care", desc: "1-on-1 dedicated sessions" },
+                  { title: "Modern Facility", desc: "Advanced equipment" },
+                  { title: "Expert Team", desc: "Certified specialists" },
+                  { title: "Proven Results", desc: "Focus on recovery" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className="mt-1 bg-primary/10 p-2 rounded-xl text-primary shrink-0">
+                      <CheckCircle size={20} strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <h4 className="font-display font-bold text-lg text-secondary">{item.title}</h4>
+                      <p className="text-sm text-slate-500 mt-1">{item.desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-secondary">Personalized Care</h4>
-                    <p className="text-sm text-slate-500 mt-1">1-on-1 dedicated sessions</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 bg-primary/10 p-1.5 rounded-full text-primary shrink-0">
-                    <CheckCircle size={18} strokeWidth={3} />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-secondary">Modern Facility</h4>
-                    <p className="text-sm text-slate-500 mt-1">Advanced equipment</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 bg-primary/10 p-1.5 rounded-full text-primary shrink-0">
-                    <CheckCircle size={18} strokeWidth={3} />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-secondary">Expert Team</h4>
-                    <p className="text-sm text-slate-500 mt-1">Certified specialists</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 bg-primary/10 p-1.5 rounded-full text-primary shrink-0">
-                    <CheckCircle size={18} strokeWidth={3} />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-secondary">Proven Results</h4>
-                    <p className="text-sm text-slate-500 mt-1">Focus on long-term recovery</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
-
           </div>
 
-          {/* Feature Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 md:mt-32">
-            {/* Mission */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group"
-            >
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-secondary transition-colors">
-                <Heart size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
-              <p className="text-gray-200 leading-relaxed">
-                To empower individuals to reclaim their health and mobility through compassionate, expert physiotherapy care.
-              </p>
-            </motion.div>
-
-            {/* What We Offer */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group"
-            >
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-secondary transition-colors">
-                <Activity size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">What We Offer</h3>
-              <ul className="space-y-4 text-gray-200">
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Personalized Physiotherapy Plans</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Advanced Rehabilitation Techniques</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Holistic Wellness Approach</span>
-                </li>
-              </ul>
-            </motion.div>
-
-            {/* Why Choose Us */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 hover:-translate-y-2 transition-transform duration-300 shadow-xl group"
-            >
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-secondary transition-colors">
-                <Shield size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Why Choose Us</h3>
-              <ul className="space-y-4 text-gray-200">
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Experienced physiotherapists</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Patient-centered care</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle size={20} className="mt-0.5 shrink-0 text-accent" />
-                  <span>Focus on long-term recovery</span>
-                </li>
-              </ul>
-            </motion.div>
+          {/* Feature Cards Grid (Mission, Offer, Why Choose Us) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              {
+                title: "Our Mission",
+                desc: "To empower individuals to reclaim their health and mobility through compassionate, expert physiotherapy care.",
+                icon: <Heart size={32} />,
+                color: "from-rose-500 to-pink-500"
+              },
+              {
+                title: "What We Offer",
+                desc: "Personalized plans, advanced rehabilitation, and a holistic approach to your physical wellness journey.",
+                icon: <Activity size={32} />,
+                color: "from-blue-500 to-cyan-500"
+              },
+              {
+                title: "Why Choose Us",
+                desc: "Experienced specialists, patient-centered care, and a focus on long-term recovery and prevention.",
+                icon: <Shield size={32} />,
+                color: "from-indigo-500 to-purple-500"
+              }
+            ].map((feature, index) => (
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="relative group h-full"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))` }}></div>
+                <div className="bg-slate-50 hover:bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl hover:-translate-y-2 flex flex-col">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-gray-200 group-hover:scale-110 transition-transform duration-500`}>
+                    {feature.icon}
+                  </div>
+                  <h3 className="font-display text-2xl font-bold mb-4 text-secondary">{feature.title}</h3>
+                  <p className="text-slate-600 leading-relaxed text-lg flex-1">
+                    {feature.desc}
+                  </p>
+                  <div className="mt-8 flex items-center gap-2 text-primary font-bold text-sm group-hover:gap-3 transition-all">
+                    Learn More <ArrowRight size={16} />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -381,13 +373,13 @@ export default function App() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary mb-4">Meet Our Experts</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-secondary mb-6">Meet Our Experts</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
               Our team of dedicated professionals is here to provide you with the best care and support on your journey to recovery.
             </p>
-            <div className="w-24 h-1.5 bg-primary mx-auto mt-6 rounded-full"></div>
+            <div className="w-24 h-1.5 bg-primary mx-auto mt-8 rounded-full"></div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -456,13 +448,27 @@ export default function App() {
           </div>
         </div>
       </section>
-      <section id="services" className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary">Our Services</h2>
-            <div className="w-24 h-1 bg-primary mx-auto mt-4 rounded-full"></div>
-            <p className="mt-6 text-gray-600 max-w-2xl mx-auto text-lg">
-              Comprehensive physiotherapy services designed to help you recover, regain strength, and live a pain-free life.
+      {/* 3. SERVICES SECTION */}
+      <section id="services" className="py-32 bg-slate-50 relative overflow-hidden">
+        {/* Background Accents */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-widest uppercase mb-6"
+            >
+              <Activity size={14} /> Our Expertise
+            </motion.div>
+            <h2 className="font-display text-4xl md:text-5xl font-extrabold text-secondary mb-6">Comprehensive Care</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+              Specialized physiotherapy services designed to help you recover faster, regain strength, and live a life without physical limitations.
             </p>
           </div>
 
@@ -470,33 +476,39 @@ export default function App() {
             {[
               {
                 title: "Back & Neck Pain",
-                desc: "Targeted therapy to relieve chronic back and neck pain, improving posture and mobility.",
-                icon: <Activity size={32} />
+                desc: "Targeted therapy to relieve chronic back and neck pain, improving posture and mobility through manual techniques.",
+                icon: <Activity size={28} />,
+                gradient: "from-blue-500 to-cyan-400"
               },
               {
                 title: "Sports Injuries",
-                desc: "Intensive recovery protocols designed for athletes to safely return to peak performance.",
-                icon: <Activity size={32} />
+                desc: "Intensive recovery protocols designed for athletes to safely return to peak performance and prevent future injuries.",
+                icon: <Activity size={28} />,
+                gradient: "from-indigo-500 to-blue-400"
               },
               {
                 title: "Post-Surgery Rehab",
-                desc: "Guided recovery following surgeries to ensure proper healing and regain range of motion.",
-                icon: <Heart size={32} />
+                desc: "Guided recovery following surgeries to ensure proper healing, reduce scar tissue, and regain full range of motion.",
+                icon: <Heart size={28} />,
+                gradient: "from-rose-500 to-pink-400"
               },
               {
                 title: "Joint Pain & Arthritis",
-                desc: "Specialized care to manage joint pain, reduce inflammation, and improve joint function.",
-                icon: <Shield size={32} />
+                desc: "Specialized care to manage joint pain, reduce inflammation, and improve joint function for better quality of life.",
+                icon: <Shield size={28} />,
+                gradient: "from-emerald-500 to-teal-400"
               },
               {
                 title: "Neurological Rehab",
-                desc: "Dedicated therapy programs for stroke, Parkinson's, MS, and other neurological conditions.",
-                icon: <Activity size={32} />
+                desc: "Dedicated therapy programs for stroke, Parkinson's, and other neurological conditions to improve motor control.",
+                icon: <Activity size={28} />,
+                gradient: "from-amber-500 to-orange-400"
               },
               {
-                title: "Pediatric Physiotherapy",
-                desc: "Gentle and engaging therapy for children to address developmental delays and injuries.",
-                icon: <Shield size={32} />
+                title: "Pediatric Care",
+                desc: "Gentle and engaging therapy for children to address developmental delays, congenital issues, and childhood injuries.",
+                icon: <Shield size={28} />,
+                gradient: "from-purple-500 to-violet-400"
               }
             ].map((service, index) => (
               <motion.div 
@@ -505,24 +517,27 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 group"
+                className="group bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start"
               >
-                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                   {service.icon}
                 </div>
-                <h3 className="text-xl font-bold text-secondary mb-3">{service.title}</h3>
-                <p className="text-gray-600 mb-6">{service.desc}</p>
-                <a href="#contact" className="text-primary font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
-                  Learn More <ArrowRight size={16} />
-                </a>
+                <h3 className="font-display text-2xl font-bold text-secondary mb-4">{service.title}</h3>
+                <p className="text-slate-500 mb-8 leading-relaxed flex-1">{service.desc}</p>
+                <button 
+                  onClick={() => setIsFormOpen(true)}
+                  className="text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all"
+                >
+                  Book Session <ArrowRight size={18} />
+                </button>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5. WHY CHOOSE US (VISUAL SECTION) */}
-      <section className="py-24 bg-gray-50 relative overflow-hidden">
+      {/* 5. WHY CHOOSE US SECTION */}
+      <section className="py-32 bg-white relative overflow-hidden">
         {/* Decorative background elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
@@ -530,16 +545,9 @@ export default function App() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-secondary mb-4">Why Choose FitRevive?</h2>
-            <div className="w-24 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Experience the difference with our comprehensive, patient-centered approach to physiotherapy and rehabilitation.
-            </p>
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-12 items-center">
-            {/* Features List */}
+          <div className="flex flex-col lg:flex-row gap-20 items-center">
+            
+            {/* Image Grid (Left Side) */}
             <motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -547,32 +555,46 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="space-y-4">
-                {[
-                  { title: "Experienced & Certified Therapist", icon: <Shield className="text-white" size={20} />, color: "bg-blue-500" },
-                  { title: "Personalized Treatment Plans", icon: <Activity className="text-white" size={20} />, color: "bg-primary" },
-                  { title: "Modern Equipment", icon: <Activity className="text-white" size={20} />, color: "bg-indigo-500" },
-                  { title: "Affordable Pricing", icon: <CheckCircle className="text-white" size={20} />, color: "bg-emerald-500" },
-                  { title: "Friendly Environment", icon: <Heart className="text-white" size={20} />, color: "bg-rose-500" }
-                ].map((item, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex items-center gap-4 group"
-                  >
-                    <div className={`w-12 h-12 ${item.color} rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
-                      {item.icon}
+              <div className="grid grid-cols-12 grid-rows-2 gap-6 h-[600px]">
+                {/* Main large image/video */}
+                <div className="col-span-8 row-span-2 relative rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white">
+                  <video 
+                    src="https://storage.googleapis.com/static.antigravity.ai/projects/88c885ba-f3de-44d6-b4de-edd75fec5e87/1743785565547.mp4" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
+                  <div className="absolute bottom-8 left-8">
+                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 text-white text-xs font-bold tracking-widest uppercase mb-2">
+                      Clinical Excellence
                     </div>
-                    <h3 className="text-lg font-semibold text-secondary">{item.title}</h3>
-                  </motion.div>
-                ))}
+                    <h4 className="font-display text-2xl font-bold text-white">Expert Care</h4>
+                  </div>
+                </div>
+                
+                {/* Top right image */}
+                <div className="col-span-4 row-span-1 relative rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white">
+                  <img 
+                    src="https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                    alt="Modern Equipment" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
+                </div>
+
+                {/* Bottom right stat */}
+                <div className="col-span-4 row-span-1 bg-gradient-to-br from-primary to-blue-600 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center text-white shadow-xl">
+                  <div className="text-4xl font-extrabold mb-1 font-display">98%</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest opacity-80">Success Rate</div>
+                </div>
               </div>
             </motion.div>
-            
-            {/* Image Grid */}
+
+            {/* Features List (Right Side) */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -580,41 +602,43 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="grid grid-cols-12 grid-rows-2 gap-4 h-[500px]">
-                {/* Main large image */}
-                <div className="col-span-7 row-span-2 relative rounded-3xl overflow-hidden shadow-lg group">
-                  <img 
-                    src="https://images.pexels.com/photos/5473182/pexels-photo-5473182.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                    alt="Physiotherapy session" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <span className="text-white font-semibold text-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Expert Care</span>
-                  </div>
-                </div>
-                
-                {/* Top right image */}
-                <div className="col-span-5 row-span-1 relative rounded-3xl overflow-hidden shadow-lg group">
-                  <img 
-                    src="https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                    alt="Modern Equipment" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-300"></div>
-                </div>
-                
-                {/* Bottom right image */}
-                <div className="col-span-5 row-span-1 relative rounded-3xl overflow-hidden shadow-lg group">
-                  <img 
-                    src="https://images.pexels.com/photos/6111616/pexels-photo-6111616.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                    alt="Rehabilitation" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-secondary/20 group-hover:bg-transparent transition-colors duration-300"></div>
-                </div>
+              <div className="flex items-center gap-4 mb-8">
+                <span className="w-12 h-[3px] bg-primary rounded-full"></span>
+                <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Why Choose Us</span>
+              </div>
+              
+              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-secondary mb-8 leading-tight">
+                The FitRevive <span className="text-primary">Difference</span>
+              </h2>
+              
+              <p className="text-slate-500 text-lg mb-12 leading-relaxed">
+                We combine clinical expertise with a deeply personal approach to ensure every patient receives the highest standard of care.
+              </p>
+
+              <div className="grid gap-6">
+                {[
+                  { title: "Experienced Specialists", desc: "Our team consists of highly qualified and certified physiotherapists.", icon: <Shield size={24} />, color: "from-blue-500 to-cyan-500" },
+                  { title: "Personalized Treatment", desc: "Every plan is custom-tailored to your specific needs and goals.", icon: <Activity size={24} />, color: "from-primary to-blue-600" },
+                  { title: "Modern Technology", desc: "We utilize the latest equipment and evidence-based techniques.", icon: <Activity size={24} />, color: "from-indigo-500 to-purple-600" },
+                  { title: "Compassionate Care", desc: "A friendly, supportive environment that focuses on your well-being.", icon: <Heart size={24} />, color: "from-rose-500 to-pink-600" }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 hover:bg-white border border-transparent hover:border-slate-100 hover:shadow-xl transition-all duration-500 group"
+                  >
+                    <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                      {item.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl font-bold text-secondary mb-1">{item.title}</h3>
+                      <p className="text-slate-500 text-sm">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
           </div>
@@ -756,7 +780,10 @@ export default function App() {
           </h2>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-            <button className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2">
+            <button 
+              onClick={() => setIsFormOpen(true)}
+              className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
+            >
               Book Appointment <ChevronRight size={20} />
             </button>
             <button className="bg-green-500 text-white hover:bg-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2">
@@ -1034,10 +1061,28 @@ export default function App() {
             <div className="flex gap-6 text-sm text-gray-400">
               <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
+              <button 
+                onClick={handleAdminLogin}
+                disabled={isLoggingIn}
+                className="flex items-center gap-1.5 hover:text-primary transition-colors group"
+              >
+                <Settings size={14} className="group-hover:rotate-90 transition-transform duration-500" />
+                {isLoggingIn ? 'Logging in...' : 'Admin Portal'}
+              </button>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Appointment Modal */}
+      <AppointmentForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+
+      {/* Admin Dashboard */}
+      <AnimatePresence>
+        {isAdminView && user?.email === ADMIN_EMAIL && (
+          <AdminDashboard onClose={() => setIsAdminView(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

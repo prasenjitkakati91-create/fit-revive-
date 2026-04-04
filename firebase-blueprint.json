@@ -1,0 +1,53 @@
+{
+  "entities": {
+    "Appointment": {
+      "title": "Appointment",
+      "description": "A booking request for a physiotherapy session.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The full name of the patient."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The email address of the patient."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The phone number of the patient."
+        },
+        "service": {
+          "type": "string",
+          "description": "The type of service requested."
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The requested date for the appointment."
+        },
+        "time": {
+          "type": "string",
+          "description": "The requested time for the appointment."
+        },
+        "message": {
+          "type": "string",
+          "description": "Any additional message or symptoms."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time the appointment was created."
+        }
+      },
+      "required": ["name", "email", "phone", "service", "date", "time"]
+    }
+  },
+  "firestore": {
+    "/appointments/{appointmentId}": {
+      "schema": "Appointment",
+      "description": "Collection of appointment bookings."
+    }
+  }
+}
