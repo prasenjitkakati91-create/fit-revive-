@@ -202,8 +202,8 @@ export default function App() {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/5] max-w-md mx-auto lg:mx-0">
                 <img 
-                  src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Professional physiotherapist treating a patient" 
+                  src="https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Professional physiotherapy clinic environment" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
@@ -217,11 +217,11 @@ export default function App() {
               <div className="absolute bottom-12 -right-6 md:-right-12 bg-white p-6 rounded-2xl shadow-xl border border-slate-100 z-20 animate-bounce" style={{ animationDuration: '4s' }}>
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white shrink-0 shadow-lg shadow-primary/30">
-                    <span className="text-2xl font-bold">10+</span>
+                    <span className="text-2xl font-bold">15+</span>
                   </div>
                   <div>
                     <p className="font-bold text-xl text-secondary">Years of</p>
-                    <p className="text-primary font-medium">Clinical Excellence</p>
+                    <p className="text-primary font-medium">Trusted Care</p>
                   </div>
                 </div>
               </div>
