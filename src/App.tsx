@@ -108,26 +108,26 @@ export default function App() {
             </div>
             
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-4 xl:space-x-8">
               {navLinks.map((link) => (
                 <a 
                   key={link.name} 
                   href={link.href}
-                  className={`text-sm font-medium transition-colors hover:text-accent ${isScrolled ? 'text-gray-600' : 'text-white drop-shadow-sm'}`}
+                  className={`text-sm xl:text-base font-medium transition-colors hover:text-accent ${isScrolled ? 'text-gray-600' : 'text-white drop-shadow-sm'}`}
                 >
                   {link.name}
                 </a>
               ))}
               <button 
                 onClick={() => setIsFormOpen(true)}
-                className="bg-primary hover:bg-accent text-white px-5 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                className="bg-primary hover:bg-accent text-white px-4 xl:px-6 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 Book Now
               </button>
             </div>
 
             {/* Mobile menu button */}
-            <div className="md:hidden flex items-center">
+            <div className="lg:hidden flex items-center">
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className={`${isScrolled ? 'text-gray-800' : 'text-white'}`}
@@ -140,7 +140,7 @@ export default function App() {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white shadow-xl absolute top-full left-0 w-full py-4 px-4 flex flex-col space-y-4">
+          <div className="lg:hidden bg-white shadow-xl absolute top-full left-0 w-full py-4 px-4 flex flex-col space-y-4 border-t border-gray-100">
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
@@ -165,7 +165,7 @@ export default function App() {
       </nav>
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden py-24 md:py-0">
+      <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden pt-32 pb-16 lg:pt-0 lg:pb-0">
         <div className="absolute inset-0 z-0 bg-secondary">
           {heroImages.map((img, index) => (
             <img 
@@ -179,12 +179,12 @@ export default function App() {
             />
           ))}
           {/* Dark gradient overlay for text readability on the left */}
-          <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
           {/* Subtle overall dark overlay */}
           <div className="absolute inset-0 bg-secondary/10"></div>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-12 md:mt-16">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -195,7 +195,7 @@ export default function App() {
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
               Welcome to FitRevive
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold text-white mb-6 md:mb-8 leading-[1.1] tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white mb-6 md:mb-8 leading-[1.1] tracking-tight">
               Reclaim Your Mobility with <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Expert Physiotherapy</span>
             </h1>
             <h2 className="text-lg sm:text-xl md:text-2xl text-gray-200 font-medium mb-4 md:mb-6 border-l-4 border-accent pl-3 md:pl-4">
@@ -223,8 +223,24 @@ export default function App() {
             </div>
           </motion.div>
         </div>
-      </section>
 
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2"
+        >
+          <span className="text-white/60 text-xs font-bold uppercase tracking-widest">Scroll</span>
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
+            <motion.div 
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-1.5 h-1.5 bg-accent rounded-full"
+            />
+          </div>
+        </motion.div>
+      </section>
       {/* 2. ABOUT US SECTION */}
       <section id="about" className="py-32 bg-white relative overflow-hidden">
         {/* Decorative background elements */}
