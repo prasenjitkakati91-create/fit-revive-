@@ -99,6 +99,14 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [mobileMenuOpen]);
+
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About Us', href: '#about' },
@@ -156,41 +164,113 @@ export default function App() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="lg:hidden flex items-center">
+            <div className="lg:hidden flex items-center z-[60]">
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                className={`relative group w-11 h-11 flex items-center justify-center rounded-full transition-all duration-300 ${isScrolled || mobileMenuOpen ? 'bg-slate-100/80 backdrop-blur-md' : 'bg-white/10 backdrop-blur-sm'}`}
+                aria-label="Toggle Menu"
               >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                <div className="relative w-6 h-5 flex flex-col justify-center items-center gap-1.5 focus:outline-none">
+                  <motion.span 
+                    animate={mobileMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-secondary' : 'bg-white'}`}
+                  />
+                  <motion.span 
+                    animate={mobileMenuOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
+                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-secondary' : 'bg-white'}`}
+                  />
+                  <motion.span 
+                    animate={mobileMenuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-secondary' : 'bg-white'}`}
+                  />
+                </div>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Nav */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-white shadow-xl absolute top-full left-0 w-full py-4 px-4 flex flex-col space-y-4 border-t border-gray-100">
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-gray-800 font-medium py-2 border-b border-gray-100"
-              >
-                {link.name}
-              </a>
-            ))}
-            <button 
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setIsFormOpen(true);
-              }}
-              className="bg-primary text-white px-5 py-3 rounded-xl text-center font-medium mt-4"
+        {/* Mobile Nav Overlay */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 200 }}
+              className="fixed inset-0 z-50 bg-white/98 backdrop-blur-2xl flex flex-col items-center justify-between p-8 lg:hidden overflow-y-auto"
             >
-              Book Appointment
-            </button>
-          </div>
-        )}
+              {/* Decorative Background Elements */}
+              <div className="absolute inset-0 -z-10 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 -z-10"></div>
+
+              <div className="flex flex-col items-center space-y-6 w-full mt-20">
+                {navLinks.map((link, i) => (
+                  <motion.a 
+                    key={link.name} 
+                    href={link.href}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08, type: 'spring' }}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="group relative text-4xl font-display font-bold text-secondary hover:text-primary transition-all duration-300"
+                  >
+                    <span className="relative z-10">{link.name}</span>
+                    <motion.span 
+                      className="absolute -bottom-1 left-0 w-0 h-1 bg-accent rounded-full group-hover:w-full transition-all duration-300"
+                      layoutId="mobile-nav-underline"
+                    />
+                  </motion.a>
+                ))}
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + navLinks.length * 0.08 }}
+                  className="pt-6 w-full flex flex-col items-center"
+                >
+                  <button 
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsFormOpen(true);
+                    }}
+                    className="w-full max-w-xs bg-primary text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-2xl shadow-primary/30 active:scale-95 transition-transform"
+                  >
+                    Book Appointment
+                  </button>
+                </motion.div>
+              </div>
+
+              {/* Mobile Menu Footer */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="w-full flex flex-col items-center gap-6 pb-8"
+              >
+                <div className="h-px w-12 bg-slate-200"></div>
+                <div className="flex gap-6">
+                  {[
+                    { icon: <Facebook size={24} />, href: "#" },
+                    { icon: <Instagram size={24} />, href: "#" },
+                    { icon: <Twitter size={24} />, href: "#" }
+                  ].map((social, i) => (
+                    <a 
+                      key={i} 
+                      href={social.href} 
+                      className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+                    >
+                      {social.icon}
+                    </a>
+                  ))}
+                </div>
+                <div className="text-slate-400 text-sm font-medium tracking-wide">
+                  © 2026 FitRevive Physiotherapy
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* 1. HERO SECTION */}
@@ -282,7 +362,7 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2 relative"
             >
-              <div className="relative rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] aspect-[4/5] max-w-md mx-auto lg:mx-0 border-[12px] border-white">
+              <div className="relative rounded-3xl md:rounded-[3rem] overflow-hidden shadow-2xl aspect-video md:aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 md:border-[12px] border-white">
                 <img 
                   src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=2070" 
                   alt="Professional Physiotherapy Session" 
@@ -476,8 +556,8 @@ export default function App() {
                 className="relative group h-full"
               >
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))` }}></div>
-                <div className="bg-slate-50 hover:bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-gray-200 group-hover:scale-110 transition-transform duration-500`}>
+                <div className="bg-slate-50 hover:bg-white p-8 md:p-10 rounded-3xl border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
+                <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center text-white mb-8 shadow-lg shadow-gray-200 group-hover:scale-110 transition-transform duration-500`}>
                     {feature.icon}
                   </div>
                   <h3 className="font-display text-2xl font-bold mb-4 text-secondary">{feature.title}</h3>
@@ -650,7 +730,7 @@ export default function App() {
                 whileTap={{ scale: 0.98 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start"
+                className="group bg-white p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start"
               >
                 <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                   {service.icon}
@@ -688,39 +768,46 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2"
             >
-              <div className="grid grid-cols-12 grid-rows-2 gap-6 h-[600px]">
+              <div className="flex flex-col gap-4 md:grid md:grid-cols-12 md:grid-rows-2 md:gap-6 md:h-[600px]">
                 {/* Main large image/video */}
-                <div className="col-span-8 row-span-2 relative rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white">
+                <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&q=80&w=2069" 
+                    src="https://i.ibb.co/5g2k7Tzn/2d1600e7-5fd3-43e7-ba26-493edb838067.jpg" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
-                  <div className="absolute bottom-8 left-8">
-                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 text-white text-xs font-bold tracking-widest uppercase mb-2">
+                  <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8">
+                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 md:px-4 md:py-2 rounded-full border border-white/30 text-white text-[10px] md:text-xs font-bold tracking-widest uppercase mb-2">
                       Clinical Excellence
                     </div>
-                    <h4 className="font-display text-2xl font-bold text-white">Expert Care</h4>
+                    <h4 className="font-display text-xl md:text-2xl font-bold text-white">Expert Care</h4>
                   </div>
                 </div>
                 
-                {/* Top right image */}
-                <div className="col-span-4 row-span-1 relative rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white">
-                  <img 
-                    src="https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                    alt="Modern Equipment" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
-                </div>
+                <div className="grid grid-cols-2 gap-4 md:contents">
+                  {/* Top right image */}
+                  <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
+                    <img 
+                      src="https://i.ibb.co/7dNtkMKh/2f7e40d1-d606-46d9-b841-346f45324a09.jpg" 
+                      alt="Modern Equipment" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
+                  </div>
 
-                {/* Bottom right stat */}
-                <div className="col-span-4 row-span-1 bg-gradient-to-br from-primary to-blue-600 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center text-white shadow-xl">
-                  <div className="text-4xl font-extrabold mb-1 font-display">98%</div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest opacity-80">Success Rate</div>
+                  {/* Bottom right image */}
+                  <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
+                    <img 
+                      src="https://i.ibb.co/3YhzQ6yX/b6db1fde-6079-4e51-9d36-25bb75f0d911.jpg" 
+                      alt="Physiotherapy Session" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
+                  </div>
                 </div>
               </div>
             </motion.div>
