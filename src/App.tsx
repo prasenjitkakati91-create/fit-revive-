@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Menu, X, ChevronRight, Activity, Heart, Shield, Users, 
+  Menu, X, ChevronLeft, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
   Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
   Building, Award, LogIn, Settings
@@ -15,6 +15,7 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [testimonialSlide, setTestimonialSlide] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -51,6 +52,30 @@ export default function App() {
     }
   };
 
+  const testimonials = [
+    {
+      name: "Bikash Sarma",
+      text: "The team at FitRevive completely cured my chronic back pain. I can finally play with my kids again without wincing.",
+      img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200"
+    },
+    {
+      name: "Rimpi Das",
+      text: "Post-surgery rehab was tough, but my physiotherapist was incredibly patient and motivating. Highly recommended!",
+      img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200"
+    },
+    {
+      name: "Pallabi Kalita",
+      text: "Very professional clinic with modern equipment. They explained my injury clearly and gave me great exercises.",
+      img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200"
+    }
+  ];
+
+  useEffect(() => {
+    const testimonialTimer = setInterval(() => {
+      setTestimonialSlide((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
+    return () => clearInterval(testimonialTimer);
+  }, [testimonials.length]);
   const heroImages = [
     "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=2000",
@@ -110,20 +135,24 @@ export default function App() {
             {/* Desktop Nav */}
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-8">
               {navLinks.map((link) => (
-                <a 
+                <motion.a 
                   key={link.name} 
                   href={link.href}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className={`text-sm xl:text-base font-medium transition-colors hover:text-accent ${isScrolled ? 'text-gray-600' : 'text-white drop-shadow-sm'}`}
                 >
                   {link.name}
-                </a>
+                </motion.a>
               ))}
-              <button 
+              <motion.button 
                 onClick={() => setIsFormOpen(true)}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 className="bg-primary hover:bg-accent text-white px-4 xl:px-6 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 Book Now
-              </button>
+              </motion.button>
             </div>
 
             {/* Mobile menu button */}
@@ -165,7 +194,7 @@ export default function App() {
       </nav>
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden pt-32 pb-16 lg:pt-0 lg:pb-0">
+      <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden pt-28 pb-16 lg:pt-32 lg:pb-24">
         <div className="absolute inset-0 z-0 bg-secondary">
           {heroImages.map((img, index) => (
             <img 
@@ -195,7 +224,7 @@ export default function App() {
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
               Welcome to FitRevive
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white mb-6 md:mb-8 leading-[1.1] tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl 2xl:text-8xl font-extrabold text-white mb-6 md:mb-8 leading-[1.1] tracking-tight">
               Reclaim Your Mobility with <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Expert Physiotherapy</span>
             </h1>
             <h2 className="text-lg sm:text-xl md:text-2xl text-gray-200 font-medium mb-4 md:mb-6 border-l-4 border-accent pl-3 md:pl-4">
@@ -205,116 +234,185 @@ export default function App() {
               Experience world-class rehabilitation in Assam. Our certified specialists combine advanced therapeutic techniques with personalized care to treat chronic pain, sports injuries, and post-surgical conditions.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-              <button 
+              <motion.button 
                 onClick={() => setIsFormOpen(true)}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg hover:shadow-primary/50 transform hover:-translate-y-1"
               >
                 Book Appointment
-              </button>
-              <a 
+              </motion.button>
+              <motion.a 
                 href="https://wa.me/918473809386?text=Hello%20FitRevive%20Physiotherapy,%20I%20would%20like%20to%20book%20an%20appointment."
                 target="_blank"
                 rel="noopener noreferrer"
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center justify-center gap-2 bg-white text-[#128C7E] hover:bg-gray-50 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg hover:shadow-white/30 transform hover:-translate-y-1"
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                 Chat on WhatsApp
-              </a>
+              </motion.a>
             </div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 1, repeat: Infinity, repeatType: "reverse" }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2"
-        >
-          <span className="text-white/60 text-xs font-bold uppercase tracking-widest">Scroll</span>
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
-            <motion.div 
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-accent rounded-full"
-            />
-          </div>
-        </motion.div>
       </section>
       {/* 2. ABOUT US SECTION */}
       <section id="about" className="py-32 bg-white relative overflow-hidden">
         {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 transform origin-top-right -z-10"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/30 -skew-x-12 transform origin-top-right -z-10"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 1.1 }}
+          whileInView={{ opacity: 0.4, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20rem] font-black text-slate-50 select-none -z-20 tracking-tighter"
+        >
+          RECOVERY
+        </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-20 items-center mb-32">
-            
-            {/* Image Composition (Left Side) */}
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 mb-32">
+            {/* Image Side (Left) */}
             <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2 relative"
             >
-              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 border-white">
-                <video 
+              <div className="relative rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] aspect-[4/5] max-w-md mx-auto lg:mx-0 border-[12px] border-white">
+                <img 
+                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=2070" 
+                  alt="Professional Physiotherapy Session" 
                   className="w-full h-full object-cover"
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  preload="auto"
-                  src="https://storage.googleapis.com/static.antigravity.ai/projects/88c885ba-f3de-44d6-b4de-edd75fec5e87/1743785565547.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-secondary/40 via-transparent to-transparent"></div>
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/30 via-transparent to-transparent"></div>
               </div>
-              
-              {/* Decorative Border */}
-              <div className="absolute -bottom-8 -left-8 w-full h-full border-2 border-primary/20 rounded-[2.5rem] -z-10 hidden md:block max-w-md"></div>
               
               {/* Floating Experience Badge */}
-              <div className="absolute bottom-12 -right-6 md:-right-12 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 z-20 animate-bounce" style={{ animationDuration: '4s' }}>
-                <div className="flex items-center gap-5">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-xl shadow-primary/30 rotate-3">
-                    <Shield size={28} />
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="absolute -bottom-6 -right-4 md:-right-10 bg-white p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 z-20"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-slate-200">
+                    <div className="relative">
+                      <Shield size={24} strokeWidth={2} />
+                      <motion.div 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 1, type: "spring" }}
+                        className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-slate-900 flex items-center justify-center"
+                      >
+                        <CheckCircle size={10} strokeWidth={4} />
+                      </motion.div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-display font-bold text-xl text-secondary leading-tight">Certified</p>
-                    <p className="text-primary font-semibold tracking-wide text-sm">Clinical Excellence</p>
+                  <div className="pr-2">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Verified</span>
+                      <div className="h-px w-4 bg-slate-200"></div>
+                    </div>
+                    <motion.p 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.8, duration: 0.5 }}
+                      className="font-display font-bold text-lg text-secondary leading-none"
+                    >
+                      Clinical Excellence
+                    </motion.p>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 1.1, duration: 0.5 }}
+                      className="text-slate-500 font-medium text-xs mt-1"
+                    >
+                      Certified Specialists
+                    </motion.p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
+
+              {/* Decorative Dots */}
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-[radial-gradient(#3b82f6_2px,transparent_2px)] [background-size:16px_16px] opacity-20 -z-10"></div>
             </motion.div>
 
             {/* Text Content (Right Side) */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="w-full lg:w-1/2"
             >
-              <div className="flex items-center gap-4 mb-8">
+              <motion.div 
+                variants={{
+                  hidden: { opacity: 0, x: 20 },
+                  visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
+                }}
+                className="flex items-center gap-4 mb-8"
+              >
                 <span className="w-12 h-[3px] bg-primary rounded-full"></span>
                 <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Discover FitRevive</span>
-              </div>
+              </motion.div>
               
-              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-secondary">
-                Your journey to a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">pain-free</span> life starts here.
+              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-secondary overflow-hidden">
+                {"Your journey to a ".split(" ").map((word, i) => (
+                  <motion.span
+                    key={i}
+                    variants={{
+                      hidden: { opacity: 0, y: 40 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.1 } }
+                    }}
+                    className="inline-block mr-3"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+                <motion.span
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.8 } }
+                  }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 inline-block mr-3"
+                >
+                  pain-free
+                </motion.span>
+                {"life starts here.".split(" ").map((word, i) => (
+                  <motion.span
+                    key={i}
+                    variants={{
+                      hidden: { opacity: 0, y: 40 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 1 + (i * 0.1) } }
+                    }}
+                    className="inline-block mr-3"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
               </h2>
               
-              <div className="space-y-6 text-lg text-slate-600 leading-relaxed mb-12">
+              <motion.div 
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 1.5 } }
+                }}
+                className="space-y-6 text-lg text-slate-600 leading-relaxed mb-12"
+              >
                 <p>
                   At FitRevive Physiotherapy, we believe that movement is medicine. Our dedicated team of professionals is committed to helping you overcome pain, recover from injuries, and achieve your optimal physical potential.
                 </p>
                 <p>
                   With years of clinical experience and a passion for healing, we utilize evidence-based practices tailored to your unique needs. We don't just treat symptoms; we identify and address the root cause of your discomfort.
                 </p>
-              </div>
+              </motion.div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-10 pt-10 border-t border-slate-100">
                 {[
@@ -323,15 +421,23 @@ export default function App() {
                   { title: "Expert Team", desc: "Certified specialists" },
                   { title: "Proven Results", desc: "Focus on recovery" }
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <div className="mt-1 bg-primary/10 p-2 rounded-xl text-primary shrink-0">
+                    <motion.div 
+                    key={i} 
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 1.8 + (i * 0.1) } }
+                    }}
+                    whileHover={{ x: 5 }}
+                    className="flex items-start gap-4 group/item cursor-default"
+                  >
+                    <div className="mt-1 bg-primary/10 p-2 rounded-xl text-primary shrink-0 group-hover/item:bg-primary group-hover/item:text-white transition-colors duration-300">
                       <CheckCircle size={20} strokeWidth={2.5} />
                     </div>
                     <div>
-                      <h4 className="font-display font-bold text-lg text-secondary">{item.title}</h4>
+                      <h4 className="font-display font-bold text-lg text-secondary group-hover/item:text-primary transition-colors duration-300">{item.title}</h4>
                       <p className="text-sm text-slate-500 mt-1">{item.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -363,12 +469,14 @@ export default function App() {
                 key={index} 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -10 }}
+                whileTap={{ scale: 0.98 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="relative group h-full"
               >
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))` }}></div>
-                <div className="bg-slate-50 hover:bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl hover:-translate-y-2 flex flex-col">
+                <div className="bg-slate-50 hover:bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
                   <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-gray-200 group-hover:scale-110 transition-transform duration-500`}>
                     {feature.icon}
                   </div>
@@ -434,6 +542,8 @@ export default function App() {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -10 }}
+                whileTap={{ scale: 0.98 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden flex flex-col"
@@ -445,8 +555,8 @@ export default function App() {
                     className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute bottom-0 left-0 w-full p-6 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex justify-center gap-3">
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute bottom-0 left-0 w-full p-6 translate-y-0 md:translate-y-8 opacity-100 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex justify-center gap-3">
                     <a href="#" className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors">
                       <Facebook size={18} />
                     </a>
@@ -536,6 +646,8 @@ export default function App() {
                 key={index} 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -10 }}
+                whileTap={{ scale: 0.98 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start"
@@ -579,14 +691,11 @@ export default function App() {
               <div className="grid grid-cols-12 grid-rows-2 gap-6 h-[600px]">
                 {/* Main large image/video */}
                 <div className="col-span-8 row-span-2 relative rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white">
-                  <video 
-                    src="https://storage.googleapis.com/static.antigravity.ai/projects/88c885ba-f3de-44d6-b4de-edd75fec5e87/1743785565547.mp4" 
+                  <img 
+                    src="https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&q=80&w=2069" 
+                    alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline
-                    preload="auto"
+                    referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
                   <div className="absolute bottom-8 left-8">
@@ -668,8 +777,8 @@ export default function App() {
       </section>
 
       {/* 6. TESTIMONIAL SECTION */}
-      <section id="testimonials" className="py-24 bg-gradient-to-b from-secondary to-[#152a42] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section id="testimonials" className="py-24 bg-gradient-to-b from-secondary to-[#152a42] text-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -680,57 +789,82 @@ export default function App() {
             Client Testimonials
           </motion.h2>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {[
-              {
-                name: "Bikash Sarma",
-                text: "The team at FitRevive completely cured my chronic back pain. I can finally play with my kids again without wincing.",
-                img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200"
-              },
-              {
-                name: "Rimpi Das",
-                text: "Post-surgery rehab was tough, but my physiotherapist was incredibly patient and motivating. Highly recommended!",
-                img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200"
-              },
-              {
-                name: "Pallabi Kalita",
-                text: "Very professional clinic with modern equipment. They explained my injury clearly and gave me great exercises.",
-                img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200"
-              }
-            ].map((testimonial, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 flex flex-col items-center text-center hover:bg-white/15 transition-colors"
-              >
-                <img 
-                  src={testimonial.img} 
-                  alt={testimonial.name} 
-                  className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-primary/50"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="flex gap-1 mb-4 text-yellow-400">
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                </div>
-                <p className="text-gray-300 text-sm italic mb-6 flex-grow">"{testimonial.text}"</p>
-                <h5 className="font-semibold text-white">{testimonial.name}</h5>
-              </motion.div>
+          <div className="relative max-w-4xl mx-auto mb-16">
+            <div className="overflow-hidden relative min-h-[400px] md:min-h-[350px] flex items-center">
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={testimonialSlide}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full bg-white/10 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-white/10 flex flex-col items-center text-center shadow-2xl"
+                >
+                  <div className="relative mb-6">
+                    <img 
+                      src={testimonials[testimonialSlide].img} 
+                      alt={testimonials[testimonialSlide].name} 
+                      className="w-24 h-24 rounded-full object-cover border-4 border-primary shadow-xl"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute -bottom-2 -right-2 bg-primary p-2 rounded-full shadow-lg">
+                      <Star size={16} fill="white" className="text-white" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-1 mb-6 text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={20} fill="currentColor" />
+                    ))}
+                  </div>
+                  
+                  <p className="text-xl md:text-2xl text-gray-100 italic mb-8 leading-relaxed font-light">
+                    "{testimonials[testimonialSlide].text}"
+                  </p>
+                  
+                  <div>
+                    <h5 className="font-bold text-xl text-white mb-1">{testimonials[testimonialSlide].name}</h5>
+                    <p className="text-primary font-medium text-sm uppercase tracking-widest">Happy Patient</p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Navigation Arrows */}
+            <button 
+              onClick={() => setTestimonialSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 bg-white/10 hover:bg-primary text-white p-3 rounded-full backdrop-blur-md transition-all border border-white/10 z-10 hidden sm:flex"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={() => setTestimonialSlide((prev) => (prev + 1) % testimonials.length)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 bg-white/10 hover:bg-primary text-white p-3 rounded-full backdrop-blur-md transition-all border border-white/10 z-10 hidden sm:flex"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+
+          {/* Indicators */}
+          <div className="flex justify-center gap-3 mb-16">
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setTestimonialSlide(i)}
+                className={`h-2 transition-all duration-300 rounded-full ${testimonialSlide === i ? 'w-8 bg-primary' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+              />
             ))}
           </div>
           
           <motion.button 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.05, y: -5 }}
+            whileTap={{ scale: 0.95 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+            onClick={() => setIsFormOpen(true)}
+            className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2 transform hover:-translate-y-1"
           >
             Please Share Your Feedback <ChevronRight size={18} />
           </motion.button>
@@ -756,9 +890,9 @@ export default function App() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[
-              "https://images.pexels.com/photos/5473182/pexels-photo-5473182.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/6129997/pexels-photo-6129997.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/5793998/pexels-photo-5793998.jpeg?auto=compress&cs=tinysrgb&w=800",
+              "https://images.pexels.com/photos/5473173/pexels-photo-5473173.jpeg?auto=compress&cs=tinysrgb&w=800",
+              "https://images.pexels.com/photos/5473185/pexels-photo-5473185.jpeg?auto=compress&cs=tinysrgb&w=800",
+              "https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=800",
               "https://images.pexels.com/photos/5473173/pexels-photo-5473173.jpeg?auto=compress&cs=tinysrgb&w=800",
               "https://images.pexels.com/photos/5473185/pexels-photo-5473185.jpeg?auto=compress&cs=tinysrgb&w=800",
               "https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=800"
@@ -767,6 +901,8 @@ export default function App() {
                 key={i} 
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="relative overflow-hidden rounded-2xl aspect-[4/3] group shadow-sm hover:shadow-xl transition-all"
@@ -802,15 +938,21 @@ export default function App() {
           </h2>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-            <button 
+            <motion.button 
               onClick={() => setIsFormOpen(true)}
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
               className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
             >
               Book Appointment <ChevronRight size={20} />
-            </button>
-            <button className="bg-green-500 text-white hover:bg-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2">
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-green-500 text-white hover:bg-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
+            >
               <MessageCircle size={20} /> Chat on WhatsApp
-            </button>
+            </motion.button>
           </div>
         </div>
       </section>
