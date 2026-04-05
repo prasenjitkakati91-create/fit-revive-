@@ -80,11 +80,11 @@ export default function App() {
     return () => clearInterval(testimonialTimer);
   }, [testimonials.length]);
   const heroImages = [
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=2000",
-    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=2000",
-    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=2000",
-    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=2000"
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=75",
+    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
+    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
+    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
+    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75"
   ];
 
   useEffect(() => {
@@ -127,13 +127,14 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="https://i.ibb.co/8gYFyMdJ/logo.jpg" 
+                src="https://fit-images.vercel.app/logo.jpg" 
                 alt="FitRevive Logo" 
                 className="w-10 h-10 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.nextElementSibling?.classList.remove('hidden');
                 }}
+                decoding="async"
               />
               <div className="hidden w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg">
                 F
@@ -378,10 +379,12 @@ export default function App() {
             >
               <div className="relative rounded-3xl md:rounded-[3rem] overflow-hidden shadow-2xl aspect-video md:aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 md:border-[12px] border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=2070" 
+                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=75&w=1200" 
                   alt="Professional Physiotherapy Session" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-secondary/30 via-transparent to-transparent"></div>
               </div>
@@ -645,6 +648,8 @@ export default function App() {
                     alt={member.name} 
                     className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute bottom-0 left-0 w-full p-6 translate-y-0 md:translate-y-8 opacity-100 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex justify-center gap-3">
@@ -787,6 +792,8 @@ export default function App() {
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
                   <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8">
@@ -805,6 +812,8 @@ export default function App() {
                       alt="Modern Equipment" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
                   </div>
@@ -816,6 +825,8 @@ export default function App() {
                       alt="Physiotherapy Session" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
                   </div>
@@ -904,6 +915,8 @@ export default function App() {
                       alt={testimonials[testimonialSlide].name} 
                       className="w-24 h-24 rounded-full object-cover border-4 border-primary shadow-xl"
                       referrerPolicy="no-referrer"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute -bottom-2 -right-2 bg-primary p-2 rounded-full shadow-lg">
                       <Star size={16} fill="white" className="text-white" />
@@ -1010,6 +1023,8 @@ export default function App() {
                   alt={`Clinic gallery ${i + 1}`} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-secondary/20 group-hover:bg-transparent transition-colors duration-500"></div>
               </motion.div>
@@ -1230,13 +1245,15 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="https://i.ibb.co/8gYFyMdJ/logo.jpg" 
+                  src="https://fit-images.vercel.app/logo.jpg" 
                   alt="FitRevive Logo" 
                   className="w-12 h-12 rounded-xl object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
                   }}
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="hidden w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl">
                   F
