@@ -611,25 +611,25 @@ export default function App() {
                 name: "Dr. Trishnamoni Haloi (P.T.)",
                 role: "Founder cum Consultant Physiotherapist",
                 desc: "Specializes in neurological rehabilitation.",
-                img: "https://i.ibb.co/R16qxJ4/Gemini-Generated-Image-wnf0rewnf0rewnf0.jpg"
+                img: "https://fit-images.vercel.app/trishna.jpeg"
               },
               {
                 name: "Dr. Dorothy Mazumdar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Expert in orthopedic and sports rehabilitation.",
-                img: "https://i.ibb.co/PzFVSVLp/Gemini-Generated-Image-243nd8243nd8243n.png"
+                img: "https://fit-images.vercel.app/dorothy.jpg"
               },
               {
                 name: "Dr. Anjuma Akhtar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Dedicated to pediatric physiotherapy and post-surgery recovery programs.",
-                img: "https://i.ibb.co/pvpDzx8m/Gemini-Generated-Image-b0d85mb0d85mb0d8.png"
+                img: "https://fit-images.vercel.app/anjuma.jpg"
               },
               {
                 name: "Ms. Sumiya anjum",
                 role: "Assistant Physiotherapist cum Clinic Administrator",
                 desc: "Ensures smooth clinic operations and provides excellent patient care assistance.",
-                img: "https://i.ibb.co/vCNrC3Xk/Gemini-Generated-Image-kef4pikef4pikef4.png"
+                img: "https://fit-images.vercel.app/sumiya.jpeg"
               }
             ].map((member, index) => (
               <motion.div 
