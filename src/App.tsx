@@ -788,7 +788,7 @@ export default function App() {
                 {/* Main large image/video */}
                 <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="https://i.ibb.co/5g2k7Tzn/2d1600e7-5fd3-43e7-ba26-493edb838067.jpg" 
+                    src="https://fit-images.vercel.app/interior.jpeg" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
@@ -808,7 +808,7 @@ export default function App() {
                   {/* Top right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="https://i.ibb.co/7dNtkMKh/2f7e40d1-d606-46d9-b841-346f45324a09.jpg" 
+                      src="https://fit-images.vercel.app/interior3.JPG" 
                       alt="Modern Equipment" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
@@ -821,7 +821,7 @@ export default function App() {
                   {/* Bottom right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="https://i.ibb.co/3YhzQ6yX/b6db1fde-6079-4e51-9d36-25bb75f0d911.jpg" 
+                      src="https://fit-images.vercel.app/interiora.jpeg" 
                       alt="Physiotherapy Session" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
