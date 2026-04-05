@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
+import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 
@@ -17,6 +18,8 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [testimonialSlide, setTestimonialSlide] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isLegalOpen, setIsLegalOpen] = useState(false);
+  const [legalType, setLegalType] = useState<'privacy' | 'terms'>('privacy');
   const [isAdminView, setIsAdminView] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -234,9 +237,20 @@ export default function App() {
                       setMobileMenuOpen(false);
                       setIsFormOpen(true);
                     }}
-                    className="w-full max-w-xs bg-primary text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-2xl shadow-primary/30 active:scale-95 transition-transform"
+                    className="w-full max-w-xs bg-primary text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-2xl shadow-primary/30 active:scale-95 transition-transform mb-4"
                   >
                     Book Appointment
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleAdminLogin();
+                    }}
+                    disabled={isLoggingIn}
+                    className="w-full max-w-xs bg-secondary text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
+                  >
+                    <Settings size={20} className={isLoggingIn ? 'animate-spin' : ''} />
+                    {isLoggingIn ? 'Logging in...' : 'Admin Portal'}
                   </button>
                 </motion.div>
               </div>
@@ -564,9 +578,6 @@ export default function App() {
                   <p className="text-slate-600 leading-relaxed text-lg flex-1">
                     {feature.desc}
                   </p>
-                  <div className="mt-8 flex items-center gap-2 text-primary font-bold text-sm group-hover:gap-3 transition-all">
-                    Learn More <ArrowRight size={16} />
-                  </div>
                 </div>
               </motion.div>
             ))}
@@ -1007,242 +1018,261 @@ export default function App() {
         </div>
       </section>
 
-      {/* 8. FINAL CTA SECTION */}
-      <section id="book" className="relative py-32 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
-            alt="Clinic background" 
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-primary/80 mix-blend-multiply"></div>
-        </div>
-        
-        <div className="relative z-10 text-center px-4 max-w-3xl mx-auto text-white">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-            Start Your Recovery Today
-          </h2>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-            <motion.button 
-              onClick={() => setIsFormOpen(true)}
-              whileHover={{ scale: 1.05, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
-            >
-              Book Appointment <ChevronRight size={20} />
-            </motion.button>
-            <motion.button 
-              whileHover={{ scale: 1.05, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-green-500 text-white hover:bg-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
-            >
-              <MessageCircle size={20} /> Chat on WhatsApp
-            </motion.button>
-          </div>
-        </div>
-      </section>
-
       {/* 9. CONTACT SECTION */}
-      <section id="contact" className="py-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-16">
-            
-            {/* Contact Form */}
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="w-full lg:w-3/5"
-            >
-              <h2 className="text-3xl font-bold text-secondary mb-8">Send us a message</h2>
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                    <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-gray-50" placeholder="John" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                    <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-gray-50" placeholder="Doe" />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                  <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-gray-50" placeholder="john@example.com" />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                    <input type="tel" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-gray-50" placeholder="+91 00000 00000" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Alternate Phone (Optional)</label>
-                    <input type="tel" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-gray-50" placeholder="+91 00000 00000" />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                  <textarea rows={4} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-gray-50 resize-none" placeholder="How can we help you?"></textarea>
-                </div>
-                
-                <button type="button" className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-xl font-medium transition-all shadow-md hover:shadow-lg w-full md:w-auto">
-                  Submit Message
-                </button>
-              </form>
-            </motion.div>
-            
-            {/* Contact Info */}
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="w-full lg:w-2/5"
-            >
-              <div className="bg-gray-50 p-10 rounded-3xl h-full border border-gray-100">
-                <h2 className="text-3xl font-bold text-secondary mb-8">Contact Info</h2>
-                
-                <div className="space-y-8 mb-12">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0 text-primary">
-                      <MapPin size={24} />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Address</h4>
-                      <a href="https://share.google/2js6WOQRcneu7DiBA" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary transition-colors block">
-                        Bangaon, Nalbari<br/>Assam, India
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0 text-primary">
-                      <Phone size={24} />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
-                      <p className="text-gray-600">8473809386</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0 text-primary">
-                      <Mail size={24} />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
-                      <p className="text-gray-600">fitrevivephysio@gmail.com</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-4">Follow Us</h4>
-                  <div className="flex gap-4 mb-8">
-                    <a href="https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
-                      <Facebook size={20} />
-                    </a>
-                    <a href="https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
-                      <Instagram size={20} />
-                    </a>
-                    <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors shadow-sm">
-                      <Twitter size={20} />
-                    </a>
-                  </div>
-                  
-                  <a 
-                    href="https://share.google/2js6WOQRcneu7DiBA" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 hover:text-primary hover:border-primary px-6 py-3 rounded-xl font-medium transition-all shadow-sm w-full justify-center"
-                  >
-                    <MapPin size={18} />
-                    View on Google Maps
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-            
-          </div>
+      <section id="contact" className="py-32 bg-white relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-accent/5 rounded-full blur-[120px] -z-10"></div>
 
-          {/* Map Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          
+          {/* 1. Recovery Journey (Top) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-32"
+          >
+            <div className="text-center mb-20">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-[0.2em] uppercase mb-8 border border-primary/10 shadow-sm"
+              >
+                <Activity size={14} className="animate-pulse" /> Your Recovery Journey
+              </motion.div>
+              <h2 className="text-5xl md:text-7xl font-display font-black text-secondary mb-8 leading-[1.1] tracking-tight">
+                Professional <span className="text-primary relative inline-block">
+                  Consultation
+                  <svg className="absolute -bottom-2 left-0 w-full h-3 text-accent/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="8" />
+                  </svg>
+                </span> Process
+              </h2>
+              <p className="text-slate-500 text-xl leading-relaxed max-w-3xl mx-auto font-medium">
+                A systematic, evidence-based approach designed to restore your physical potential and long-term health.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+              {[
+                {
+                  step: "01",
+                  title: "Initial Assessment",
+                  desc: "A thorough evaluation of your physical condition, history, and goals to identify the root cause.",
+                  icon: <Users size={28} />,
+                  color: "bg-blue-500"
+                },
+                {
+                  step: "02",
+                  title: "Personalized Plan",
+                  desc: "Developing a custom treatment strategy combining manual therapy, exercise, and education.",
+                  icon: <Calendar size={28} />,
+                  color: "bg-cyan-500"
+                },
+                {
+                  step: "03",
+                  title: "Expert Treatment",
+                  desc: "Hands-on therapy sessions using advanced techniques to relieve pain and restore function.",
+                  icon: <Activity size={28} />,
+                  color: "bg-indigo-500"
+                },
+                {
+                  step: "04",
+                  title: "Progress Review",
+                  desc: "Regular monitoring and adjustments to your plan to ensure optimal recovery and health.",
+                  icon: <CheckCircle size={28} />,
+                  color: "bg-emerald-500"
+                }
+              ].map((item, idx) => (
+                <motion.div 
+                  key={idx} 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="group relative p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden"
+                >
+                  {/* Hover Background Accent */}
+                  <div className={`absolute top-0 right-0 w-32 h-32 ${item.color} opacity-0 group-hover:opacity-[0.03] -translate-y-1/2 translate-x-1/2 rounded-full transition-all duration-700`}></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-start mb-8">
+                      <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-inner">
+                        {item.icon}
+                      </div>
+                      <span className="text-5xl font-black text-slate-100 group-hover:text-primary/10 transition-colors duration-500">
+                        {item.step}
+                      </span>
+                    </div>
+                    <h4 className="text-2xl font-bold text-secondary mb-4 group-hover:text-primary transition-colors">{item.title}</h4>
+                    <p className="text-slate-500 text-base leading-relaxed group-hover:text-slate-600 transition-colors">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="mt-20 p-12 rounded-[3rem] bg-secondary text-white flex flex-col lg:flex-row items-center justify-between gap-10 relative overflow-hidden shadow-2xl"
+            >
+              <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
+              
+              <div className="relative z-10 max-w-xl text-center lg:text-left">
+                <h4 className="text-3xl md:text-4xl font-display font-black mb-4 tracking-tight">Ready to start your recovery?</h4>
+                <p className="text-slate-400 text-lg font-medium">Join hundreds of patients who have reclaimed their active lifestyle with FitRevive.</p>
+              </div>
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsFormOpen(true)}
+                className="relative z-10 bg-primary hover:bg-accent text-white px-12 py-6 rounded-2xl font-black text-lg transition-all shadow-2xl shadow-primary/40 whitespace-nowrap"
+              >
+                Book Appointment Now
+              </motion.button>
+            </motion.div>
+          </motion.div>
+
+          {/* 2. Contact Info (Bottom) */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-16 rounded-3xl overflow-hidden shadow-lg h-[400px] border border-gray-100"
+            className="pt-24 border-t border-slate-100"
           >
-            <iframe 
-              src="https://maps.google.com/maps?q=Bangaon,%20Nalbari,%20Assam,%20India&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen={true} 
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
-              title="FitRevive Location Map"
-            ></iframe>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+              {/* Address */}
+              <div className="group flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                  <MapPin size={32} />
+                </div>
+                <div>
+                  <h4 className="text-2xl font-bold text-secondary mb-3">Our Location</h4>
+                  <a href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" target="_blank" rel="noopener noreferrer" className="text-lg text-slate-500 hover:text-primary transition-colors leading-relaxed font-medium">
+                    Bangaon, Nalbari<br/>Assam, India
+                  </a>
+                </div>
+              </div>
+
+              {/* Contact */}
+              <div className="group flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:-rotate-12 transition-all duration-500">
+                  <Phone size={32} />
+                </div>
+                <div>
+                  <h4 className="text-2xl font-bold text-secondary mb-3">Get In Touch</h4>
+                  <p className="text-lg text-slate-500 mb-1 font-medium">8473809386</p>
+                  <p className="text-lg text-slate-500 font-medium">fitrevivephysio@gmail.com</p>
+                </div>
+              </div>
+
+              {/* Socials */}
+              <div className="group flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                  <Users size={32} />
+                </div>
+                <div>
+                  <h4 className="text-2xl font-bold text-secondary mb-6">Follow Our Journey</h4>
+                  <div className="flex gap-5 justify-center">
+                    {[
+                      { icon: <Facebook size={22} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
+                      { icon: <Instagram size={22} />, href: "https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" },
+                      { icon: <Twitter size={22} />, href: "#" }
+                    ].map((social, i) => (
+                      <motion.a 
+                        key={i} 
+                        href={social.href} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        whileHover={{ y: -5 }}
+                        className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border border-slate-100"
+                      >
+                        {social.icon}
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-24 text-center">
+              <motion.a 
+                href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                whileHover={{ x: 10 }}
+                className="inline-flex items-center gap-4 text-primary font-black text-lg group"
+              >
+                View on Google Maps 
+                <span className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                  <ArrowRight size={20} />
+                </span>
+              </motion.a>
+            </div>
           </motion.div>
         </div>
       </section>
-
       {/* 10. FOOTER */}
-      <footer className="bg-secondary pt-20 pb-10 text-white border-t-4 border-primary overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-            {/* Column 1: About */}
+      <footer className="bg-[#0a192f] text-white pt-20 pb-10 relative overflow-hidden">
+        {/* Subtle Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+            {/* Column 1: Brand */}
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <img 
                   src="https://i.ibb.co/8gYFyMdJ/logo.jpg" 
                   alt="FitRevive Logo" 
-                  className="w-12 h-12 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
+                  className="w-12 h-12 rounded-xl object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
                   }}
                 />
-                <div className="hidden w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                <div className="hidden w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl">
                   F
                 </div>
-                <span className="font-bold text-2xl text-white tracking-tight">
-                  FitRevive
-                </span>
+                <span className="font-display font-black text-2xl tracking-tight">FitRevive</span>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Dedicated to helping you overcome pain, recover from injuries, and achieve your optimal physical potential through expert physiotherapy care.
+              <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                Expert physiotherapy care dedicated to restoring your mobility and enhancing your quality of life through personalized treatment plans.
               </p>
-              <div className="flex gap-4 pt-2">
-                <a href="https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
-                  <Facebook size={18} />
-                </a>
-                <a href="https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
-                  <Instagram size={18} />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors shadow-sm">
-                  <Twitter size={18} />
-                </a>
+              <div className="flex gap-3">
+                {[
+                  { icon: <Facebook size={18} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
+                  { icon: <Instagram size={18} />, href: "https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" },
+                  { icon: <Twitter size={18} />, href: "#" }
+                ].map((social, i) => (
+                  <a 
+                    key={i}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white hover:border-primary transition-all duration-300"
+                  >
+                    {social.icon}
+                  </a>
+                ))}
               </div>
             </div>
 
-            {/* Column 2: Quick Links */}
+            {/* Column 2: Navigation */}
             <div>
-              <h3 className="text-lg font-bold mb-6 relative inline-block">
-                Quick Links
-                <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-primary rounded-full"></span>
-              </h3>
-              <ul className="space-y-3">
+              <h3 className="text-sm uppercase tracking-widest text-primary font-bold mb-8">Navigation</h3>
+              <ul className="space-y-4">
                 {navLinks.map((link) => (
                   <li key={link.name}>
-                    <a href={link.href} className="text-gray-300 hover:text-primary transition-colors flex items-center gap-2 text-sm">
-                      <ChevronRight size={14} className="text-primary" />
+                    <a href={link.href} className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
                       {link.name}
                     </a>
                   </li>
@@ -1252,22 +1282,19 @@ export default function App() {
 
             {/* Column 3: Services */}
             <div>
-              <h3 className="text-lg font-bold mb-6 relative inline-block">
-                Our Services
-                <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-primary rounded-full"></span>
-              </h3>
-              <ul className="space-y-3">
+              <h3 className="text-sm uppercase tracking-widest text-primary font-bold mb-8">Specialties</h3>
+              <ul className="space-y-4">
                 {[
-                  "Physiotherapy Consultation",
-                  "Pain Management Therapy",
-                  "Orthopedic Rehabilitation",
-                  "Neurological Rehabilitation",
-                  "Sports Injury Rehab",
-                  "Post-Surgical Rehab"
+                  "Physiotherapy",
+                  "Pain Management",
+                  "Orthopedic Rehab",
+                  "Sports Injury",
+                  "Neurological Rehab",
+                  "Post-Surgical Care"
                 ].map((service, idx) => (
                   <li key={idx}>
-                    <a href="#services" className="text-gray-300 hover:text-primary transition-colors flex items-center gap-2 text-sm">
-                      <ChevronRight size={14} className="text-primary" />
+                    <a href="#services" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
                       {service}
                     </a>
                   </li>
@@ -1277,48 +1304,53 @@ export default function App() {
 
             {/* Column 4: Contact */}
             <div>
-              <h3 className="text-lg font-bold mb-6 relative inline-block">
-                Contact Us
-                <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-primary rounded-full"></span>
-              </h3>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3 text-sm text-gray-300">
-                  <MapPin size={18} className="text-primary shrink-0 mt-0.5" />
-                  <a href="https://share.google/2js6WOQRcneu7DiBA" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                    Bangaon, Nalbari<br/>Assam, India
+              <h3 className="text-sm uppercase tracking-widest text-primary font-bold mb-8">Get in Touch</h3>
+              <ul className="space-y-6">
+                <li className="flex items-start gap-4">
+                  <MapPin size={20} className="text-primary shrink-0" />
+                  <a href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm font-medium leading-relaxed">
+                    Bangaon, Nalbari, Assam, India
                   </a>
                 </li>
-                <li className="flex items-center gap-3 text-sm text-gray-300">
-                  <Phone size={18} className="text-primary shrink-0" />
-                  <span>8473809386</span>
+                <li className="flex items-center gap-4">
+                  <Phone size={20} className="text-primary shrink-0" />
+                  <span className="text-slate-400 text-sm font-medium">8473809386</span>
                 </li>
-                <li className="flex items-center gap-3 text-sm text-gray-300">
-                  <Mail size={18} className="text-primary shrink-0" />
-                  <span>fitrevivephysio@gmail.com</span>
-                </li>
-                <li className="flex items-center gap-3 text-sm text-gray-300">
-                  <Calendar size={18} className="text-primary shrink-0" />
-                  <span>Mon - Sun (10:00 AM - 7:00 PM)</span>
+                <li className="flex items-center gap-4">
+                  <Mail size={20} className="text-primary shrink-0" />
+                  <span className="text-slate-400 text-sm font-medium">fitrevivephysio@gmail.com</span>
                 </li>
               </ul>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm text-center md:text-left">
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-slate-500 text-xs font-medium">
               &copy; {new Date().getFullYear()} FitRevive Physiotherapy. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
+            <div className="flex items-center gap-8">
+              <div className="flex gap-6 text-xs font-bold uppercase tracking-wider">
+                <button 
+                  onClick={() => { setLegalType('privacy'); setIsLegalOpen(true); }}
+                  className="text-slate-500 hover:text-primary transition-colors"
+                >
+                  Privacy
+                </button>
+                <button 
+                  onClick={() => { setLegalType('terms'); setIsLegalOpen(true); }}
+                  className="text-slate-500 hover:text-primary transition-colors"
+                >
+                  Terms
+                </button>
+              </div>
               <button 
                 onClick={handleAdminLogin}
                 disabled={isLoggingIn}
-                className="flex items-center gap-1.5 hover:text-primary transition-colors group"
+                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-500 hover:text-white hover:bg-white/10 transition-all group"
+                title="Admin Portal"
               >
-                <Settings size={14} className="group-hover:rotate-90 transition-transform duration-500" />
-                {isLoggingIn ? 'Logging in...' : 'Admin Portal'}
+                <Settings size={16} className="group-hover:rotate-90 transition-transform duration-500" />
               </button>
             </div>
           </div>
@@ -1327,6 +1359,13 @@ export default function App() {
 
       {/* Appointment Modal */}
       <AppointmentForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+
+      {/* Legal Modals */}
+      <LegalModal 
+        isOpen={isLegalOpen} 
+        onClose={() => setIsLegalOpen(false)} 
+        type={legalType} 
+      />
 
       {/* Admin Dashboard */}
       <AnimatePresence>

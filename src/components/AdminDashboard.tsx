@@ -194,90 +194,163 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                 <p className="text-sm">Try adjusting your search or filters</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50/50 border-b border-gray-100">
-                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Patient</th>
-                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Service</th>
-                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Schedule</th>
-                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contact</th>
-                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {filteredAppointments.map((app) => (
-                      <motion.tr 
-                        layout
-                        key={app.id}
-                        className="hover:bg-gray-50/80 transition-colors group"
-                      >
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary font-bold">
-                              {app.name.charAt(0)}
-                            </div>
-                            <div>
-                              <p className="font-bold text-gray-900">{app.name}</p>
-                              <p className="text-xs text-gray-500">ID: {app.id.slice(0, 8)}</p>
-                            </div>
+              <>
+                {/* Mobile Card View */}
+                <div className="block lg:hidden divide-y divide-gray-100">
+                  {filteredAppointments.map((app) => (
+                    <motion.div 
+                      layout
+                      key={app.id}
+                      className="p-6 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary font-bold text-lg">
+                            {app.name.charAt(0)}
                           </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold">
-                            {app.service}
-                          </span>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                              <Calendar size={14} className="text-gray-400" />
-                              {formatDate(app.date)}
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
-                              <Clock size={14} className="text-gray-400" />
-                              {app.time}
-                            </div>
+                          <div>
+                            <p className="font-bold text-gray-900 text-lg">{app.name}</p>
+                            <p className="text-xs text-gray-500">ID: {app.id.slice(0, 8)}</p>
                           </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="space-y-1">
-                            <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-gray-700 hover:text-primary transition-colors font-medium">
-                              <Phone size={14} className="text-gray-400" />
-                              {app.phone}
-                            </a>
-                            <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-gray-500 hover:text-primary transition-colors">
-                              <Mail size={14} className="text-gray-400" />
-                              {app.email}
-                            </a>
+                        </div>
+                        <span className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold">
+                          {app.service}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="space-y-1">
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Schedule</p>
+                          <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                            <Calendar size={14} className="text-gray-400" />
+                            {formatDate(app.date)}
                           </div>
-                        </td>
-                        <td className="px-6 py-5 text-right">
-                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {app.message && (
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <Clock size={14} className="text-gray-400" />
+                            {app.time}
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Contact</p>
+                          <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                            <Phone size={14} className="text-gray-400" />
+                            {app.phone}
+                          </a>
+                          <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-gray-500 truncate max-w-[120px]">
+                            <Mail size={14} className="text-gray-400" />
+                            {app.email}
+                          </a>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-50">
+                        {app.message && (
+                          <button 
+                            onClick={() => alert(`Message: ${app.message}`)}
+                            className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-slate-50 text-slate-600 rounded-xl font-bold text-sm"
+                          >
+                            <MessageSquare size={18} /> View Message
+                          </button>
+                        )}
+                        <button 
+                          disabled={deletingId === app.id}
+                          onClick={() => handleDelete(app.id)}
+                          className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-600 rounded-xl font-bold text-sm"
+                        >
+                          {deletingId === app.id ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                          Delete
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden lg:block overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/50 border-b border-gray-100">
+                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Patient</th>
+                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Service</th>
+                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Schedule</th>
+                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contact</th>
+                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {filteredAppointments.map((app) => (
+                        <motion.tr 
+                          layout
+                          key={app.id}
+                          className="hover:bg-gray-50/80 transition-colors group"
+                        >
+                          <td className="px-6 py-5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary font-bold">
+                                {app.name.charAt(0)}
+                              </div>
+                              <div>
+                                <p className="font-bold text-gray-900">{app.name}</p>
+                                <p className="text-xs text-gray-500">ID: {app.id.slice(0, 8)}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-5">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold">
+                              {app.service}
+                            </span>
+                          </td>
+                          <td className="px-6 py-5">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                                <Calendar size={14} className="text-gray-400" />
+                                {formatDate(app.date)}
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <Clock size={14} className="text-gray-400" />
+                                {app.time}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-5">
+                            <div className="space-y-1">
+                              <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-gray-700 hover:text-primary transition-colors font-medium">
+                                <Phone size={14} className="text-gray-400" />
+                                {app.phone}
+                              </a>
+                              <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-gray-500 hover:text-primary transition-colors">
+                                <Mail size={14} className="text-gray-400" />
+                                {app.email}
+                              </a>
+                            </div>
+                          </td>
+                          <td className="px-6 py-5 text-right">
+                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              {app.message && (
+                                <button 
+                                  onClick={() => alert(`Message: ${app.message}`)}
+                                  className="p-2 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
+                                  title="View Message"
+                                >
+                                  <MessageSquare size={18} />
+                                </button>
+                              )}
                               <button 
-                                onClick={() => alert(`Message: ${app.message}`)}
-                                className="p-2 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
-                                title="View Message"
+                                disabled={deletingId === app.id}
+                                onClick={() => handleDelete(app.id)}
+                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all disabled:opacity-50"
+                                title="Delete Appointment"
                               >
-                                <MessageSquare size={18} />
+                                {deletingId === app.id ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
                               </button>
-                            )}
-                            <button 
-                              disabled={deletingId === app.id}
-                              onClick={() => handleDelete(app.id)}
-                              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all disabled:opacity-50"
-                              title="Delete Appointment"
-                            >
-                              {deletingId === app.id ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
-                            </button>
-                          </div>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>
