@@ -117,9 +117,9 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
@@ -959,7 +959,7 @@ export default function App() {
       </section>
 
       {/* 6. GALLERY SECTION */}
-      <section id="gallery" className="py-24 bg-gray-50">
+      <section id="gallery" className="py-24 bg-gray-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -1045,7 +1045,7 @@ export default function App() {
       </section>
 
       {/* 9. CONTACT SECTION */}
-      <section id="contact" className="py-24 bg-white">
+      <section id="contact" className="py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16">
             
@@ -1194,7 +1194,7 @@ export default function App() {
       </section>
 
       {/* 10. FOOTER */}
-      <footer className="bg-secondary pt-20 pb-10 text-white border-t-4 border-primary">
+      <footer className="bg-secondary pt-20 pb-10 text-white border-t-4 border-primary overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             {/* Column 1: About */}

@@ -9,14 +9,17 @@
   --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Inter", sans-serif;
   color: #333;
   background-color: #f9fafb;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 @keyframes fadeInUp {
