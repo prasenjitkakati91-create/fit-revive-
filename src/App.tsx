@@ -24,6 +24,33 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const galleryItems = [
+    { url: "https://fit-images.vercel.app/exterior.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/inog.jpeg", category: "Event" },
+    { url: "https://fit-images.vercel.app/interior3.JPG", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/inog2.jpeg", category: "Event" },
+    { url: "https://fit-images.vercel.app/interiora.jpeg", category: "Recovery" },
+    { url: "https://fit-images.vercel.app/inog3.jpeg", category: "Event" },
+    { url: "https://fit-images.vercel.app/team.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/inog4.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/gust.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/interior.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
+  ];
+
+  const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
+
+  const filteredGallery = activeFilter === 'All' 
+    ? galleryItems 
+    : galleryItems.filter(item => item.category === activeFilter);
+
+  useEffect(() => {
+    setGalleryIndex(0);
+  }, [activeFilter]);
 
   const ADMIN_EMAIL = "prasenjitkakati91@gmail.com";
 
@@ -121,7 +148,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 overflow-x-hidden w-full max-w-[100vw]">
       {/* NAVBAR */}
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -201,30 +228,26 @@ export default function App() {
               initial={{ opacity: 0, x: '100%' }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-              className="fixed inset-0 z-50 bg-white/98 backdrop-blur-2xl flex flex-col items-center justify-between p-8 lg:hidden overflow-y-auto"
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 right-0 w-full sm:w-80 z-50 bg-white/98 backdrop-blur-2xl flex flex-col p-8 lg:hidden overflow-y-auto overflow-x-hidden shadow-2xl border-l border-slate-100"
             >
               {/* Decorative Background Elements */}
               <div className="absolute inset-0 -z-10 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 -z-10"></div>
 
-              <div className="flex flex-col items-center space-y-6 w-full mt-20">
+              <div className="flex flex-col items-start justify-center space-y-8 w-full flex-grow mt-12">
                 {navLinks.map((link, i) => (
                   <motion.a 
                     key={link.name} 
                     href={link.href}
-                    initial={{ opacity: 0, x: 30 }}
+                    initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.08, type: 'spring' }}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="group relative text-4xl font-display font-bold text-secondary hover:text-primary transition-all duration-300"
+                    className="group relative text-3xl md:text-4xl font-display font-bold text-secondary hover:text-primary transition-all duration-300 text-left w-full block"
                   >
                     <span className="relative z-10">{link.name}</span>
-                    <motion.span 
-                      className="absolute -bottom-1 left-0 w-0 h-1 bg-accent rounded-full group-hover:w-full transition-all duration-300"
-                      layoutId="mobile-nav-underline"
-                    />
                   </motion.a>
                 ))}
                 
@@ -232,7 +255,7 @@ export default function App() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + navLinks.length * 0.08 }}
-                  className="pt-6 w-full flex flex-col items-center"
+                  className="pt-8 w-full flex flex-col items-start"
                 >
                   <button 
                     onClick={() => {
@@ -265,15 +288,17 @@ export default function App() {
                 className="w-full flex flex-col items-center gap-6 pb-8"
               >
                 <div className="h-px w-12 bg-slate-200"></div>
-                <div className="flex gap-6">
+                <div className="flex gap-6 justify-start">
                   {[
-                    { icon: <Facebook size={24} />, href: "#" },
-                    { icon: <Instagram size={24} />, href: "#" },
+                    { icon: <Facebook size={24} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
+                    { icon: <Instagram size={24} />, href: "https://www.instagram.com/fitrevive_physiotherapy?igsh=NW5kNWUwbWVrdzk3&utm_source=qr" },
                     { icon: <Twitter size={24} />, href: "#" }
                   ].map((social, i) => (
                     <a 
                       key={i} 
                       href={social.href} 
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
                     >
                       {social.icon}
@@ -396,7 +421,7 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.6 }}
-                className="absolute -bottom-6 -right-4 md:-right-10 bg-white p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 z-20"
+                className="absolute -bottom-6 right-0 md:-right-10 bg-white p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 z-20"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-slate-200">
@@ -568,10 +593,10 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -10 }}
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.98, y: -5 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="relative group h-full"
+                className="relative group h-full cursor-pointer"
               >
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))` }}></div>
                 <div className="bg-slate-50 hover:bg-white p-8 md:p-10 rounded-3xl border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
@@ -638,10 +663,10 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -10 }}
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.98, y: -5 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden flex flex-col"
+                className="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden flex flex-col cursor-pointer"
               >
                 <div className="relative aspect-[4/5] overflow-hidden m-3 rounded-2xl">
                   <img 
@@ -654,11 +679,11 @@ export default function App() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute bottom-0 left-0 w-full p-6 translate-y-0 md:translate-y-8 opacity-100 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex justify-center gap-3">
-                    <a href="#" className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors">
+                    <a href="https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors">
                       <Facebook size={18} />
                     </a>
-                    <a href="#" className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors">
-                      <Twitter size={18} />
+                    <a href="https://www.instagram.com/fitrevive_physiotherapy?igsh=NW5kNWUwbWVrdzk3&utm_source=qr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors">
+                      <Instagram size={18} />
                     </a>
                     <a href="#" className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-white transition-colors">
                       <Mail size={18} />
@@ -744,10 +769,10 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -10 }}
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.98, y: -5 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-white p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start"
+                className="group bg-white p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start cursor-pointer"
               >
                 <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                   {service.icon}
@@ -869,7 +894,8 @@ export default function App() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 hover:bg-white border border-transparent hover:border-slate-100 hover:shadow-xl transition-all duration-500 group"
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 hover:bg-white border border-transparent hover:border-slate-100 hover:shadow-xl transition-all duration-500 group cursor-pointer"
                   >
                     <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
                       {item.icon}
@@ -984,76 +1010,133 @@ export default function App() {
       </section>
 
       {/* 6. GALLERY SECTION */}
-      <section id="gallery" className="py-32 bg-gray-50 relative overflow-hidden">
-        {/* Background Accents */}
-        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-[120px] -z-10"></div>
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-accent/5 rounded-full blur-[120px] -z-10"></div>
+      <section id="gallery" className="py-24 relative overflow-hidden bg-slate-50">
+        {/* Blurred Gradient Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/50 via-purple-50/50 to-white"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-[100px]"></div>
+        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-20"
-          >
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Visual Journey</span>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-secondary mb-6">Clinic Gallery</h2>
-            <div className="w-24 h-1.5 bg-primary mx-auto rounded-full mb-8"></div>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
-              Experience the professional environment and modern facilities at FitRevive Physiotherapy.
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
-            {[
-              { url: "https://fit-images.vercel.app/exterior.jpeg", title: "Clinic Exterior", span: "lg:col-span-2 lg:row-span-2" },
-              { url: "https://fit-images.vercel.app/inog.jpeg", title: "Inauguration Ceremony", span: "lg:col-span-2 lg:row-span-1" },
-              { url: "https://fit-images.vercel.app/inog2.jpeg", title: "Grand Opening", span: "lg:col-span-1 lg:row-span-1" },
-              { url: "https://fit-images.vercel.app/inog3.jpeg", title: "Clinic Blessing", span: "lg:col-span-1 lg:row-span-1" },
-              { url: "https://fit-images.vercel.app/team.jpeg", title: "Our Dedicated Team", span: "lg:col-span-2 lg:row-span-1" },
-              { url: "https://fit-images.vercel.app/inog4.jpeg", title: "Clinic Interior", span: "lg:col-span-1 lg:row-span-1" },
-              { url: "https://fit-images.vercel.app/trishna.jpeg", title: "Expert Consultation", span: "lg:col-span-1 lg:row-span-1" },
-            ].map((item, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                onClick={() => setSelectedGalleryImage(item.url)}
-                className={`relative overflow-hidden rounded-[2rem] group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 ${item.span}`}
-              >
-                <img 
-                  src={item.url} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  decoding="async"
-                />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    whileHover={{ y: 0, opacity: 1 }}
-                    className="flex items-center justify-between"
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Main Card Container */}
+          <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 p-6 md:p-12">
+            
+            {/* Header */}
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-3 block">Gallery</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-secondary mb-4">Our Visual Journey</h2>
+              <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto">
+                See real patient recovery moments, treatments, and clinic highlights
+              </p>
+            </div>
+
+            {/* Filters */}
+            <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-12">
+              {filters.map(filter => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
+                    activeFilter === filter 
+                      ? 'bg-secondary text-white shadow-md' 
+                      : 'bg-transparent text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+              <button className="px-4 py-2 rounded-full text-xs md:text-sm font-medium text-secondary border border-slate-200 hover:bg-slate-50 flex items-center gap-1 transition-all">
+                View More <ArrowRight size={14} />
+              </button>
+            </div>
+
+            {/* Carousel */}
+            <div className="relative h-[300px] md:h-[450px] flex items-center justify-center overflow-hidden mb-8" style={{ perspective: '1000px' }}>
+              <AnimatePresence>
+                {filteredGallery.length > 0 ? (
+                  filteredGallery.map((item, index) => {
+                    let diff = index - galleryIndex;
+                    const total = filteredGallery.length;
+                    
+                    // Wrap logic for infinite feel
+                    if (total > 0) {
+                      if (diff > Math.floor(total / 2)) diff -= total;
+                      if (diff < -Math.floor(total / 2)) diff += total;
+                    }
+
+                    const isCenter = diff === 0;
+                    const isEdge = Math.abs(diff) === 1;
+                    const isFarEdge = Math.abs(diff) === 2;
+
+                    // Responsive offset
+                    const xOffset = typeof window !== 'undefined' && window.innerWidth < 768 ? 120 : 260;
+
+                    return (
+                      <motion.div
+                        key={item.url}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ 
+                          x: diff * xOffset,
+                          scale: isCenter ? 1.1 : isEdge ? 0.85 : 0.65,
+                          opacity: isCenter ? 1 : isEdge ? 0.6 : isFarEdge ? 0.2 : 0,
+                          zIndex: 50 - Math.abs(diff),
+                        }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        className={`absolute w-[200px] h-[260px] md:w-[320px] md:h-[400px] rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
+                        onClick={() => {
+                          if (isCenter) setSelectedGalleryImage(item.url);
+                          else setGalleryIndex(index);
+                        }}
+                        style={{
+                          pointerEvents: Math.abs(diff) > 2 ? 'none' : 'auto'
+                        }}
+                      >
+                        <img 
+                          src={item.url} 
+                          alt={item.category} 
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          {isCenter && (
+                            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                              <Maximize2 size={24} />
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })
+                ) : (
+                  <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    exit={{ opacity: 0 }}
+                    className="text-slate-400"
                   >
-                    <div>
-                      <p className="text-white font-bold text-lg mb-1">{item.title}</p>
-                      <p className="text-primary text-xs font-medium uppercase tracking-widest">FitRevive Clinic</p>
-                    </div>
-                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg">
-                      <Maximize2 size={20} />
-                    </div>
+                    No images found for this category.
                   </motion.div>
-                </div>
+                )}
+              </AnimatePresence>
+            </div>
 
-                {/* Subtle Border on Hover */}
-                <div className="absolute inset-0 border-0 group-hover:border-[12px] border-white/10 transition-all duration-500 rounded-[2rem]"></div>
-              </motion.div>
-            ))}
+            {/* Controls */}
+            <div className="flex justify-center gap-4">
+              <button 
+                onClick={() => setGalleryIndex(prev => (prev - 1 + filteredGallery.length) % filteredGallery.length)}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-secondary transition-colors shadow-sm"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={() => setGalleryIndex(prev => (prev + 1) % filteredGallery.length)}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-secondary transition-colors shadow-sm"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
           </div>
         </div>
 
@@ -1259,7 +1342,7 @@ export default function App() {
                   <div className="flex gap-5 justify-center">
                     {[
                       { icon: <Facebook size={22} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
-                      { icon: <Instagram size={22} />, href: "https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" },
+                      { icon: <Instagram size={22} />, href: "https://www.instagram.com/fitrevive_physiotherapy?igsh=NW5kNWUwbWVrdzk3&utm_source=qr" },
                       { icon: <Twitter size={22} />, href: "#" }
                     ].map((social, i) => (
                       <motion.a 
@@ -1327,7 +1410,7 @@ export default function App() {
               <div className="flex gap-3">
                 {[
                   { icon: <Facebook size={18} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
-                  { icon: <Instagram size={18} />, href: "https://www.instagram.com/fitrevive_physiotherapy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" },
+                  { icon: <Instagram size={18} />, href: "https://www.instagram.com/fitrevive_physiotherapy?igsh=NW5kNWUwbWVrdzk3&utm_source=qr" },
                   { icon: <Twitter size={18} />, href: "#" }
                 ].map((social, i) => (
                   <a 
