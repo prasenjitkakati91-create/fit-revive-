@@ -10,7 +10,7 @@ import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
 import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, User } from 'firebase/auth';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,6 +59,21 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
+
+    // Handle redirect result for mobile browsers where popup might fail
+    getRedirectResult(auth).then((result) => {
+      if (result) {
+        if (result.user.email === ADMIN_EMAIL) {
+          setIsAdminView(true);
+        } else {
+          alert("Access Denied: You are not authorized to access the admin dashboard.");
+        }
+      }
+    }).catch((error) => {
+      console.error("Redirect login error:", error);
+      alert("Login failed: " + error.message);
+    });
+
     return () => unsubscribe();
   }, []);
 
@@ -77,10 +92,17 @@ export default function App() {
       } else {
         alert("Access Denied: You are not authorized to access the admin dashboard.");
       }
-    } catch (error) {
-      console.error("Login error:", error);
-    } finally {
       setIsLoggingIn(false);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      // Fallback to redirect if popup is blocked
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+        const provider = new GoogleAuthProvider();
+        signInWithRedirect(auth, provider);
+      } else {
+        alert("Login failed: " + error.message);
+        setIsLoggingIn(false);
+      }
     }
   };
 
@@ -269,9 +291,9 @@ export default function App() {
                     Book Appointment
                   </button>
                   <button 
-                    onClick={async () => {
-                      await handleAdminLogin();
+                    onClick={() => {
                       setMobileMenuOpen(false);
+                      handleAdminLogin();
                     }}
                     disabled={isLoggingIn}
                     className="w-full max-w-xs bg-secondary text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
@@ -1521,7 +1543,7 @@ export default function App() {
 
       {/* Admin Dashboard */}
       <AnimatePresence>
-        {isAdminView && user?.email === ADMIN_EMAIL && (
+        {isAdminView && (
           <AdminDashboard onClose={() => setIsAdminView(false)} />
         )}
       </AnimatePresence>
