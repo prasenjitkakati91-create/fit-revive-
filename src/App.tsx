@@ -995,19 +995,6 @@ export default function App() {
               />
             ))}
           </div>
-          
-          <motion.button 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            whileTap={{ scale: 0.95 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            onClick={() => setIsFormOpen(true)}
-            className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2 transform hover:-translate-y-1"
-          >
-            Please Share Your Feedback <ChevronRight size={18} />
-          </motion.button>
         </div>
       </section>
 
