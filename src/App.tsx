@@ -53,7 +53,7 @@ export default function App() {
     setGalleryIndex(0);
   }, [activeFilter]);
 
-  const ADMIN_EMAIL = "prasenjitkakati91@gmail.com";
+  const ADMIN_EMAIL = "fitrevive.org@gmail.com";
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -676,7 +676,8 @@ export default function App() {
                     alt={member.name} 
                     className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
-                    loading="lazy"
+                    loading="eager"
+                    fetchPriority="high"
                     decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -1317,7 +1318,7 @@ export default function App() {
                 <div>
                   <h4 className="text-2xl font-bold text-secondary mb-3">Get In Touch</h4>
                   <p className="text-lg text-slate-500 mb-1 font-medium">8473809386</p>
-                  <p className="text-lg text-slate-500 font-medium">fitrevivephysio@gmail.com</p>
+                  <p className="text-lg text-slate-500 font-medium">fitrevive.org@gmail.com</p>
                 </div>
               </div>
 
@@ -1469,7 +1470,7 @@ export default function App() {
                 </li>
                 <li className="flex items-center gap-4">
                   <Mail size={20} className="text-primary shrink-0" />
-                  <span className="text-slate-400 text-sm font-medium">fitrevivephysio@gmail.com</span>
+                  <span className="text-slate-400 text-sm font-medium">fitrevive.org@gmail.com</span>
                 </li>
               </ul>
             </div>
