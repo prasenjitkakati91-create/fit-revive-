@@ -4,7 +4,7 @@ import {
   Menu, X, ChevronLeft, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
   Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
-  Building, Award, LogIn, Settings
+  Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
@@ -23,6 +23,7 @@ export default function App() {
   const [isAdminView, setIsAdminView] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
 
   const ADMIN_EMAIL = "prasenjitkakati91@gmail.com";
 
@@ -983,54 +984,114 @@ export default function App() {
       </section>
 
       {/* 6. GALLERY SECTION */}
-      <section id="gallery" className="py-24 bg-gray-50 overflow-hidden">
+      <section id="gallery" className="py-32 bg-gray-50 relative overflow-hidden">
+        {/* Background Accents */}
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-accent/5 rounded-full blur-[120px] -z-10"></div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-secondary mb-4">Clinic Gallery</h2>
-            <div className="w-24 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Take a look inside our modern facility and see our experts in action.
+            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Visual Journey</span>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-secondary mb-6">Clinic Gallery</h2>
+            <div className="w-24 h-1.5 bg-primary mx-auto rounded-full mb-8"></div>
+            <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+              Experience the professional environment and modern facilities at FitRevive Physiotherapy.
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
             {[
-              "https://images.pexels.com/photos/5473173/pexels-photo-5473173.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/5473185/pexels-photo-5473185.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/5473173/pexels-photo-5473173.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/5473185/pexels-photo-5473185.jpeg?auto=compress&cs=tinysrgb&w=800",
-              "https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=800"
-            ].map((img, i) => (
+              { url: "https://fit-images.vercel.app/exterior.jpeg", title: "Clinic Exterior", span: "lg:col-span-2 lg:row-span-2" },
+              { url: "https://fit-images.vercel.app/inog.jpeg", title: "Inauguration Ceremony", span: "lg:col-span-2 lg:row-span-1" },
+              { url: "https://fit-images.vercel.app/inog2.jpeg", title: "Grand Opening", span: "lg:col-span-1 lg:row-span-1" },
+              { url: "https://fit-images.vercel.app/inog3.jpeg", title: "Clinic Blessing", span: "lg:col-span-1 lg:row-span-1" },
+              { url: "https://fit-images.vercel.app/team.jpeg", title: "Our Dedicated Team", span: "lg:col-span-2 lg:row-span-1" },
+              { url: "https://fit-images.vercel.app/inog4.jpeg", title: "Clinic Interior", span: "lg:col-span-1 lg:row-span-1" },
+              { url: "https://fit-images.vercel.app/trishna.jpeg", title: "Expert Consultation", span: "lg:col-span-1 lg:row-span-1" },
+            ].map((item, i) => (
               <motion.div 
                 key={i} 
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative overflow-hidden rounded-2xl aspect-[4/3] group shadow-sm hover:shadow-xl transition-all"
+                onClick={() => setSelectedGalleryImage(item.url)}
+                className={`relative overflow-hidden rounded-[2rem] group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 ${item.span}`}
               >
                 <img 
-                  src={img} 
-                  alt={`Clinic gallery ${i + 1}`} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  src={item.url} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute inset-0 bg-secondary/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileHover={{ y: 0, opacity: 1 }}
+                    className="flex items-center justify-between"
+                  >
+                    <div>
+                      <p className="text-white font-bold text-lg mb-1">{item.title}</p>
+                      <p className="text-primary text-xs font-medium uppercase tracking-widest">FitRevive Clinic</p>
+                    </div>
+                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg">
+                      <Maximize2 size={20} />
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Subtle Border on Hover */}
+                <div className="absolute inset-0 border-0 group-hover:border-[12px] border-white/10 transition-all duration-500 rounded-[2rem]"></div>
               </motion.div>
             ))}
           </div>
         </div>
+
+        {/* Lightbox Modal */}
+        <AnimatePresence>
+          {selectedGalleryImage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-12 bg-secondary/95 backdrop-blur-md"
+              onClick={() => setSelectedGalleryImage(null)}
+            >
+              <motion.button
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all z-10"
+                onClick={() => setSelectedGalleryImage(null)}
+              >
+                <X size={24} />
+              </motion.button>
+
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative max-w-5xl w-full max-h-full rounded-3xl overflow-hidden shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img 
+                  src={selectedGalleryImage} 
+                  alt="Gallery View" 
+                  className="w-full h-auto max-h-[85vh] object-contain bg-black/20"
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
       {/* 9. CONTACT SECTION */}
