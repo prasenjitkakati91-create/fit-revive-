@@ -18,6 +18,15 @@ const services = [
   "Ergonomic Assessment"
 ];
 
+const timeSlots = [
+  "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", 
+  "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM",
+  "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
+  "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
+  "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM",
+  "07:00 PM", "07:30 PM", "08:00 PM"
+];
+
 export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -227,14 +236,16 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                           <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
                             <Clock size={14} /> Preferred Time
                           </label>
-                          <input 
+                          <select 
                             required
-                            type="time"
                             name="time"
                             value={formData.time}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          />
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm bg-white"
+                          >
+                            <option value="">Select a time</option>
+                            {timeSlots.map(t => <option key={t} value={t}>{t}</option>)}
+                          </select>
                         </div>
                       </div>
 

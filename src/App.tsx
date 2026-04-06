@@ -40,6 +40,7 @@ export default function App() {
     { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/interior.jpeg", category: "Equipment" },
     { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/me2.jpeg", category: "Clinic" },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -267,9 +268,9 @@ export default function App() {
                     Book Appointment
                   </button>
                   <button 
-                    onClick={() => {
+                    onClick={async () => {
+                      await handleAdminLogin();
                       setMobileMenuOpen(false);
-                      handleAdminLogin();
                     }}
                     disabled={isLoggingIn}
                     className="w-full max-w-xs bg-secondary text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2"

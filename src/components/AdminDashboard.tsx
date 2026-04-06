@@ -106,7 +106,7 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] bg-gray-50 flex flex-col"
+      className="fixed inset-0 h-[100dvh] w-full z-[200] bg-gray-50 flex flex-col"
     >
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-4 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-10">
