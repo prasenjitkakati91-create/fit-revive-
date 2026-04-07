@@ -84,7 +84,7 @@ export default function App() {
     } catch (error: any) {
       console.error("Login error:", error);
       if (error.code === 'auth/unauthorized-domain') {
-        alert("Domain not authorized. Please add this website's URL to Firebase Authorized Domains.");
+        alert(`Domain not authorized.\n\nPlease go to Firebase Console -> Authentication -> Settings -> Authorized Domains and add exactly this text:\n\n${window.location.hostname}`);
       } else if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
         alert("Login failed: " + error.message);
       }
@@ -165,7 +165,7 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="https://fit-images.vercel.app/logo-2.jpg" 
+                src="/logo-2.jpg" 
                 alt="FitRevive Logo" 
                 className="w-10 h-10 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
                 referrerPolicy="no-referrer"
@@ -173,6 +173,8 @@ export default function App() {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.nextElementSibling?.classList.remove('hidden');
                 }}
+                loading="eager"
+                fetchPriority="high"
                 decoding="async"
               />
               <div className="hidden w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg">
@@ -337,6 +339,8 @@ export default function App() {
                 index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
               referrerPolicy="no-referrer"
+              loading="eager"
+              fetchPriority={index === 0 ? "high" : "auto"}
             />
           ))}
           {/* Dark gradient overlay for text readability on the left */}
@@ -420,7 +424,8 @@ export default function App() {
                   alt="Professional Physiotherapy Session" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
-                  loading="lazy"
+                  loading="eager"
+                  fetchPriority="high"
                   decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-secondary/30 via-transparent to-transparent"></div>
@@ -431,7 +436,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.5, duration: 0.6 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
                 className="absolute -bottom-6 right-0 md:-right-10 bg-white p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 z-20"
               >
                 <div className="flex items-center gap-4">
@@ -441,7 +446,7 @@ export default function App() {
                       <motion.div 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ delay: 1, type: "spring" }}
+                        transition={{ delay: 0.4, type: "spring" }}
                         className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-slate-900 flex items-center justify-center"
                       >
                         <CheckCircle size={10} strokeWidth={4} />
@@ -457,7 +462,7 @@ export default function App() {
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.8, duration: 0.5 }}
+                      transition={{ delay: 0.3, duration: 0.4 }}
                       className="font-display font-bold text-lg text-secondary leading-none"
                     >
                       Clinical Excellence
@@ -466,7 +471,7 @@ export default function App() {
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 1.1, duration: 0.5 }}
+                      transition={{ delay: 0.4, duration: 0.4 }}
                       className="text-slate-500 font-medium text-xs mt-1"
                     >
                       Certified Specialists
@@ -503,7 +508,7 @@ export default function App() {
                     key={i}
                     variants={{
                       hidden: { opacity: 0, y: 40 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.1 } }
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: i * 0.05 } }
                     }}
                     className="inline-block mr-3"
                   >
@@ -513,7 +518,7 @@ export default function App() {
                 <motion.span
                   variants={{
                     hidden: { opacity: 0, scale: 0.8 },
-                    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.8 } }
+                    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }
                   }}
                   className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 inline-block mr-3"
                 >
@@ -524,7 +529,7 @@ export default function App() {
                     key={i}
                     variants={{
                       hidden: { opacity: 0, y: 40 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 1 + (i * 0.1) } }
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.3 + (i * 0.05) } }
                     }}
                     className="inline-block mr-3"
                   >
@@ -536,7 +541,7 @@ export default function App() {
               <motion.div 
                 variants={{
                   hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 1.5 } }
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.4 } }
                 }}
                 className="space-y-6 text-lg text-slate-600 leading-relaxed mb-12"
               >
@@ -559,7 +564,7 @@ export default function App() {
                     key={i} 
                     variants={{
                       hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 1.8 + (i * 0.1) } }
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.5 + (i * 0.05) } }
                     }}
                     whileHover={{ x: 5 }}
                     className="flex items-start gap-4 group/item cursor-default"
@@ -830,7 +835,8 @@ export default function App() {
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
-                    loading="lazy"
+                    loading="eager"
+                    fetchPriority="high"
                     decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
@@ -850,7 +856,8 @@ export default function App() {
                       alt="Modern Equipment" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
-                      loading="lazy"
+                      loading="eager"
+                      fetchPriority="high"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
@@ -863,7 +870,8 @@ export default function App() {
                       alt="Physiotherapy Session" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
-                      loading="lazy"
+                      loading="eager"
+                      fetchPriority="high"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
@@ -954,7 +962,8 @@ export default function App() {
                       alt={testimonials[testimonialSlide].name} 
                       className="w-24 h-24 rounded-full object-cover border-4 border-primary shadow-xl"
                       referrerPolicy="no-referrer"
-                      loading="lazy"
+                      loading="eager"
+                      fetchPriority="high"
                       decoding="async"
                     />
                     <div className="absolute -bottom-2 -right-2 bg-primary p-2 rounded-full shadow-lg">
@@ -1096,6 +1105,8 @@ export default function App() {
                           src={item.url} 
                           alt={item.category} 
                           className="w-full h-full object-cover"
+                          loading="eager"
+                          fetchPriority="high"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                           {isCenter && (
@@ -1169,6 +1180,8 @@ export default function App() {
                   src={selectedGalleryImage} 
                   alt="Gallery View" 
                   className="w-full h-auto max-h-[85vh] object-contain bg-black/20"
+                  loading="eager"
+                  fetchPriority="high"
                 />
               </motion.div>
             </motion.div>
@@ -1388,7 +1401,7 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="https://fit-images.vercel.app/logo-2.jpg" 
+                  src="/logo-2.jpg" 
                   alt="FitRevive Logo" 
                   className="w-12 h-12 rounded-xl object-cover"
                   referrerPolicy="no-referrer"
@@ -1396,7 +1409,8 @@ export default function App() {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
                   }}
-                  loading="lazy"
+                  loading="eager"
+                  fetchPriority="high"
                   decoding="async"
                 />
                 <div className="hidden w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl">
