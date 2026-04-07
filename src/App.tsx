@@ -28,19 +28,19 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const galleryItems = [
-    { url: "/exterior.jpeg", category: "Clinic" },
-    { url: "/inog.jpeg", category: "Event" },
-    { url: "/interior3.JPG", category: "Equipment" },
-    { url: "/inog2.jpeg", category: "Event" },
-    { url: "/interiora.jpeg", category: "Recovery" },
-    { url: "/inog3.jpeg", category: "Event" },
-    { url: "/team.jpeg", category: "Clinic" },
-    { url: "/inog4.jpeg", category: "Clinic" },
-    { url: "/gust.jpeg", category: "Clinic" },
-    { url: "/image.jpeg", category: "Clinic" },
-    { url: "/interior.jpeg", category: "Equipment" },
-    { url: "/me.jpeg", category: "Clinic" },
-    { url: "/me2.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/exterior.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/inog.jpeg", category: "Event" },
+    { url: "https://fit-images.vercel.app/interior3.JPG", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/inog2.jpeg", category: "Event" },
+    { url: "https://fit-images.vercel.app/interiora.jpeg", category: "Recovery" },
+    { url: "https://fit-images.vercel.app/inog3.jpeg", category: "Event" },
+    { url: "https://fit-images.vercel.app/team.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/inog4.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/gust.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/interior.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/me2.jpeg", category: "Clinic" },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -105,17 +105,17 @@ export default function App() {
     {
       name: "Bikash Sarma",
       text: "The team at FitRevive completely cured my chronic back pain. I can finally play with my kids again without wincing.",
-      img: "/test-1.jpg"
+      img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200"
     },
     {
       name: "Rimpi Das",
       text: "Post-surgery rehab was tough, but my physiotherapist was incredibly patient and motivating. Highly recommended!",
-      img: "/test-2.jpg"
+      img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200"
     },
     {
       name: "Pallabi Kalita",
       text: "Very professional clinic with modern equipment. They explained my injury clearly and gave me great exercises.",
-      img: "/test-3.jpg"
+      img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200"
     }
   ];
 
@@ -126,11 +126,11 @@ export default function App() {
     return () => clearInterval(testimonialTimer);
   }, [testimonials.length]);
   const heroImages = [
-    "/hero-1.jpg",
-    "/hero-2.jpg",
-    "/hero-3.jpg",
-    "/hero-4.jpg",
-    "/hero-5.jpg"
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=75",
+    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
+    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
+    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
+    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75"
   ];
 
   useEffect(() => {
@@ -660,25 +660,25 @@ export default function App() {
                 name: "Dr. Trishnamoni Haloi (P.T.)",
                 role: "Founder cum Consultant Physiotherapist",
                 desc: "Specializes in neurological rehabilitation.",
-                img: "/trishna.jpeg"
+                img: "https://fit-images.vercel.app/trishna.jpeg"
               },
               {
                 name: "Dr. Dorothy Mazumdar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Expert in orthopedic and sports rehabilitation.",
-                img: "/dorothy.jpg"
+                img: "https://fit-images.vercel.app/dorothy.jpg"
               },
               {
                 name: "Dr. Anjuma Akhtar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Dedicated to pediatric physiotherapy and post-surgery recovery programs.",
-                img: "/anjuma.jpg"
+                img: "https://fit-images.vercel.app/anjuma.jpg"
               },
               {
                 name: "Ms. Sumiya anjum",
                 role: "Assistant Physiotherapist cum Clinic Administrator",
                 desc: "Ensures smooth clinic operations and provides excellent patient care assistance.",
-                img: "/sumiya.jpeg"
+                img: "https://fit-images.vercel.app/sumiya.jpeg"
               }
             ].map((member, index) => (
               <motion.div 
@@ -838,10 +838,9 @@ export default function App() {
                 {/* Main large image/video */}
                 <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="/interior.jpeg" 
+                    src="https://fit-images.vercel.app/interior.jpeg" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    referrerPolicy="no-referrer"
                     loading="eager"
                     fetchPriority="high"
                     decoding="async"
@@ -859,10 +858,9 @@ export default function App() {
                   {/* Top right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="/interior3.JPG" 
+                      src="https://fit-images.vercel.app/interior3.JPG" 
                       alt="Modern Equipment" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      referrerPolicy="no-referrer"
                       loading="eager"
                       fetchPriority="high"
                       decoding="async"
@@ -873,10 +871,9 @@ export default function App() {
                   {/* Bottom right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="/interiora.jpeg" 
+                      src="https://fit-images.vercel.app/interiora.jpeg" 
                       alt="Physiotherapy Session" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      referrerPolicy="no-referrer"
                       loading="eager"
                       fetchPriority="high"
                       decoding="async"
