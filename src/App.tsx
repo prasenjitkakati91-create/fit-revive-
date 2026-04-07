@@ -28,19 +28,19 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const galleryItems = [
-    { url: "https://fit-images.vercel.app/exterior.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/inog.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/interior3.JPG", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/inog2.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/interiora.jpeg", category: "Recovery" },
-    { url: "https://fit-images.vercel.app/inog3.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/team.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/inog4.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/gust.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/interior.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/me2.jpeg", category: "Clinic" },
+    { url: "/exterior.jpeg", category: "Clinic" },
+    { url: "/inog.jpeg", category: "Event" },
+    { url: "/interior3.JPG", category: "Equipment" },
+    { url: "/inog2.jpeg", category: "Event" },
+    { url: "/interiora.jpeg", category: "Recovery" },
+    { url: "/inog3.jpeg", category: "Event" },
+    { url: "/team.jpeg", category: "Clinic" },
+    { url: "/inog4.jpeg", category: "Clinic" },
+    { url: "/gust.jpeg", category: "Clinic" },
+    { url: "/image.jpeg", category: "Clinic" },
+    { url: "/interior.jpeg", category: "Equipment" },
+    { url: "/me.jpeg", category: "Clinic" },
+    { url: "/me2.jpeg", category: "Clinic" },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -52,6 +52,14 @@ export default function App() {
   useEffect(() => {
     setGalleryIndex(0);
   }, [activeFilter]);
+
+  useEffect(() => {
+    if (filteredGallery.length === 0) return;
+    const timer = setInterval(() => {
+      setGalleryIndex((prev) => (prev + 1) % filteredGallery.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [filteredGallery.length]);
 
   const ADMIN_EMAIL = "fitrevive.org@gmail.com";
 
@@ -97,17 +105,17 @@ export default function App() {
     {
       name: "Bikash Sarma",
       text: "The team at FitRevive completely cured my chronic back pain. I can finally play with my kids again without wincing.",
-      img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200"
+      img: "/test-1.jpg"
     },
     {
       name: "Rimpi Das",
       text: "Post-surgery rehab was tough, but my physiotherapist was incredibly patient and motivating. Highly recommended!",
-      img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200"
+      img: "/test-2.jpg"
     },
     {
       name: "Pallabi Kalita",
       text: "Very professional clinic with modern equipment. They explained my injury clearly and gave me great exercises.",
-      img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200"
+      img: "/test-3.jpg"
     }
   ];
 
@@ -118,11 +126,11 @@ export default function App() {
     return () => clearInterval(testimonialTimer);
   }, [testimonials.length]);
   const heroImages = [
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=75",
-    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
-    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
-    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
-    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75"
+    "/hero-1.jpg",
+    "/hero-2.jpg",
+    "/hero-3.jpg",
+    "/hero-4.jpg",
+    "/hero-5.jpg"
   ];
 
   useEffect(() => {
@@ -653,25 +661,25 @@ export default function App() {
                 name: "Dr. Trishnamoni Haloi (P.T.)",
                 role: "Founder cum Consultant Physiotherapist",
                 desc: "Specializes in neurological rehabilitation.",
-                img: "https://fit-images.vercel.app/trishna.jpeg"
+                img: "/trishna.jpeg"
               },
               {
                 name: "Dr. Dorothy Mazumdar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Expert in orthopedic and sports rehabilitation.",
-                img: "https://fit-images.vercel.app/dorothy.jpg"
+                img: "/dorothy.jpg"
               },
               {
                 name: "Dr. Anjuma Akhtar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Dedicated to pediatric physiotherapy and post-surgery recovery programs.",
-                img: "https://fit-images.vercel.app/anjuma.jpg"
+                img: "/anjuma.jpg"
               },
               {
                 name: "Ms. Sumiya anjum",
                 role: "Assistant Physiotherapist cum Clinic Administrator",
                 desc: "Ensures smooth clinic operations and provides excellent patient care assistance.",
-                img: "https://fit-images.vercel.app/sumiya.jpeg"
+                img: "/sumiya.jpeg"
               }
             ].map((member, index) => (
               <motion.div 
@@ -831,7 +839,7 @@ export default function App() {
                 {/* Main large image/video */}
                 <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="https://fit-images.vercel.app/interior.jpeg" 
+                    src="/interior.jpeg" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
@@ -852,7 +860,7 @@ export default function App() {
                   {/* Top right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="https://fit-images.vercel.app/interior3.JPG" 
+                      src="/interior3.JPG" 
                       alt="Modern Equipment" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
@@ -866,7 +874,7 @@ export default function App() {
                   {/* Bottom right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="https://fit-images.vercel.app/interiora.jpeg" 
+                      src="/interiora.jpeg" 
                       alt="Physiotherapy Session" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       referrerPolicy="no-referrer"
@@ -1060,8 +1068,8 @@ export default function App() {
             </div>
 
             {/* Carousel */}
-            <div className="relative h-[300px] md:h-[450px] flex items-center justify-center overflow-hidden mb-8" style={{ perspective: '1000px' }}>
-              <AnimatePresence>
+            <div className="relative h-[300px] md:h-[500px] flex items-center justify-center overflow-hidden mb-12" style={{ perspective: '1200px' }}>
+              <AnimatePresence mode="popLayout">
                 {filteredGallery.length > 0 ? (
                   filteredGallery.map((item, index) => {
                     let diff = index - galleryIndex;
@@ -1078,42 +1086,53 @@ export default function App() {
                     const isFarEdge = Math.abs(diff) === 2;
 
                     // Responsive offset
-                    const xOffset = typeof window !== 'undefined' && window.innerWidth < 768 ? 120 : 260;
+                    const xOffset = typeof window !== 'undefined' && window.innerWidth < 768 ? 140 : 320;
 
                     return (
                       <motion.div
                         key={item.url}
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.5, x: diff > 0 ? 500 : -500 }}
                         animate={{ 
                           x: diff * xOffset,
-                          scale: isCenter ? 1.1 : isEdge ? 0.85 : 0.65,
-                          opacity: isCenter ? 1 : isEdge ? 0.6 : isFarEdge ? 0.2 : 0,
+                          scale: isCenter ? 1.15 : isEdge ? 0.85 : 0.6,
+                          opacity: isCenter ? 1 : isEdge ? 0.5 : isFarEdge ? 0.15 : 0,
                           zIndex: 50 - Math.abs(diff),
+                          rotateY: diff * -15,
                         }}
-                        exit={{ opacity: 0, scale: 0.5 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className={`absolute w-[200px] h-[260px] md:w-[320px] md:h-[400px] rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
+                        exit={{ opacity: 0, scale: 0.5, x: diff > 0 ? -500 : 500 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 260, 
+                          damping: 26,
+                          opacity: { duration: 0.3 }
+                        }}
+                        className={`absolute w-[220px] h-[280px] md:w-[380px] md:h-[480px] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
                         onClick={() => {
                           if (isCenter) setSelectedGalleryImage(item.url);
                           else setGalleryIndex(index);
                         }}
                         style={{
-                          pointerEvents: Math.abs(diff) > 2 ? 'none' : 'auto'
+                          pointerEvents: Math.abs(diff) > 2 ? 'none' : 'auto',
+                          transformStyle: 'preserve-3d'
                         }}
                       >
                         <img 
                           src={item.url} 
                           alt={item.category} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                           loading="eager"
                           fetchPriority="high"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          {isCenter && (
-                            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                              <Maximize2 size={24} />
+                        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-500 ${isCenter ? 'opacity-100' : 'opacity-0'}`}>
+                          <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                              <span className="text-xs font-bold text-primary uppercase tracking-widest mb-1 block">{item.category}</span>
+                              <h4 className="text-white font-bold text-lg">FitRevive Moments</h4>
                             </div>
-                          )}
+                            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                              <Maximize2 size={20} />
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     );
@@ -1123,7 +1142,7 @@ export default function App() {
                     initial={{ opacity: 0 }} 
                     animate={{ opacity: 1 }} 
                     exit={{ opacity: 0 }}
-                    className="text-slate-400"
+                    className="text-slate-400 font-medium"
                   >
                     No images found for this category.
                   </motion.div>
@@ -1131,20 +1150,34 @@ export default function App() {
               </AnimatePresence>
             </div>
 
-            {/* Controls */}
-            <div className="flex justify-center gap-4">
-              <button 
-                onClick={() => setGalleryIndex(prev => (prev - 1 + filteredGallery.length) % filteredGallery.length)}
-                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-secondary transition-colors shadow-sm"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button 
-                onClick={() => setGalleryIndex(prev => (prev + 1) % filteredGallery.length)}
-                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-secondary transition-colors shadow-sm"
-              >
-                <ChevronRight size={20} />
-              </button>
+            {/* Controls & Indicators */}
+            <div className="flex flex-col items-center gap-8">
+              <div className="flex justify-center gap-4">
+                <button 
+                  onClick={() => setGalleryIndex(prev => (prev - 1 + filteredGallery.length) % filteredGallery.length)}
+                  className="w-12 h-12 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-lg active:scale-90"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+                
+                {/* Dots */}
+                <div className="flex items-center gap-2 px-4">
+                  {filteredGallery.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setGalleryIndex(i)}
+                      className={`h-2 transition-all duration-500 rounded-full ${galleryIndex === i ? 'w-8 bg-primary' : 'w-2 bg-slate-200 hover:bg-slate-300'}`}
+                    />
+                  ))}
+                </div>
+
+                <button 
+                  onClick={() => setGalleryIndex(prev => (prev + 1) % filteredGallery.length)}
+                  className="w-12 h-12 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-lg active:scale-90"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              </div>
             </div>
 
           </div>
