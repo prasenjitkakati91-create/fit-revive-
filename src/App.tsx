@@ -4,7 +4,9 @@ import {
   Menu, X, ChevronLeft, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
   Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
-  Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2
+  Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
+  Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
+  Target, Microscope, HeartHandshake
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
@@ -754,37 +756,37 @@ export default function App() {
               {
                 title: "Back & Neck Pain",
                 desc: "Targeted therapy to relieve chronic back and neck pain, improving posture and mobility through manual techniques.",
-                icon: <Activity size={28} />,
+                icon: <PersonStanding size={28} />,
                 gradient: "from-blue-500 to-cyan-400"
               },
               {
                 title: "Sports Injuries",
                 desc: "Intensive recovery protocols designed for athletes to safely return to peak performance and prevent future injuries.",
-                icon: <Activity size={28} />,
+                icon: <Dumbbell size={28} />,
                 gradient: "from-indigo-500 to-blue-400"
               },
               {
                 title: "Post-Surgery Rehab",
                 desc: "Guided recovery following surgeries to ensure proper healing, reduce scar tissue, and regain full range of motion.",
-                icon: <Heart size={28} />,
+                icon: <Bandage size={28} />,
                 gradient: "from-rose-500 to-pink-400"
               },
               {
                 title: "Joint Pain & Arthritis",
                 desc: "Specialized care to manage joint pain, reduce inflammation, and improve joint function for better quality of life.",
-                icon: <Shield size={28} />,
+                icon: <Bone size={28} />,
                 gradient: "from-emerald-500 to-teal-400"
               },
               {
                 title: "Neurological Rehab",
                 desc: "Dedicated therapy programs for stroke, Parkinson's, and other neurological conditions to improve motor control.",
-                icon: <Activity size={28} />,
+                icon: <Brain size={28} />,
                 gradient: "from-amber-500 to-orange-400"
               },
               {
                 title: "Pediatric Care",
                 desc: "Gentle and engaging therapy for children to address developmental delays, congenital issues, and childhood injuries.",
-                icon: <Shield size={28} />,
+                icon: <Baby size={28} />,
                 gradient: "from-purple-500 to-violet-400"
               }
             ].map((service, index) => (
@@ -795,20 +797,23 @@ export default function App() {
                 whileHover={{ y: -10 }}
                 whileTap={{ scale: 0.98, y: -5 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-white p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 hover:border-transparent flex flex-col items-start cursor-pointer"
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="relative group h-full cursor-pointer"
               >
-                <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                  {service.icon}
+                <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95`}></div>
+                <div className="bg-slate-50 hover:bg-white p-8 md:p-10 rounded-3xl border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col items-start">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                    {service.icon}
+                  </div>
+                  <h3 className="font-display text-2xl font-bold text-secondary mb-4">{service.title}</h3>
+                  <p className="text-slate-500 mb-8 leading-relaxed flex-1">{service.desc}</p>
+                  <button 
+                    onClick={() => setIsFormOpen(true)}
+                    className="text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all mt-auto"
+                  >
+                    Book Session <ArrowRight size={18} />
+                  </button>
                 </div>
-                <h3 className="font-display text-2xl font-bold text-secondary mb-4">{service.title}</h3>
-                <p className="text-slate-500 mb-8 leading-relaxed flex-1">{service.desc}</p>
-                <button 
-                  onClick={() => setIsFormOpen(true)}
-                  className="text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all"
-                >
-                  Book Session <ArrowRight size={18} />
-                </button>
               </motion.div>
             ))}
           </div>
@@ -907,26 +912,30 @@ export default function App() {
 
               <div className="grid gap-6">
                 {[
-                  { title: "Experienced Specialists", desc: "Our team consists of highly qualified and certified physiotherapists.", icon: <Shield size={24} />, color: "from-blue-500 to-cyan-500" },
-                  { title: "Personalized Treatment", desc: "Every plan is custom-tailored to your specific needs and goals.", icon: <Activity size={24} />, color: "from-primary to-blue-600" },
-                  { title: "Modern Technology", desc: "We utilize the latest equipment and evidence-based techniques.", icon: <Activity size={24} />, color: "from-indigo-500 to-purple-600" },
-                  { title: "Compassionate Care", desc: "A friendly, supportive environment that focuses on your well-being.", icon: <Heart size={24} />, color: "from-rose-500 to-pink-600" }
+                  { title: "Experienced Specialists", desc: "Our team consists of highly qualified and certified physiotherapists.", icon: <Award size={24} />, color: "from-blue-500 to-cyan-500" },
+                  { title: "Personalized Treatment", desc: "Every plan is custom-tailored to your specific needs and goals.", icon: <Target size={24} />, color: "from-primary to-blue-600" },
+                  { title: "Modern Technology", desc: "We utilize the latest equipment and evidence-based techniques.", icon: <Microscope size={24} />, color: "from-indigo-500 to-purple-600" },
+                  { title: "Compassionate Care", desc: "A friendly, supportive environment that focuses on your well-being.", icon: <HeartHandshake size={24} />, color: "from-rose-500 to-pink-600" }
                 ].map((item, i) => (
                   <motion.div 
                     key={i} 
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -10 }}
+                    whileTap={{ scale: 0.98, y: -5 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 hover:bg-white border border-transparent hover:border-slate-100 hover:shadow-xl transition-all duration-500 group cursor-pointer"
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                    className="relative group cursor-pointer"
                   >
-                    <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-display text-xl font-bold text-secondary mb-1">{item.title}</h3>
-                      <p className="text-slate-500 text-sm">{item.desc}</p>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-30 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95`}></div>
+                    <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 hover:bg-white border border-slate-100 hover:border-transparent hover:shadow-xl transition-all duration-500 h-full">
+                      <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                        {item.icon}
+                      </div>
+                      <div>
+                        <h3 className="font-display text-xl font-bold text-secondary mb-1">{item.title}</h3>
+                        <p className="text-slate-500 text-sm">{item.desc}</p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -1032,39 +1041,50 @@ export default function App() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Main Card Container */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 p-6 md:p-12">
+          <div className="bg-slate-900 rounded-[3rem] shadow-2xl border border-slate-800 p-6 md:p-12 relative overflow-hidden">
             
+            {/* Ambient Glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+
             {/* Header */}
-            <div className="text-center mb-10">
-              <span className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-3 block">Gallery</span>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-secondary mb-4">Our Visual Journey</h2>
-              <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto">
+            <div className="text-center mb-12 relative z-10">
+              <span className="text-xs font-bold tracking-widest uppercase text-primary mb-3 block">Gallery</span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                Our Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-400">Journey</span>
+              </h2>
+              <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
                 See real patient recovery moments, treatments, and clinic highlights
               </p>
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-12">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-16 relative z-10">
               {filters.map(filter => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
+                  className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
                     activeFilter === filter 
-                      ? 'bg-secondary text-white shadow-md' 
-                      : 'bg-transparent text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                      ? 'bg-primary text-white shadow-[0_0_20px_rgba(14,165,233,0.4)]' 
+                      : 'bg-slate-800/50 text-slate-300 border border-slate-700 hover:border-slate-500 hover:bg-slate-800'
                   }`}
                 >
                   {filter}
                 </button>
               ))}
-              <button className="px-4 py-2 rounded-full text-xs md:text-sm font-medium text-secondary border border-slate-200 hover:bg-slate-50 flex items-center gap-1 transition-all">
-                View More <ArrowRight size={14} />
-              </button>
             </div>
 
             {/* Carousel */}
-            <div className="relative h-[300px] md:h-[500px] flex items-center justify-center overflow-hidden mb-12" style={{ perspective: '1200px' }}>
+            <div className="relative h-[400px] md:h-[600px] flex items-center justify-center mb-12 z-10" style={{ perspective: '1200px' }}>
+              
+              {/* Left Arrow (Floating) */}
+              <button 
+                onClick={() => setGalleryIndex(prev => (prev - 1 + filteredGallery.length) % filteredGallery.length)}
+                className="absolute left-2 md:left-8 z-[60] w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 md:bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all shadow-xl active:scale-90"
+              >
+                <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+              </button>
+
               <AnimatePresence mode="popLayout">
                 {filteredGallery.length > 0 ? (
                   filteredGallery.map((item, index) => {
@@ -1082,7 +1102,7 @@ export default function App() {
                     const isFarEdge = Math.abs(diff) === 2;
 
                     // Responsive offset
-                    const xOffset = typeof window !== 'undefined' && window.innerWidth < 768 ? 140 : 320;
+                    const xOffset = typeof window !== 'undefined' && window.innerWidth < 768 ? 140 : 340;
 
                     return (
                       <motion.div
@@ -1090,19 +1110,19 @@ export default function App() {
                         initial={{ opacity: 0, scale: 0.5, x: diff > 0 ? 500 : -500 }}
                         animate={{ 
                           x: diff * xOffset,
-                          scale: isCenter ? 1.15 : isEdge ? 0.85 : 0.6,
-                          opacity: isCenter ? 1 : isEdge ? 0.5 : isFarEdge ? 0.15 : 0,
+                          scale: isCenter ? 1.2 : isEdge ? 0.85 : 0.6,
+                          opacity: isCenter ? 1 : isEdge ? 0.4 : isFarEdge ? 0.1 : 0,
                           zIndex: 50 - Math.abs(diff),
-                          rotateY: diff * -15,
+                          rotateY: diff * -20,
                         }}
                         exit={{ opacity: 0, scale: 0.5, x: diff > 0 ? -500 : 500 }}
                         transition={{ 
                           type: "spring", 
-                          stiffness: 260, 
-                          damping: 26,
-                          opacity: { duration: 0.3 }
+                          stiffness: 300, 
+                          damping: 30,
+                          opacity: { duration: 0.4 }
                         }}
-                        className={`absolute w-[220px] h-[280px] md:w-[380px] md:h-[480px] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
+                        className={`absolute w-[240px] h-[320px] md:w-[400px] md:h-[520px] rounded-[2rem] md:rounded-[3rem] overflow-visible ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
                         onClick={() => {
                           if (isCenter) setSelectedGalleryImage(item.url);
                           else setGalleryIndex(index);
@@ -1112,21 +1132,24 @@ export default function App() {
                           transformStyle: 'preserve-3d'
                         }}
                       >
-                        <img 
-                          src={item.url} 
-                          alt={item.category} 
-                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                          loading="eager"
-                          fetchPriority="high"
-                        />
-                        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-500 ${isCenter ? 'opacity-100' : 'opacity-0'}`}>
-                          <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
-                            <div>
-                              <span className="text-xs font-bold text-primary uppercase tracking-widest mb-1 block">{item.category}</span>
-                              <h4 className="text-white font-bold text-lg">FitRevive Moments</h4>
-                            </div>
-                            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                              <Maximize2 size={20} />
+                        {/* Image Container with Glow */}
+                        <div className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}>
+                          <img 
+                            src={item.url} 
+                            alt={item.category} 
+                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                            loading="eager"
+                            fetchPriority="high"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+                              <div>
+                                <span className="text-xs font-bold text-primary uppercase tracking-widest mb-2 block">{item.category}</span>
+                                <h4 className="text-white font-bold text-xl">FitRevive Moments</h4>
+                              </div>
+                              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+                                <Maximize2 size={20} />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1144,35 +1167,29 @@ export default function App() {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Right Arrow (Floating) */}
+              <button 
+                onClick={() => setGalleryIndex(prev => (prev + 1) % filteredGallery.length)}
+                className="absolute right-2 md:right-8 z-[60] w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 md:bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all shadow-xl active:scale-90"
+              >
+                <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+              </button>
             </div>
 
             {/* Controls & Indicators */}
-            <div className="flex flex-col items-center gap-8">
-              <div className="flex justify-center gap-4">
-                <button 
-                  onClick={() => setGalleryIndex(prev => (prev - 1 + filteredGallery.length) % filteredGallery.length)}
-                  className="w-12 h-12 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-lg active:scale-90"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                
+            <div className="flex flex-col items-center gap-8 relative z-10">
+              <div className="flex justify-center gap-6 items-center">
                 {/* Dots */}
-                <div className="flex items-center gap-2 px-4">
+                <div className="flex items-center gap-3 px-4 bg-slate-800/50 backdrop-blur-sm py-3 rounded-full border border-slate-700/50">
                   {filteredGallery.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setGalleryIndex(i)}
-                      className={`h-2 transition-all duration-500 rounded-full ${galleryIndex === i ? 'w-8 bg-primary' : 'w-2 bg-slate-200 hover:bg-slate-300'}`}
+                      className={`h-2 transition-all duration-500 rounded-full ${galleryIndex === i ? 'w-8 bg-primary shadow-[0_0_10px_rgba(14,165,233,0.5)]' : 'w-2 bg-slate-600 hover:bg-slate-400'}`}
                     />
                   ))}
                 </div>
-
-                <button 
-                  onClick={() => setGalleryIndex(prev => (prev + 1) % filteredGallery.length)}
-                  className="w-12 h-12 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-lg active:scale-90"
-                >
-                  <ChevronRight size={24} />
-                </button>
               </div>
             </div>
 
