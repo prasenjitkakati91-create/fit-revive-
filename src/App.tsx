@@ -6,7 +6,7 @@ import {
   Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
   Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
-  Target, Microscope, HeartHandshake
+  Target, Microscope, HeartHandshake, Quote, BadgeCheck
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
@@ -18,7 +18,6 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [testimonialSlide, setTestimonialSlide] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [legalType, setLegalType] = useState<'privacy' | 'terms'>('privacy');
@@ -121,12 +120,6 @@ export default function App() {
     }
   ];
 
-  useEffect(() => {
-    const testimonialTimer = setInterval(() => {
-      setTestimonialSlide((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(testimonialTimer);
-  }, [testimonials.length]);
   const heroImages = [
     "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=75",
     "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
@@ -157,6 +150,27 @@ export default function App() {
       document.body.style.overflow = 'unset';
     }
   }, [mobileMenuOpen]);
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href.replace('#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        const headerOffset = 80; // Approximate height of the fixed navbar
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+    
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    }
+  };
 
   const navLinks = [
     { name: 'Home', href: '#home' },
@@ -200,6 +214,7 @@ export default function App() {
                 <motion.a 
                   key={link.name} 
                   href={link.href}
+                  onClick={(e) => scrollToSection(e, link.href)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={`text-sm xl:text-base font-medium transition-colors hover:text-accent ${isScrolled ? 'text-gray-600' : 'text-white drop-shadow-sm'}`}
@@ -266,7 +281,7 @@ export default function App() {
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.08, type: 'spring' }}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(e) => scrollToSection(e, link.href)}
                     className="group relative text-3xl md:text-4xl font-display font-bold text-secondary hover:text-primary transition-all duration-300 text-left w-full block"
                   >
                     <span className="relative z-10">{link.name}</span>
@@ -958,73 +973,50 @@ export default function App() {
             Client Testimonials
           </motion.h2>
           
-          <div className="relative max-w-4xl mx-auto mb-16">
-            <div className="overflow-hidden relative min-h-[400px] md:min-h-[350px] flex items-center">
-              <AnimatePresence mode="wait">
-                <motion.div 
-                  key={testimonialSlide}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.5 }}
-                  className="w-full bg-white/10 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-white/10 flex flex-col items-center text-center shadow-2xl"
-                >
-                  <div className="relative mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 max-w-6xl mx-auto mb-16">
+            {testimonials.map((testimonial, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl relative group hover:bg-white/10 transition-all duration-500 flex flex-col text-left shadow-2xl hover:-translate-y-2"
+              >
+                {/* Quote Icon Background */}
+                <div className="absolute top-6 right-6 text-white/5 group-hover:text-white/10 transition-colors duration-500">
+                  <Quote size={80} />
+                </div>
+
+                <div className="flex gap-1 mb-6 text-yellow-400 relative z-10">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={18} fill="currentColor" />
+                  ))}
+                </div>
+
+                <p className="text-lg text-gray-200 italic mb-8 flex-grow relative z-10 font-light leading-relaxed">
+                  "{testimonial.text}"
+                </p>
+
+                <div className="flex items-center gap-4 relative z-10 mt-auto pt-6 border-t border-white/10">
+                  <div className="relative">
                     <img 
-                      src={testimonials[testimonialSlide].img} 
-                      alt={testimonials[testimonialSlide].name} 
-                      className="w-24 h-24 rounded-full object-cover border-4 border-primary shadow-xl"
+                      src={testimonial.img} 
+                      alt={testimonial.name} 
+                      className="w-14 h-14 rounded-full object-cover border-2 border-primary"
                       referrerPolicy="no-referrer"
-                      loading="eager"
-                      fetchPriority="high"
-                      decoding="async"
+                      loading="lazy"
                     />
-                    <div className="absolute -bottom-2 -right-2 bg-primary p-2 rounded-full shadow-lg">
-                      <Star size={16} fill="white" className="text-white" />
+                    <div className="absolute -bottom-1 -right-1 bg-white rounded-full flex items-center justify-center shadow-sm">
+                      <BadgeCheck size={20} className="text-blue-500" fill="currentColor" stroke="white" />
                     </div>
                   </div>
-                  
-                  <div className="flex gap-1 mb-6 text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={20} fill="currentColor" />
-                    ))}
-                  </div>
-                  
-                  <p className="text-xl md:text-2xl text-gray-100 italic mb-8 leading-relaxed font-light">
-                    "{testimonials[testimonialSlide].text}"
-                  </p>
-                  
                   <div>
-                    <h5 className="font-bold text-xl text-white mb-1">{testimonials[testimonialSlide].name}</h5>
-                    <p className="text-primary font-medium text-sm uppercase tracking-widest">Happy Patient</p>
+                    <h5 className="font-bold text-white">{testimonial.name}</h5>
+                    <p className="text-primary text-xs uppercase tracking-wider font-semibold">Verified Patient</p>
                   </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Navigation Arrows */}
-            <button 
-              onClick={() => setTestimonialSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 bg-white/10 hover:bg-primary text-white p-3 rounded-full backdrop-blur-md transition-all border border-white/10 z-10 hidden sm:flex"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button 
-              onClick={() => setTestimonialSlide((prev) => (prev + 1) % testimonials.length)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 bg-white/10 hover:bg-primary text-white p-3 rounded-full backdrop-blur-md transition-all border border-white/10 z-10 hidden sm:flex"
-            >
-              <ChevronRight size={24} />
-            </button>
-          </div>
-
-          {/* Indicators */}
-          <div className="flex justify-center gap-3 mb-16">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setTestimonialSlide(i)}
-                className={`h-2 transition-all duration-300 rounded-full ${testimonialSlide === i ? 'w-8 bg-primary' : 'w-2 bg-white/30 hover:bg-white/50'}`}
-              />
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -1491,7 +1483,11 @@ export default function App() {
               <ul className="space-y-4">
                 {navLinks.map((link) => (
                   <li key={link.name}>
-                    <a href={link.href} className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                    <a 
+                      href={link.href} 
+                      onClick={(e) => scrollToSection(e, link.href)}
+                      className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group"
+                    >
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
                       {link.name}
                     </a>
@@ -1513,7 +1509,11 @@ export default function App() {
                   "Post-Surgical Care"
                 ].map((service, idx) => (
                   <li key={idx}>
-                    <a href="#services" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                    <a 
+                      href="#services" 
+                      onClick={(e) => scrollToSection(e, '#services')}
+                      className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group"
+                    >
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
                       {service}
                     </a>
