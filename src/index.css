@@ -20,7 +20,7 @@ html, body {
 body {
   font-family: "Inter", sans-serif;
   color: #333;
-  background-color: #f9fafb;
+  background-color: #0f172a; /* Match footer color to prevent white line at bottom */
 }
 
 @keyframes fadeInUp {
