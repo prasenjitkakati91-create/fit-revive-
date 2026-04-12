@@ -40,18 +40,19 @@ export default function App() {
     { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/me2.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/interior.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/interior2.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/interior3.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/equipment.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment2.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment3.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment4.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment5.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment6.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment7.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment8.jpeg", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/equipment9.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/12.webp", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/14.webp", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/1.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/2.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/3.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/4.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/5.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/6.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/7.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/8.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/9.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/10.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/11.webp", category: "Equipment" },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -868,7 +869,7 @@ export default function App() {
                 {/* Main large image/video */}
                 <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="https://fit-images.vercel.app/interior3.jpeg" 
+                    src="https://fit-images.vercel.app/12.webp" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="eager"
@@ -1135,13 +1136,14 @@ export default function App() {
                         }}
                       >
                         {/* Image Container with Glow */}
-                        <div className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}>
+                        <div className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 bg-slate-800 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}>
                           <img 
                             src={item.url} 
                             alt={item.category} 
                             className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                            loading="eager"
-                            fetchPriority="high"
+                            loading={Math.abs(diff) <= 2 ? "eager" : "lazy"}
+                            fetchPriority={isCenter ? "high" : Math.abs(diff) <= 1 ? "auto" : "low"}
+                            decoding="async"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
                             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
