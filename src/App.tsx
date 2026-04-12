@@ -61,6 +61,19 @@ export default function App() {
     ? galleryItems 
     : galleryItems.filter(item => item.category === activeFilter);
 
+  // Preload images for faster gallery viewing
+  useEffect(() => {
+    const preloadImages = () => {
+      filteredGallery.forEach((item) => {
+        const img = new Image();
+        img.src = item.url;
+      });
+    };
+    // Delay preloading slightly to prioritize initial page load
+    const timeoutId = setTimeout(preloadImages, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [filteredGallery]);
+
   useEffect(() => {
     setGalleryIndex(0);
   }, [activeFilter]);
@@ -1137,15 +1150,23 @@ export default function App() {
                       >
                         {/* Image Container with Glow */}
                         <div className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 bg-slate-800 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}>
-                          <img 
-                            src={item.url} 
-                            alt={item.category} 
-                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                            loading={Math.abs(diff) <= 2 ? "eager" : "lazy"}
-                            fetchPriority={isCenter ? "high" : Math.abs(diff) <= 1 ? "auto" : "low"}
-                            decoding="async"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
+                          {/* Loading Skeleton */}
+                          <div className="absolute inset-0 bg-slate-800 animate-pulse"></div>
+                          
+                          {Math.abs(diff) <= 3 && (
+                            <img 
+                              src={item.url} 
+                              alt={item.category} 
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110 z-10"
+                              loading={Math.abs(diff) <= 1 ? "eager" : "lazy"}
+                              fetchPriority={isCenter ? "high" : "low"}
+                              decoding="async"
+                              onLoad={(e) => {
+                                (e.target as HTMLImageElement).previousElementSibling?.classList.add('hidden');
+                              }}
+                            />
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 z-20">
                             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
                               <div>
                                 <span className="text-xs font-bold text-primary uppercase tracking-widest mb-2 block">{item.category}</span>
