@@ -31,7 +31,6 @@ export default function App() {
   const galleryItems = [
     { url: "https://fit-images.vercel.app/exterior.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/inog.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/interior3.JPG", category: "Equipment" },
     { url: "https://fit-images.vercel.app/inog2.jpeg", category: "Event" },
     { url: "https://fit-images.vercel.app/interiora.jpeg", category: "Recovery" },
     { url: "https://fit-images.vercel.app/inog3.jpeg", category: "Event" },
@@ -39,9 +38,20 @@ export default function App() {
     { url: "https://fit-images.vercel.app/inog4.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/gust.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/interior.jpeg", category: "Equipment" },
     { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
     { url: "https://fit-images.vercel.app/me2.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/interior.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/interior2.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/interior3.jpeg", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/equipment.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment2.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment3.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment4.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment5.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment6.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment7.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment8.jpeg", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/equipment9.jpeg", category: "Equipment" },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -858,7 +868,7 @@ export default function App() {
                 {/* Main large image/video */}
                 <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="https://fit-images.vercel.app/interior.jpeg" 
+                    src="https://fit-images.vercel.app/interior3.jpeg" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="eager"
