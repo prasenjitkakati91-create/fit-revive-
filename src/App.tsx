@@ -214,7 +214,7 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="https://fit-images.vercel.app/logo-2.jpg?v=2" 
+                src="/logo.jpg" 
                 alt="FitRevive Logo" 
                 className="w-10 h-10 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
                 onError={(e) => {
@@ -1476,7 +1476,7 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="https://fit-images.vercel.app/logo-2.jpg?v=2" 
+                  src="/logo.jpg" 
                   alt="FitRevive Logo" 
                   className="w-12 h-12 rounded-xl object-cover"
                   loading="lazy"
