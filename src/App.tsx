@@ -29,30 +29,31 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const galleryItems = [
-    { url: "https://fit-images.vercel.app/exterior.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/inog.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/inog2.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/interiora.jpeg", category: "Recovery" },
-    { url: "https://fit-images.vercel.app/inog3.jpeg", category: "Event" },
-    { url: "https://fit-images.vercel.app/team.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/inog4.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/gust.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/image.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/me.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/me2.jpeg", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/12.webp", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/14.webp", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/1.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/2.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/3.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/4.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/5.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/6.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/7.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/8.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/9.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/10.webp", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/11.webp", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/exterior.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/inog.jpeg?v=2", category: "Event" },
+    { url: "https://fit-images.vercel.app/inog2.jpeg?v=2", category: "Event" },
+    { url: "https://fit-images.vercel.app/interiora.jpeg?v=2", category: "Recovery" },
+    { url: "https://fit-images.vercel.app/inog3.jpeg?v=2", category: "Event" },
+    { url: "https://fit-images.vercel.app/team.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/inog4.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/gust.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/image.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/me.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/me2.jpeg?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/12.webp?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/14.webp?v=2", category: "Clinic" },
+    { url: "https://fit-images.vercel.app/1.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/2.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/3.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/4.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/5.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/6.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/7.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/8.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/9.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/10.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/11.webp?v=2", category: "Equipment" },
+    { url: "https://fit-images.vercel.app/13.webp?v=2", category: "Equipment" },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -213,7 +214,7 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="https://fit-images.vercel.app/logo-2.jpg" 
+                src="https://fit-images.vercel.app/logo-2.jpg?v=2" 
                 alt="FitRevive Logo" 
                 className="w-10 h-10 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
                 onError={(e) => {
@@ -387,8 +388,9 @@ export default function App() {
                 index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
               referrerPolicy="no-referrer"
-              loading="eager"
-              fetchPriority={index === 0 ? "high" : "auto"}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "low"}
+              decoding="async"
             />
           ))}
           {/* Dark gradient overlay for text readability on the left */}
@@ -472,8 +474,8 @@ export default function App() {
                   alt="Professional Physiotherapy Session" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
-                  loading="eager"
-                  fetchPriority="high"
+                  loading="lazy"
+                  fetchPriority="low"
                   decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-secondary/30 via-transparent to-transparent"></div>
@@ -701,25 +703,25 @@ export default function App() {
                 name: "Dr. Trishnamoni Haloi (P.T.)",
                 role: "Founder cum Consultant Physiotherapist",
                 desc: "Specializes in neurological rehabilitation.",
-                img: "https://fit-images.vercel.app/trishna.jpeg"
+                img: "https://fit-images.vercel.app/trishna.jpeg?v=2"
               },
               {
                 name: "Dr. Dorothy Mazumdar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Expert in orthopedic and sports rehabilitation.",
-                img: "https://fit-images.vercel.app/dorothy.jpg"
+                img: "https://fit-images.vercel.app/dorothy.jpg?v=2"
               },
               {
                 name: "Dr. Anjuma Akhtar (P.T.)",
                 role: "Consultant Physiotherapist",
                 desc: "Dedicated to pediatric physiotherapy and post-surgery recovery programs.",
-                img: "https://fit-images.vercel.app/anjuma.jpg"
+                img: "https://fit-images.vercel.app/anjuma.jpg?v=2"
               },
               {
                 name: "Ms. Sumiya anjum",
                 role: "Assistant Physiotherapist cum Clinic Administrator",
                 desc: "Ensures smooth clinic operations and provides excellent patient care assistance.",
-                img: "https://fit-images.vercel.app/sumiya.jpeg"
+                img: "https://fit-images.vercel.app/sumiya.jpeg?v=2"
               }
             ].map((member, index) => (
               <motion.div 
@@ -738,8 +740,8 @@ export default function App() {
                     alt={member.name} 
                     className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
-                    loading="eager"
-                    fetchPriority="high"
+                    loading="lazy"
+                    fetchPriority="low"
                     decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -882,11 +884,11 @@ export default function App() {
                 {/* Main large image/video */}
                 <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
-                    src="https://fit-images.vercel.app/12.webp" 
+                    src="https://fit-images.vercel.app/12.webp?v=2" 
                     alt="Modern Physiotherapy Clinic" 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="eager"
-                    fetchPriority="high"
+                    loading="lazy"
+                    fetchPriority="low"
                     decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
@@ -902,11 +904,11 @@ export default function App() {
                   {/* Top right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="https://fit-images.vercel.app/interior3.JPG" 
+                      src="https://fit-images.vercel.app/interior3.JPG?v=2" 
                       alt="Modern Equipment" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading="eager"
-                      fetchPriority="high"
+                      loading="lazy"
+                      fetchPriority="low"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
@@ -915,11 +917,11 @@ export default function App() {
                   {/* Bottom right image */}
                   <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
-                      src="https://fit-images.vercel.app/interiora.jpeg" 
+                      src="https://fit-images.vercel.app/interiora.jpeg?v=2" 
                       alt="Physiotherapy Session" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading="eager"
-                      fetchPriority="high"
+                      loading="lazy"
+                      fetchPriority="low"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-300"></div>
@@ -1030,6 +1032,8 @@ export default function App() {
                       className="w-14 h-14 rounded-full object-cover border-2 border-primary"
                       referrerPolicy="no-referrer"
                       loading="lazy"
+                      fetchPriority="low"
+                      decoding="async"
                     />
                     <div className="absolute -bottom-1 -right-1 bg-white rounded-full flex items-center justify-center shadow-sm">
                       <BadgeCheck size={20} className="text-blue-500" fill="currentColor" stroke="white" />
@@ -1472,16 +1476,16 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="https://fit-images.vercel.app/logo-2.jpg" 
+                  src="https://fit-images.vercel.app/logo-2.jpg?v=2" 
                   alt="FitRevive Logo" 
                   className="w-12 h-12 rounded-xl object-cover"
+                  loading="lazy"
+                  fetchPriority="low"
+                  decoding="async"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
                   }}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
                 />
                 <div className="hidden w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl">
                   F
