@@ -13,7 +13,6 @@ import AdminDashboard from './components/AdminDashboard';
 import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
-import logo from './assets/logo.jpg';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -214,14 +213,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <img 
-                src={logo} 
-                alt="FitRevive Logo" 
-                className="h-10 w-auto rounded-lg object-contain shadow-sm bg-white/10 backdrop-blur-sm p-1 border border-white/20"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-              />
+              <div className="h-10 w-10 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
               <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-secondary' : 'text-white drop-shadow-md'}`}>
                 FitRevive
               </span>
@@ -1469,14 +1461,7 @@ export default function App() {
             {/* Column 1: Brand */}
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <img 
-                  src={logo} 
-                  alt="FitRevive Logo" 
-                  className="h-12 w-auto rounded-xl object-contain bg-white/5 p-1"
-                  loading="lazy"
-                  fetchPriority="low"
-                  decoding="async"
-                />
+                <div className="h-12 w-12 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
                 <span className="font-display font-black text-2xl tracking-tight">FitRevive</span>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed font-medium">
