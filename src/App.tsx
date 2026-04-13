@@ -214,13 +214,9 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="/logo.jpg?v=3" 
+                src="/logo.jpg?v=4" 
                 alt="FitRevive Logo" 
                 className="w-10 h-10 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
@@ -1476,16 +1472,12 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="/logo.jpg?v=3" 
+                  src="/logo.jpg?v=4" 
                   alt="FitRevive Logo" 
                   className="w-12 h-12 rounded-xl object-cover"
                   loading="lazy"
                   fetchPriority="low"
                   decoding="async"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                  }}
                 />
                 <div className="hidden w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl">
                   F
