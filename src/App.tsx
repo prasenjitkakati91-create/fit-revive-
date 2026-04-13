@@ -216,7 +216,7 @@ export default function App() {
               <img 
                 src="/logo.jpg?v=4" 
                 alt="FitRevive Logo" 
-                className="w-10 h-10 rounded-full object-cover shadow-lg bg-white border-2 border-white/20"
+                className="h-10 w-auto rounded-lg object-contain shadow-sm bg-white/10 backdrop-blur-sm p-1 border border-white/20"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
@@ -1474,7 +1474,7 @@ export default function App() {
                 <img 
                   src="/logo.jpg?v=4" 
                   alt="FitRevive Logo" 
-                  className="w-12 h-12 rounded-xl object-cover"
+                  className="h-12 w-auto rounded-xl object-contain bg-white/5 p-1"
                   loading="lazy"
                   fetchPriority="low"
                   decoding="async"
