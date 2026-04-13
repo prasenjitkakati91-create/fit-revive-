@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { 
   Menu, X, ChevronLeft, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
@@ -27,6 +27,15 @@ export default function App() {
   const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
+
+  const galleryRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: galleryRef,
+    offset: ["start end", "end start"]
+  });
+
+  const galleryY1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const galleryY2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   const galleryItems = [
     { url: "https://fit-images.vercel.app/exterior.jpeg?v=2", category: "Clinic" },
@@ -1037,12 +1046,12 @@ export default function App() {
       </section>
 
       {/* 6. GALLERY SECTION */}
-      <section id="gallery" className="py-24 relative overflow-hidden bg-slate-50">
+      <section id="gallery" ref={galleryRef} className="py-24 relative overflow-hidden bg-slate-50">
         {/* Blurred Gradient Background */}
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/50 via-purple-50/50 to-white"></div>
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-[100px]"></div>
+          <motion.div style={{ y: galleryY1 }} className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></motion.div>
+          <motion.div style={{ y: galleryY2 }} className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-[100px]"></motion.div>
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -1050,7 +1059,7 @@ export default function App() {
           <div className="bg-slate-900 rounded-[3rem] shadow-2xl border border-slate-800 p-6 md:p-12 relative overflow-hidden">
             
             {/* Ambient Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+            <motion.div style={{ y: galleryY1 }} className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-primary/10 blur-[120px] rounded-full pointer-events-none"></motion.div>
 
             {/* Header */}
             <div className="text-center mb-12 relative z-10">
@@ -1139,7 +1148,10 @@ export default function App() {
                         }}
                       >
                         {/* Image Container with Glow */}
-                        <div className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 bg-slate-800 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}>
+                        <motion.div 
+                          whileHover={isCenter ? { scale: 1.02, boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.6)" } : {}}
+                          className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 bg-slate-800 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}
+                        >
                           {/* Loading Skeleton */}
                           <div className="absolute inset-0 bg-slate-800 animate-pulse"></div>
                           
@@ -1167,7 +1179,7 @@ export default function App() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                          </motion.div>
                       </motion.div>
                     );
                   })
