@@ -13,6 +13,7 @@ import AdminDashboard from './components/AdminDashboard';
 import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+import logo from './assets/logo.jpg';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -214,16 +215,13 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="/fit-logo.jpg?v=5" 
+                src={logo} 
                 alt="FitRevive Logo" 
                 className="h-10 w-auto rounded-lg object-contain shadow-sm bg-white/10 backdrop-blur-sm p-1 border border-white/20"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
               />
-              <div className="hidden w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                F
-              </div>
               <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-secondary' : 'text-white drop-shadow-md'}`}>
                 FitRevive
               </span>
@@ -1472,16 +1470,13 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="/fit-logo.jpg?v=5" 
+                  src={logo} 
                   alt="FitRevive Logo" 
                   className="h-12 w-auto rounded-xl object-contain bg-white/5 p-1"
                   loading="lazy"
                   fetchPriority="low"
                   decoding="async"
                 />
-                <div className="hidden w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl">
-                  F
-                </div>
                 <span className="font-display font-black text-2xl tracking-tight">FitRevive</span>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed font-medium">
