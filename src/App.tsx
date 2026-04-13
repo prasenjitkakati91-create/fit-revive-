@@ -214,7 +214,7 @@ export default function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
-                src="/logo.jpg?v=4" 
+                src="/fit-logo.jpg?v=5" 
                 alt="FitRevive Logo" 
                 className="h-10 w-auto rounded-lg object-contain shadow-sm bg-white/10 backdrop-blur-sm p-1 border border-white/20"
                 loading="eager"
@@ -1472,7 +1472,7 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <img 
-                  src="/logo.jpg?v=4" 
+                  src="/fit-logo.jpg?v=5" 
                   alt="FitRevive Logo" 
                   className="h-12 w-auto rounded-xl object-contain bg-white/5 p-1"
                   loading="lazy"
