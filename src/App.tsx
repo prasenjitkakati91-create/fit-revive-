@@ -1360,7 +1360,6 @@ export default function App() {
                   ) : (
                     <video 
                       key={selectedGalleryItem.videoUrl} 
-                      src={selectedGalleryItem.videoUrl}
                       controls 
                       autoPlay 
                       muted

@@ -11,18 +11,18 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Use CORS to allow cross-origin requests (helpful for media in some browsers)
+  // Use CORS to allow cross-origin requests
   app.use(cors());
 
-  // Serve static files from public directory explicitly with robust headers
+  // Serve static files from public directory FIRST with strong streaming headers
+  // This is where videos are located
   app.use(express.static(path.join(process.cwd(), 'public'), {
     maxAge: '1d',
-    setHeaders: (res, path) => {
+    setHeaders: (res, localPath) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
-      if (path.toLowerCase().endsWith('.mp4')) {
+      if (localPath.toLowerCase().endsWith('.mp4')) {
         res.setHeader('Accept-Ranges', 'bytes');
         res.setHeader('Content-Type', 'video/mp4');
-        res.setHeader('X-Content-Type-Options', 'nosniff');
       }
     }
   }));
@@ -32,6 +32,9 @@ async function startServer() {
     res.json({ status: "ok" });
   });
 
+  // Serve built assets in production
+  const distPath = path.join(process.cwd(), 'dist');
+  
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -43,7 +46,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
+    // Production Mode: Serve dist files
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
