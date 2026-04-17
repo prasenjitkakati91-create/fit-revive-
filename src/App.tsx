@@ -1361,19 +1361,26 @@ export default function App() {
                     <div className="flex flex-col w-full h-full bg-black">
                       <video 
                         key={selectedGalleryItem.videoUrl} 
+                        src={selectedGalleryItem.videoUrl}
                         controls 
                         autoPlay 
                         muted
                         playsInline
                         preload="auto"
+                        crossOrigin="anonymous"
                         poster={selectedGalleryItem.url}
                         className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
                         onLoadedMetadata={(e) => {
                           const video = e.currentTarget;
-                          console.log("Success: Video loaded", video.duration);
+                          console.log("SUCCESS: Video metadata loaded. Duration:", video.duration);
                         }}
+                        onPlay={() => console.log("Video started playing")}
                         onError={(e) => {
-                          console.error("Video failed to load. Check if the filename in GitHub exactly matches (lowercase):", selectedGalleryItem.videoUrl);
+                          const video = e.currentTarget;
+                          console.error("CRITICAL ERROR: Video failed to load.");
+                          console.error("URL Attempted:", selectedGalleryItem.videoUrl);
+                          console.error("Exact Error Code:", video.error?.code);
+                          console.error("Error Message:", video.error?.message);
                         }}
                       >
                         <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
@@ -1383,19 +1390,23 @@ export default function App() {
                         <div className="flex flex-col">
                           <span className="flex items-center gap-2 text-white/70 font-medium">
                             <Shield size={12} className="text-primary" />
-                            Secure Static Delivery (Vercel)
+                            Vercel Edge Streaming Active
                           </span>
-                          <span className="mt-1 opacity-60 italic">If video is blank, ensure GitHub filename is correct.</span>
+                          <span className="mt-1 opacity-60 italic">If black, check capitalization of files in GitHub.</span>
                         </div>
                         <div className="flex gap-2">
                           <button 
                             onClick={() => {
                               const v = document.querySelector('video');
-                              if (v) { v.load(); v.play().catch(console.error); }
+                              if (v) { 
+                                console.log("Forcing manual reload...");
+                                v.load(); 
+                                v.play().catch(err => console.error("Manual play failed:", err)); 
+                              }
                             }}
                             className="text-white hover:text-primary transition-colors bg-white/5 px-2 py-1 rounded border border-white/10"
                           >
-                            Retry
+                            Force Reload
                           </button>
                           <a 
                             href={selectedGalleryItem.videoUrl} 
@@ -1403,7 +1414,7 @@ export default function App() {
                             rel="noopener noreferrer"
                             className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors"
                           >
-                            Direct Link
+                            Open File Directly
                             <ExternalLink size={12} />
                           </a>
                         </div>
