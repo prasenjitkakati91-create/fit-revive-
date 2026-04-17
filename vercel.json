@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/(.*).mp4",
+      "destination": "/$1.mp4"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*).mp4",

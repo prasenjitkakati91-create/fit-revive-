@@ -66,25 +66,25 @@ export default function App() {
   const galleryItems: GalleryItem[] = [
     { 
       url: "/treatment-thumbnail.png", 
-      videoUrl: "/treatment-video.mp4?v=1", 
+      videoUrl: "/treatment-video.mp4?v=2", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail2.jpeg", 
-      videoUrl: "/video2.mp4?v=1", 
+      videoUrl: "/video2.mp4?v=2", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail3.jpeg", 
-      videoUrl: "/video3.mp4?v=1", 
+      videoUrl: "/video3.mp4?v=2", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail4.jpeg", 
-      videoUrl: "/video4.mp4?v=1", 
+      videoUrl: "/video4.mp4?v=2", 
       category: "Treatment", 
       type: "video" as const 
     },
