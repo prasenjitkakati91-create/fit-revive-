@@ -2,6 +2,7 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,15 +11,23 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Add middleware to handle range requests for videos
-  app.use((req, res, next) => {
-    if (req.url.toLowerCase().endsWith('.mp4')) {
-      res.setHeader('Accept-Ranges', 'bytes');
-    }
-    next();
-  });
+  // Use CORS to allow cross-origin requests (helpful for media in some browsers)
+  app.use(cors());
 
-  // API routes go here
+  // Serve static files from public directory explicitly with robust headers
+  app.use(express.static(path.join(process.cwd(), 'public'), {
+    maxAge: '1d',
+    setHeaders: (res, path) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      if (path.toLowerCase().endsWith('.mp4')) {
+        res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Content-Type', 'video/mp4');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+      }
+    }
+  }));
+
+  // API routes
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
   });
@@ -26,7 +35,10 @@ async function startServer() {
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { 
+        middlewareMode: true,
+        cors: true 
+      },
       appType: "spa",
     });
     app.use(vite.middlewares);

@@ -1368,6 +1368,7 @@ export default function App() {
                       preload="auto"
                       className="w-full h-full max-h-[85vh] outline-none"
                     >
+                      <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   )
