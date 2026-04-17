@@ -1229,8 +1229,8 @@ export default function App() {
                         }}
                         className={`absolute w-[240px] h-[320px] md:w-[400px] md:h-[520px] rounded-[2rem] md:rounded-[3rem] overflow-visible ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
                         onClick={() => {
-                          if (isCenter) setSelectedGalleryItem(item);
-                          else setGalleryIndex(index);
+                          setSelectedGalleryItem(item);
+                          setGalleryIndex(index);
                         }}
                         style={{
                           pointerEvents: Math.abs(diff) > 2 ? 'none' : 'auto',

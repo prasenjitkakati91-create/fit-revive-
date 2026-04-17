@@ -3,6 +3,7 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,19 +12,52 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Use CORS to allow cross-origin requests
   app.use(cors());
 
-  // Serve static files from public directory FIRST with strong streaming headers
-  // This is where videos are located
+  // Dedicated Video Stream Handler for MP4 files
+  // This handles Range requests manually which is more robust for Safari/iOS
+  app.get("/*.mp4", (req, res, next) => {
+    const filePath = path.join(process.cwd(), 'public', req.path);
+    
+    // Check if file exists in public first
+    if (!fs.existsSync(filePath)) {
+      return next(); // Fall through to other static handlers or 404
+    }
+
+    const stat = fs.statSync(filePath);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+
+    if (range) {
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = (end - start) + 1;
+      const file = fs.createReadStream(filePath, { start, end });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': 'video/mp4',
+      };
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'video/mp4',
+        'Accept-Ranges': 'bytes',
+      };
+      res.writeHead(200, head);
+      fs.createReadStream(filePath).pipe(res);
+    }
+  });
+
+  // Serve static files from public directory
   app.use(express.static(path.join(process.cwd(), 'public'), {
     maxAge: '1d',
-    setHeaders: (res, localPath) => {
+    setHeaders: (res) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
-      if (localPath.toLowerCase().endsWith('.mp4')) {
-        res.setHeader('Accept-Ranges', 'bytes');
-        res.setHeader('Content-Type', 'video/mp4');
-      }
     }
   }));
 
@@ -32,10 +66,8 @@ async function startServer() {
     res.json({ status: "ok" });
   });
 
-  // Serve built assets in production
   const distPath = path.join(process.cwd(), 'dist');
   
-  // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { 
@@ -46,7 +78,6 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // Production Mode: Serve dist files
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
