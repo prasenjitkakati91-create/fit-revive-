@@ -6,7 +6,8 @@ import {
   Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
   Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
-  Target, Microscope, HeartHandshake, Quote, BadgeCheck
+  Target, Microscope, HeartHandshake, Quote, BadgeCheck,
+  Sun, Moon
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
@@ -24,9 +25,24 @@ export default function App() {
   const [isAdminView, setIsAdminView] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
-  const [galleryIndex, setGalleryIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
 
   const galleryRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -216,14 +232,14 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 overflow-x-hidden w-full max-w-[100vw]">
+    <div className="min-h-screen bg-[var(--bg-primary)] font-sans text-[var(--text-primary)] transition-colors duration-300 overflow-x-hidden w-full max-w-[100vw]">
       {/* NAVBAR */}
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="h-10 w-10 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
-              <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-secondary' : 'text-white drop-shadow-md'}`}>
+              <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-[var(--text-primary)]' : 'text-white drop-shadow-md'}`}>
                 FitRevive
               </span>
             </div>
@@ -237,11 +253,23 @@ export default function App() {
                   onClick={(e) => scrollToSection(e, link.href)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`text-sm xl:text-base font-medium transition-colors hover:text-accent ${isScrolled ? 'text-gray-600' : 'text-white drop-shadow-sm'}`}
+                  className={`text-sm xl:text-base font-medium transition-colors hover:text-accent ${isScrolled ? 'text-[var(--text-secondary)]' : 'text-white drop-shadow-sm'}`}
                 >
                   {link.name}
                 </motion.a>
               ))}
+
+              {/* Theme Toggle Button */}
+              <motion.button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                whileHover={{ scale: 1.1, rotate: 15 }}
+                whileTap={{ scale: 0.9 }}
+                className={`p-2 rounded-full transition-colors ${isScrolled ? 'bg-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--border-color)]' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                aria-label="Toggle Theme"
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </motion.button>
+              
               <motion.button 
                 onClick={() => setIsFormOpen(true)}
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -253,127 +281,148 @@ export default function App() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="lg:hidden flex items-center z-[60]">
+            <div className="lg:hidden flex items-center gap-4 z-[120]">
+              {/* Mobile Theme Toggle */}
+              <motion.button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className={`p-2 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--bg-secondary)] text-[var(--text-primary)]' : 'bg-white/10 text-white'}`}
+                aria-label="Toggle Theme"
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </motion.button>
+
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`relative group w-11 h-11 flex items-center justify-center rounded-full transition-all duration-300 ${isScrolled || mobileMenuOpen ? 'bg-slate-100/80 backdrop-blur-md' : 'bg-white/10 backdrop-blur-sm'}`}
+                className={`relative group w-11 h-11 flex items-center justify-center rounded-full transition-all duration-300 ${isScrolled || mobileMenuOpen ? 'bg-[var(--bg-secondary)] backdrop-blur-md' : 'bg-white/10 backdrop-blur-sm'}`}
                 aria-label="Toggle Menu"
               >
                 <div className="relative w-6 h-5 flex flex-col justify-center items-center gap-1.5 focus:outline-none">
                   <motion.span 
                     animate={mobileMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-secondary' : 'bg-white'}`}
+                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--text-primary)]' : 'bg-white'}`}
                   />
                   <motion.span 
                     animate={mobileMenuOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
-                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-secondary' : 'bg-white'}`}
+                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--text-primary)]' : 'bg-white'}`}
                   />
                   <motion.span 
                     animate={mobileMenuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-secondary' : 'bg-white'}`}
+                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--text-primary)]' : 'bg-white'}`}
                   />
                 </div>
               </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Nav Overlay */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 w-full sm:w-80 z-50 bg-white/98 backdrop-blur-2xl flex flex-col p-8 lg:hidden overflow-y-auto overflow-x-hidden shadow-2xl border-l border-slate-100"
-            >
-              {/* Decorative Background Elements */}
-              <div className="absolute inset-0 -z-10 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 -z-10"></div>
-
-              <div className="flex flex-col items-start justify-center space-y-8 w-full flex-grow mt-12">
-                {navLinks.map((link, i) => (
-                  <motion.a 
-                    key={link.name} 
-                    href={link.href}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + i * 0.08, type: 'spring' }}
-                    onClick={(e) => scrollToSection(e, link.href)}
-                    className="group relative text-3xl md:text-4xl font-display font-bold text-secondary hover:text-primary transition-all duration-300 text-left w-full block"
-                  >
-                    <span className="relative z-10">{link.name}</span>
-                  </motion.a>
-                ))}
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + navLinks.length * 0.08 }}
-                  className="pt-8 w-full flex flex-col items-start"
-                >
-                  <button 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setIsFormOpen(true);
-                    }}
-                    className="w-full max-w-xs bg-primary text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-2xl shadow-primary/30 active:scale-95 transition-transform mb-4"
-                  >
-                    Book Appointment
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      handleAdminLogin();
-                    }}
-                    disabled={isLoggingIn}
-                    className="w-full max-w-xs bg-secondary text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
-                  >
-                    <Settings size={20} className={isLoggingIn ? 'animate-spin' : ''} />
-                    {isLoggingIn ? 'Logging in...' : 'Admin Portal'}
-                  </button>
-                </motion.div>
-              </div>
-
-              {/* Mobile Menu Footer */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="w-full flex flex-col items-center gap-6 pb-8"
-              >
-                <div className="h-px w-12 bg-slate-200"></div>
-                <div className="flex gap-6 justify-start">
-                  {[
-                    { icon: <Facebook size={24} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
-                    { icon: <Instagram size={24} />, href: "https://www.instagram.com/fitrevive_physiotherapy?igsh=NW5kNWUwbWVrdzk3&utm_source=qr" },
-                    { icon: <Twitter size={24} />, href: "#" }
-                  ].map((social, i) => (
-                    <a 
-                      key={i} 
-                      href={social.href} 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
-                </div>
-                <div className="text-slate-400 text-sm font-medium tracking-wide">
-                  © 2026 FitRevive Physiotherapy
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </nav>
+
+      {/* Mobile Nav Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[150] bg-[var(--bg-primary)]/98 backdrop-blur-2xl flex flex-col p-8 lg:hidden overflow-y-auto overflow-x-hidden shadow-2xl"
+          >
+            {/* Close Button in Overlay */}
+            <div className="flex justify-end mb-8 mt-4">
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-3 rounded-full bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)] shadow-lg active:scale-90 transition-transform"
+              >
+                <X size={28} />
+              </button>
+            </div>
+
+            {/* Decorative Background Elements */}
+            <div className="absolute inset-0 -z-10 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--text-primary) 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 -z-10"></div>
+
+            <div className="flex flex-col items-start justify-center space-y-8 w-full flex-grow">
+              {navLinks.map((link, i) => (
+                <motion.a 
+                  key={link.name} 
+                  href={link.href}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.08, type: 'spring' }}
+                  onClick={(e) => scrollToSection(e, link.href)}
+                  className="group relative text-3xl md:text-4xl font-display font-bold text-[var(--text-primary)] hover:text-primary transition-all duration-300 text-left w-full block"
+                >
+                  <span className="relative z-10">{link.name}</span>
+                </motion.a>
+              ))}
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + navLinks.length * 0.08 }}
+                className="pt-8 w-full flex flex-col items-start gap-4 border-t border-[var(--border-color)]"
+              >
+                <button 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsFormOpen(true);
+                  }}
+                  className="w-full max-w-xs bg-primary text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-2xl shadow-primary/30 active:scale-95 transition-transform"
+                >
+                  Book Appointment
+                </button>
+                <button 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleAdminLogin();
+                  }}
+                  disabled={isLoggingIn}
+                  className="w-full max-w-xs bg-[var(--bg-secondary)] text-[var(--text-primary)] px-8 py-4 rounded-2xl text-lg font-bold shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2 border border-[var(--border-color)]"
+                >
+                  <Settings size={20} className={isLoggingIn ? 'animate-spin' : ''} />
+                  {isLoggingIn ? 'Logging in...' : 'Admin Portal'}
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Mobile Menu Footer */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="w-full flex flex-col items-center gap-6 pb-8 mt-12"
+            >
+              <div className="h-px w-12 bg-[var(--border-color)]"></div>
+              <div className="flex gap-6 justify-start">
+                {[
+                  { icon: <Facebook size={24} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
+                  { icon: <Instagram size={24} />, href: "https://www.instagram.com/fitrevive_physiotherapy?igsh=NW5kNWUwbWVrdzk3&utm_source=qr" },
+                  { icon: <Twitter size={24} />, href: "#" }
+                ].map((social, i) => (
+                  <a 
+                    key={i} 
+                    href={social.href} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-primary)] hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+              <div className="text-[var(--text-secondary)] text-sm font-medium tracking-wide">
+                © 2026 FitRevive Physiotherapy
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 1. HERO SECTION */}
       <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden pt-28 pb-16 lg:pt-32 lg:pb-24">
-        <div className="absolute inset-0 z-0 bg-secondary">
+        <div className="absolute inset-0 z-0 bg-[#0a192f]">
           {heroImages.map((img, index) => (
             <img 
               key={index}
@@ -389,9 +438,9 @@ export default function App() {
             />
           ))}
           {/* Dark gradient overlay for text readability on the left */}
-          <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a192f]/90 via-[#0a192f]/60 to-transparent"></div>
           {/* Subtle overall dark overlay */}
-          <div className="absolute inset-0 bg-secondary/10"></div>
+          <div className="absolute inset-0 bg-[#0a192f]/10"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -429,7 +478,7 @@ export default function App() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05, y: -5 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center justify-center gap-2 bg-white text-[#128C7E] hover:bg-gray-50 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg hover:shadow-white/30 transform hover:-translate-y-1"
+                className="inline-flex items-center justify-center gap-2 bg-white text-[#128C7E] hover:bg-slate-50 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg hover:shadow-white/30 transform hover:-translate-y-1"
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                 Chat on WhatsApp
@@ -439,16 +488,16 @@ export default function App() {
         </div>
       </section>
       {/* 2. ABOUT US SECTION */}
-      <section id="about" className="py-32 bg-white relative overflow-hidden">
+      <section id="about" className="py-32 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
         {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/30 -skew-x-12 transform origin-top-right -z-10"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-[var(--bg-secondary)]/30 -skew-x-12 transform origin-top-right -z-10"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
         <motion.div 
           initial={{ opacity: 0, scale: 1.1 }}
-          whileInView={{ opacity: 0.4, scale: 1 }}
+          whileInView={{ opacity: 0.1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 2, ease: "easeOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20rem] font-black text-slate-50 select-none -z-20 tracking-tighter"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20rem] font-black text-[var(--text-primary)] opacity-5 select-none -z-20 tracking-tighter"
         >
           RECOVERY
         </motion.div>
@@ -463,7 +512,7 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2 relative"
             >
-              <div className="relative rounded-3xl md:rounded-[3rem] overflow-hidden shadow-2xl aspect-video md:aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 md:border-[12px] border-white">
+              <div className="relative rounded-3xl md:rounded-[3rem] overflow-hidden shadow-2xl aspect-video md:aspect-[4/5] max-w-md mx-auto lg:mx-0 border-8 md:border-[12px] border-[var(--bg-primary)]">
                 <img 
                   src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=75&w=1200" 
                   alt="Professional Physiotherapy Session" 
@@ -482,17 +531,17 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2, duration: 0.4 }}
-                className="absolute -bottom-6 right-0 md:-right-10 bg-white p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 z-20"
+                className="absolute -bottom-6 right-0 md:-right-10 bg-[var(--card-bg)] p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[var(--border-color)] z-20"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-slate-200">
+                  <div className="w-14 h-14 bg-[var(--text-primary)] rounded-xl flex items-center justify-center text-[var(--bg-primary)] shrink-0 shadow-lg">
                     <div className="relative">
                       <Shield size={24} strokeWidth={2} />
                       <motion.div 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.4, type: "spring" }}
-                        className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-slate-900 flex items-center justify-center"
+                        className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-[var(--text-primary)] flex items-center justify-center"
                       >
                         <CheckCircle size={10} strokeWidth={4} />
                       </motion.div>
@@ -501,14 +550,14 @@ export default function App() {
                   <div className="pr-2">
                     <div className="flex items-center gap-1.5 mb-0.5">
                       <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Verified</span>
-                      <div className="h-px w-4 bg-slate-200"></div>
+                      <div className="h-px w-4 bg-[var(--border-color)]"></div>
                     </div>
                     <motion.p 
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.3, duration: 0.4 }}
-                      className="font-display font-bold text-lg text-secondary leading-none"
+                      className="font-display font-bold text-lg text-[var(--text-primary)] leading-none"
                     >
                       Clinical Excellence
                     </motion.p>
@@ -517,7 +566,7 @@ export default function App() {
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.4, duration: 0.4 }}
-                      className="text-slate-500 font-medium text-xs mt-1"
+                      className="text-[var(--text-secondary)] font-medium text-xs mt-1"
                     >
                       Certified Specialists
                     </motion.p>
@@ -547,7 +596,7 @@ export default function App() {
                 <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Discover FitRevive</span>
               </motion.div>
               
-              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-secondary overflow-hidden">
+              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-[var(--text-primary)] overflow-hidden">
                 {"Your journey to a ".split(" ").map((word, i) => (
                   <motion.span
                     key={i}
@@ -588,7 +637,7 @@ export default function App() {
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.4 } }
                 }}
-                className="space-y-6 text-lg text-slate-600 leading-relaxed mb-12"
+                className="space-y-6 text-lg text-[var(--text-secondary)] leading-relaxed mb-12"
               >
                 <p>
                   At FitRevive Physiotherapy, we believe that movement is medicine. Our dedicated team of professionals is committed to helping you overcome pain, recover from injuries, and achieve your optimal physical potential.
@@ -598,7 +647,7 @@ export default function App() {
                 </p>
               </motion.div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-10 pt-10 border-t border-slate-100">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-10 pt-10 border-t border-[var(--border-color)]">
                 {[
                   { title: "Personalized Care", desc: "1-on-1 dedicated sessions" },
                   { title: "Modern Facility", desc: "Advanced equipment" },
@@ -618,8 +667,8 @@ export default function App() {
                       <CheckCircle size={20} strokeWidth={2.5} />
                     </div>
                     <div>
-                      <h4 className="font-display font-bold text-lg text-secondary group-hover/item:text-primary transition-colors duration-300">{item.title}</h4>
-                      <p className="text-sm text-slate-500 mt-1">{item.desc}</p>
+                      <h4 className="font-display font-bold text-lg text-[var(--text-primary)] group-hover/item:text-primary transition-colors duration-300">{item.title}</h4>
+                      <p className="text-sm text-[var(--text-secondary)] mt-1">{item.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -660,12 +709,12 @@ export default function App() {
                 className="relative group h-full cursor-pointer"
               >
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))` }}></div>
-                <div className="bg-slate-50 hover:bg-white p-8 md:p-10 rounded-3xl border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
-                <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center text-white mb-8 shadow-lg shadow-gray-200 group-hover:scale-110 transition-transform duration-500`}>
+                <div className="bg-[var(--bg-secondary)] hover:bg-[var(--card-bg)] p-8 md:p-10 rounded-3xl border border-[var(--border-color)] hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
+                <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
                     {feature.icon}
                   </div>
-                  <h3 className="font-display text-2xl font-bold mb-4 text-secondary">{feature.title}</h3>
-                  <p className="text-slate-600 leading-relaxed text-lg flex-1">
+                  <h3 className="font-display text-2xl font-bold mb-4 text-[var(--text-primary)]">{feature.title}</h3>
+                  <p className="text-[var(--text-secondary)] leading-relaxed text-lg flex-1">
                     {feature.desc}
                   </p>
                 </div>
@@ -676,7 +725,7 @@ export default function App() {
       </section>
 
       {/* 2.5 OUR TEAM SECTION */}
-      <section id="team" className="py-24 bg-white relative overflow-hidden">
+      <section id="team" className="py-24 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -685,8 +734,8 @@ export default function App() {
             transition={{ duration: 0.6 }}
             className="text-center mb-20"
           >
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-secondary mb-6">Meet Our Experts</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-[var(--text-primary)] mb-6">Meet Our Experts</h2>
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
               Our team of dedicated professionals is here to provide you with the best care and support on your journey to recovery.
             </p>
             <div className="w-24 h-1.5 bg-primary mx-auto mt-8 rounded-full"></div>
@@ -727,7 +776,7 @@ export default function App() {
                 whileTap={{ scale: 0.98, y: -5 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden flex flex-col cursor-pointer"
+                className="group bg-[var(--card-bg)] rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-[var(--border-color)] overflow-hidden flex flex-col cursor-pointer"
               >
                 <div className="relative aspect-[4/5] overflow-hidden m-3 rounded-2xl">
                   <img 
@@ -753,10 +802,10 @@ export default function App() {
                   </div>
                 </div>
                 <div className="p-6 text-center flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-secondary mb-1 group-hover:text-primary transition-colors">{member.name}</h3>
+                  <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1 group-hover:text-primary transition-colors">{member.name}</h3>
                   <p className="text-primary font-semibold text-sm mb-3">{member.role}</p>
-                  <div className="w-12 h-1 bg-gray-200 mx-auto mb-4 rounded-full group-hover:bg-primary transition-colors"></div>
-                  <p className="text-gray-600 text-sm flex-1">{member.desc}</p>
+                  <div className="w-12 h-1 bg-[var(--border-color)] mx-auto mb-4 rounded-full group-hover:bg-primary transition-colors"></div>
+                  <p className="text-[var(--text-secondary)] text-sm flex-1">{member.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -764,7 +813,7 @@ export default function App() {
         </div>
       </section>
       {/* 3. SERVICES SECTION */}
-      <section id="services" className="py-32 bg-slate-50 relative overflow-hidden">
+      <section id="services" className="py-32 bg-[var(--bg-secondary)] relative overflow-hidden transition-colors duration-300">
         {/* Background Accents */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
@@ -781,8 +830,8 @@ export default function App() {
             >
               <Activity size={14} /> Our Expertise
             </motion.div>
-            <h2 className="font-display text-4xl md:text-5xl font-extrabold text-secondary mb-6">Comprehensive Care</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+            <h2 className="font-display text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] mb-6">Comprehensive Care</h2>
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
               Specialized physiotherapy services designed to help you recover faster, regain strength, and live a life without physical limitations.
             </p>
           </div>
@@ -837,12 +886,12 @@ export default function App() {
                 className="relative group h-full cursor-pointer"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95`}></div>
-                <div className="bg-slate-50 hover:bg-white p-8 md:p-10 rounded-3xl border border-slate-100 hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col items-start">
+                <div className="bg-[var(--bg-secondary)] hover:bg-[var(--card-bg)] p-8 md:p-10 rounded-3xl border border-[var(--border-color)] hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col items-start">
                   <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                     {service.icon}
                   </div>
-                  <h3 className="font-display text-2xl font-bold text-secondary mb-4">{service.title}</h3>
-                  <p className="text-slate-500 mb-8 leading-relaxed flex-1">{service.desc}</p>
+                  <h3 className="font-display text-2xl font-bold text-[var(--text-primary)] mb-4">{service.title}</h3>
+                  <p className="text-[var(--text-secondary)] mb-8 leading-relaxed flex-1">{service.desc}</p>
                   <button 
                     onClick={() => setIsFormOpen(true)}
                     className="text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all mt-auto"
@@ -857,7 +906,7 @@ export default function App() {
       </section>
 
       {/* 5. WHY CHOOSE US SECTION */}
-      <section className="py-32 bg-white relative overflow-hidden">
+      <section className="py-32 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
         {/* Decorative background elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
@@ -877,7 +926,7 @@ export default function App() {
             >
               <div className="flex flex-col gap-4 md:grid md:grid-cols-12 md:grid-rows-2 md:gap-6 md:h-[600px]">
                 {/* Main large image/video */}
-                <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-white aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
+                <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl group border-4 border-[var(--bg-primary)] aspect-video md:aspect-auto md:col-span-8 md:row-span-2">
                   <img 
                     src="https://fit-images.vercel.app/12.webp?v=2" 
                     alt="Modern Physiotherapy Clinic" 
@@ -897,7 +946,7 @@ export default function App() {
                 
                 <div className="grid grid-cols-2 gap-4 md:contents">
                   {/* Top right image */}
-                  <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
+                  <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-[var(--bg-primary)] aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
                       src="https://fit-images.vercel.app/interior3.JPG?v=2" 
                       alt="Modern Equipment" 
@@ -910,7 +959,7 @@ export default function App() {
                   </div>
 
                   {/* Bottom right image */}
-                  <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
+                  <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-xl group border-4 border-[var(--bg-primary)] aspect-square md:aspect-auto md:col-span-4 md:row-span-1">
                     <img 
                       src="https://fit-images.vercel.app/interiora.jpeg?v=2" 
                       alt="Physiotherapy Session" 
@@ -938,11 +987,11 @@ export default function App() {
                 <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Why Choose Us</span>
               </div>
               
-              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-secondary mb-8 leading-tight">
+              <h2 className="font-display text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] mb-8 leading-tight">
                 The FitRevive <span className="text-primary">Difference</span>
               </h2>
               
-              <p className="text-slate-500 text-lg mb-12 leading-relaxed">
+              <p className="text-[var(--text-secondary)] text-lg mb-12 leading-relaxed">
                 We combine clinical expertise with a deeply personal approach to ensure every patient receives the highest standard of care.
               </p>
 
@@ -964,13 +1013,13 @@ export default function App() {
                     className="relative group cursor-pointer"
                   >
                     <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-30 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95`}></div>
-                    <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 hover:bg-white border border-slate-100 hover:border-transparent hover:shadow-xl transition-all duration-500 h-full">
+                    <div className="flex items-center gap-6 p-6 rounded-3xl bg-[var(--bg-secondary)] hover:bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-transparent hover:shadow-xl transition-all duration-500 h-full">
                       <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                         {item.icon}
                       </div>
                       <div>
-                        <h3 className="font-display text-xl font-bold text-secondary mb-1">{item.title}</h3>
-                        <p className="text-slate-500 text-sm">{item.desc}</p>
+                        <h3 className="font-display text-xl font-bold text-[var(--text-primary)] mb-1">{item.title}</h3>
+                        <p className="text-[var(--text-secondary)] text-sm">{item.desc}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -1046,28 +1095,28 @@ export default function App() {
       </section>
 
       {/* 6. GALLERY SECTION */}
-      <section id="gallery" ref={galleryRef} className="py-24 relative overflow-hidden bg-slate-50">
+      <section id="gallery" ref={galleryRef} className="py-24 relative overflow-hidden bg-[var(--bg-secondary)] transition-colors duration-300">
         {/* Blurred Gradient Background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/50 via-purple-50/50 to-white"></div>
-          <motion.div style={{ y: galleryY1 }} className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></motion.div>
-          <motion.div style={{ y: galleryY2 }} className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-[100px]"></motion.div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 via-accent/5 to-transparent"></div>
+          <motion.div style={{ y: galleryY1 }} className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/10 rounded-full blur-[100px]"></motion.div>
+          <motion.div style={{ y: galleryY2 }} className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/10 rounded-full blur-[100px]"></motion.div>
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Main Card Container */}
-          <div className="bg-slate-900 rounded-[3rem] shadow-2xl border border-slate-800 p-6 md:p-12 relative overflow-hidden">
+          <div className="bg-[var(--card-bg)] rounded-[3rem] shadow-2xl border border-[var(--border-color)] p-6 md:p-12 relative overflow-hidden">
             
             {/* Ambient Glow */}
-            <motion.div style={{ y: galleryY1 }} className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-primary/10 blur-[120px] rounded-full pointer-events-none"></motion.div>
+            <motion.div style={{ y: galleryY1 }} className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-primary/5 blur-[120px] rounded-full pointer-events-none"></motion.div>
 
             {/* Header */}
             <div className="text-center mb-12 relative z-10">
               <span className="text-xs font-bold tracking-widest uppercase text-primary mb-3 block">Gallery</span>
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
                 Our Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-400">Journey</span>
               </h2>
-              <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+              <p className="text-[var(--text-secondary)] text-sm md:text-base max-w-xl mx-auto">
                 See real patient recovery moments, treatments, and clinic highlights
               </p>
             </div>
@@ -1263,7 +1312,7 @@ export default function App() {
       </section>
 
       {/* 9. CONTACT SECTION */}
-      <section id="contact" className="py-32 bg-white relative overflow-hidden">
+      <section id="contact" className="py-32 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -z-10"></div>
@@ -1288,7 +1337,7 @@ export default function App() {
               >
                 <Activity size={14} className="animate-pulse" /> Your Recovery Journey
               </motion.div>
-              <h2 className="text-5xl md:text-7xl font-display font-black text-secondary mb-8 leading-[1.1] tracking-tight">
+              <h2 className="text-5xl md:text-7xl font-display font-black text-[var(--text-primary)] mb-8 leading-[1.1] tracking-tight">
                 Professional <span className="text-primary relative inline-block">
                   Consultation
                   <svg className="absolute -bottom-2 left-0 w-full h-3 text-accent/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
@@ -1296,7 +1345,7 @@ export default function App() {
                   </svg>
                 </span> Process
               </h2>
-              <p className="text-slate-500 text-xl leading-relaxed max-w-3xl mx-auto font-medium">
+              <p className="text-[var(--text-secondary)] text-xl leading-relaxed max-w-3xl mx-auto font-medium">
                 A systematic, evidence-based approach designed to restore your physical potential and long-term health.
               </p>
             </div>
@@ -1338,22 +1387,22 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
-                  className="group relative p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden"
+                  className="group relative p-10 rounded-[2.5rem] bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary/20 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden"
                 >
                   {/* Hover Background Accent */}
                   <div className={`absolute top-0 right-0 w-32 h-32 ${item.color} opacity-0 group-hover:opacity-[0.03] -translate-y-1/2 translate-x-1/2 rounded-full transition-all duration-700`}></div>
                   
                   <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">
-                      <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-inner">
+                      <div className="w-14 h-14 rounded-2xl bg-[var(--bg-secondary)] flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-inner">
                         {item.icon}
                       </div>
-                      <span className="text-5xl font-black text-slate-100 group-hover:text-primary/10 transition-colors duration-500">
+                      <span className="text-5xl font-black text-[var(--border-color)] group-hover:text-primary/10 transition-colors duration-500">
                         {item.step}
                       </span>
                     </div>
-                    <h4 className="text-2xl font-bold text-secondary mb-4 group-hover:text-primary transition-colors">{item.title}</h4>
-                    <p className="text-slate-500 text-base leading-relaxed group-hover:text-slate-600 transition-colors">{item.desc}</p>
+                    <h4 className="text-2xl font-bold text-[var(--text-primary)] mb-4 group-hover:text-primary transition-colors">{item.title}</h4>
+                    <p className="text-[var(--text-secondary)] text-base leading-relaxed group-hover:text-[var(--text-primary)] transition-colors">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -1363,14 +1412,14 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="mt-20 p-12 rounded-[3rem] bg-secondary text-white flex flex-col lg:flex-row items-center justify-between gap-10 relative overflow-hidden shadow-2xl"
+              className="mt-20 p-12 rounded-[3rem] bg-[var(--bg-secondary)] text-[var(--text-primary)] flex flex-col lg:flex-row items-center justify-between gap-10 relative overflow-hidden shadow-2xl border border-[var(--border-color)]"
             >
-              <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
+              <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
               
               <div className="relative z-10 max-w-xl text-center lg:text-left">
-                <h4 className="text-3xl md:text-4xl font-display font-black mb-4 tracking-tight">Ready to start your recovery?</h4>
-                <p className="text-slate-400 text-lg font-medium">Join hundreds of patients who have reclaimed their active lifestyle with FitRevive.</p>
+                <h4 className="text-3xl md:text-4xl font-display font-black mb-4 tracking-tight text-[var(--text-primary)]">Ready to start your recovery?</h4>
+                <p className="text-[var(--text-secondary)] text-lg font-medium">Join hundreds of patients who have reclaimed their active lifestyle with FitRevive.</p>
               </div>
               <motion.button 
                 whileHover={{ scale: 1.05 }}
@@ -1389,17 +1438,17 @@ export default function App() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="pt-24 border-t border-slate-100"
+            className="pt-24 border-t border-[var(--border-color)]"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
               {/* Address */}
               <div className="group flex flex-col items-center text-center space-y-6">
-                <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                <div className="w-20 h-20 bg-[var(--bg-secondary)] rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:rotate-12 transition-all duration-500">
                   <MapPin size={32} />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-bold text-secondary mb-3">Our Location</h4>
-                  <a href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" target="_blank" rel="noopener noreferrer" className="text-lg text-slate-500 hover:text-primary transition-colors leading-relaxed font-medium">
+                  <h4 className="text-2xl font-bold text-[var(--text-primary)] mb-3">Our Location</h4>
+                  <a href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" target="_blank" rel="noopener noreferrer" className="text-lg text-[var(--text-secondary)] hover:text-primary transition-colors leading-relaxed font-medium">
                     Bangaon, Nalbari<br/>Assam, India
                   </a>
                 </div>
@@ -1407,23 +1456,23 @@ export default function App() {
 
               {/* Contact */}
               <div className="group flex flex-col items-center text-center space-y-6">
-                <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:-rotate-12 transition-all duration-500">
+                <div className="w-20 h-20 bg-[var(--bg-secondary)] rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:-rotate-12 transition-all duration-500">
                   <Phone size={32} />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-bold text-secondary mb-3">Get In Touch</h4>
-                  <p className="text-lg text-slate-500 mb-1 font-medium">8473809386</p>
-                  <p className="text-lg text-slate-500 font-medium">fitrevive.org@gmail.com</p>
+                  <h4 className="text-2xl font-bold text-[var(--text-primary)] mb-3">Get In Touch</h4>
+                  <p className="text-lg text-[var(--text-secondary)] mb-1 font-medium">8473809386</p>
+                  <p className="text-lg text-[var(--text-secondary)] font-medium">fitrevive.org@gmail.com</p>
                 </div>
               </div>
 
               {/* Socials */}
               <div className="group flex flex-col items-center text-center space-y-6">
-                <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                <div className="w-20 h-20 bg-[var(--bg-secondary)] rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
                   <Users size={32} />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-bold text-secondary mb-6">Follow Our Journey</h4>
+                  <h4 className="text-2xl font-bold text-[var(--text-primary)] mb-6">Follow Our Journey</h4>
                   <div className="flex gap-5 justify-center">
                     {[
                       { icon: <Facebook size={22} />, href: "https://www.facebook.com/share/1BLPjEKSPt/?mibextid=wwXIfr" },
@@ -1436,7 +1485,7 @@ export default function App() {
                         target="_blank" 
                         rel="noopener noreferrer"
                         whileHover={{ y: -5 }}
-                        className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border border-slate-100"
+                        className="w-12 h-12 rounded-2xl bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-primary)] hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border border-[var(--border-color)]"
                       >
                         {social.icon}
                       </motion.a>
@@ -1464,7 +1513,7 @@ export default function App() {
         </div>
       </section>
       {/* 10. FOOTER */}
-      <footer className="bg-[#0a192f] text-white pt-20 pb-10 relative overflow-hidden">
+      <footer className="bg-[var(--bg-secondary)] text-[var(--text-primary)] pt-20 pb-10 relative overflow-hidden transition-colors duration-300">
         {/* Subtle Gradient Overlay */}
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
         
@@ -1474,9 +1523,9 @@ export default function App() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
-                <span className="font-display font-black text-2xl tracking-tight">FitRevive</span>
+                <span className="font-display font-black text-2xl tracking-tight text-[var(--text-primary)]">FitRevive</span>
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed font-medium">
+              <p className="text-[var(--text-secondary)] text-sm leading-relaxed font-medium">
                 Expert physiotherapy care dedicated to restoring your mobility and enhancing your quality of life through personalized treatment plans.
               </p>
               <div className="flex gap-3">
@@ -1490,7 +1539,7 @@ export default function App() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white hover:border-primary transition-all duration-300"
+                    className="w-10 h-10 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-primary hover:text-white hover:border-primary transition-all duration-300"
                   >
                     {social.icon}
                   </a>
@@ -1507,7 +1556,7 @@ export default function App() {
                     <a 
                       href={link.href} 
                       onClick={(e) => scrollToSection(e, link.href)}
-                      className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group"
+                      className="text-[var(--text-secondary)] hover:text-primary transition-colors text-sm font-medium flex items-center gap-2 group"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
                       {link.name}
@@ -1533,7 +1582,7 @@ export default function App() {
                     <a 
                       href="#services" 
                       onClick={(e) => scrollToSection(e, '#services')}
-                      className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group"
+                      className="text-[var(--text-secondary)] hover:text-primary transition-colors text-sm font-medium flex items-center gap-2 group"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
                       {service}
@@ -1549,38 +1598,38 @@ export default function App() {
               <ul className="space-y-6">
                 <li className="flex items-start gap-4">
                   <MapPin size={20} className="text-primary shrink-0" />
-                  <a href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm font-medium leading-relaxed">
+                  <a href="https://maps.app.goo.gl/8VE4xpPK8xc1QS1f6" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-primary transition-colors text-sm font-medium leading-relaxed">
                     Bangaon, Nalbari, Assam, India
                   </a>
                 </li>
                 <li className="flex items-center gap-4">
                   <Phone size={20} className="text-primary shrink-0" />
-                  <span className="text-slate-400 text-sm font-medium">8473809386</span>
+                  <span className="text-[var(--text-secondary)] text-sm font-medium">8473809386</span>
                 </li>
                 <li className="flex items-center gap-4">
                   <Mail size={20} className="text-primary shrink-0" />
-                  <span className="text-slate-400 text-sm font-medium">fitrevive.org@gmail.com</span>
+                  <span className="text-[var(--text-secondary)] text-sm font-medium">fitrevive.org@gmail.com</span>
                 </li>
               </ul>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-slate-500 text-xs font-medium">
+          <div className="pt-10 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[var(--text-secondary)] text-xs font-medium">
               &copy; {new Date().getFullYear()} FitRevive Physiotherapy. All rights reserved.
             </p>
             <div className="flex items-center gap-8">
               <div className="flex gap-6 text-xs font-bold uppercase tracking-wider">
                 <button 
                   onClick={() => { setLegalType('privacy'); setIsLegalOpen(true); }}
-                  className="text-slate-500 hover:text-primary transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary transition-colors"
                 >
                   Privacy
                 </button>
                 <button 
                   onClick={() => { setLegalType('terms'); setIsLegalOpen(true); }}
-                  className="text-slate-500 hover:text-primary transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary transition-colors"
                 >
                   Terms
                 </button>
@@ -1588,7 +1637,7 @@ export default function App() {
               <button 
                 onClick={handleAdminLogin}
                 disabled={isLoggingIn}
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-500 hover:text-white hover:bg-white/10 transition-all group"
+                className="p-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-primary hover:bg-[var(--bg-secondary)] transition-all group"
                 title="Admin Portal"
               >
                 <Settings size={16} className="group-hover:rotate-90 transition-transform duration-500" />

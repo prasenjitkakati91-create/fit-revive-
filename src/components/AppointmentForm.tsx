@@ -81,7 +81,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
           {/* Backdrop */}
           <motion.div 
             initial={{ opacity: 0 }}
@@ -96,13 +96,13 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-2xl bg-[var(--bg-primary)] rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-color)]"
           >
             <button 
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-[var(--bg-secondary)] transition-colors z-10"
             >
-              <X size={24} className="text-gray-500" />
+              <X size={24} className="text-[var(--text-secondary)]" />
             </button>
 
             <div className="flex flex-col md:flex-row">
@@ -141,22 +141,22 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                     >
                       <CheckCircle2 size={40} />
                     </motion.div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Booking Successful!</h3>
-                    <p className="text-gray-600">
+                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Booking Successful!</h3>
+                    <p className="text-[var(--text-secondary)]">
                       We've received your request. Our team will contact you shortly to confirm your appointment.
                     </p>
                   </div>
                 ) : (
                   <>
                     <div className="mb-8">
-                      <h2 className="text-2xl font-bold text-gray-900">Appointment Request</h2>
-                      <p className="text-gray-500 text-sm mt-1">Please fill in your details below.</p>
+                      <h2 className="text-2xl font-bold text-[var(--text-primary)]">Appointment Request</h2>
+                      <p className="text-[var(--text-secondary)] text-sm mt-1">Please fill in your details below.</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                             <User size={14} /> Full Name
                           </label>
                           <input 
@@ -166,11 +166,11 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="John Doe"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                             <Mail size={14} /> Email Address
                           </label>
                           <input 
@@ -180,14 +180,14 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="john@example.com"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                             <Phone size={14} /> Phone Number
                           </label>
                           <input 
@@ -197,11 +197,11 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="+91 98765 43210"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                             <Activity size={14} /> Service
                           </label>
                           <select 
@@ -209,7 +209,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                             name="service"
                             value={formData.service}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm bg-white"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                           >
                             <option value="">Select a service</option>
                             {services.map(s => <option key={s} value={s}>{s}</option>)}
@@ -219,7 +219,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                             <Calendar size={14} /> Preferred Date
                           </label>
                           <input 
@@ -229,11 +229,11 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                             value={formData.date}
                             onChange={handleChange}
                             min={new Date().toISOString().split('T')[0]}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                             <Clock size={14} /> Preferred Time
                           </label>
                           <select 
@@ -241,7 +241,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                             name="time"
                             value={formData.time}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm bg-white"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                           >
                             <option value="">Select a time</option>
                             {timeSlots.map(t => <option key={t} value={t}>{t}</option>)}
@@ -250,7 +250,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                        <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
                           <MessageSquare size={14} /> Additional Message (Optional)
                         </label>
                         <textarea 
@@ -259,7 +259,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
                           onChange={handleChange}
                           placeholder="Tell us about your symptoms or any specific requirements..."
                           rows={3}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                          className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
                         />
                       </div>
 

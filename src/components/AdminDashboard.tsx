@@ -106,36 +106,36 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 h-[100dvh] w-full z-[200] bg-gray-50 flex flex-col"
+      className="fixed inset-0 h-[100dvh] w-full z-[300] bg-[var(--bg-primary)] flex flex-col transition-colors duration-300"
     >
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+      <header className="bg-[var(--bg-primary)] border-b border-[var(--border-color)] px-4 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-10">
         <div className="flex items-center gap-4">
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-[var(--bg-secondary)] rounded-full transition-colors"
           >
-            <ChevronLeft size={24} className="text-gray-600" />
+            <ChevronLeft size={24} className="text-[var(--text-secondary)]" />
           </button>
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg">
               <Users size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Appointment Management</p>
+              <h1 className="text-xl font-bold text-[var(--text-primary)]">Admin Dashboard</h1>
+              <p className="text-xs text-[var(--text-secondary)] font-medium uppercase tracking-wider">Appointment Management</p>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-100">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-500 rounded-full text-xs font-bold border border-green-500/20">
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
             Live Updates
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 text-gray-600 hover:text-red-600 px-4 py-2 rounded-xl hover:bg-red-50 transition-all text-sm font-bold"
+            className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-red-600 px-4 py-2 rounded-xl hover:bg-red-500/10 transition-all text-sm font-bold"
           >
             <LogOut size={18} />
             <span className="hidden sm:inline">Logout</span>
@@ -148,31 +148,31 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
         <div className="max-w-7xl mx-auto">
           {/* Stats & Filters */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-            <div className="lg:col-span-1 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-              <p className="text-sm font-medium text-gray-500 mb-1">Total Bookings</p>
-              <h3 className="text-3xl font-bold text-gray-900">{appointments.length}</h3>
-              <div className="mt-4 flex items-center gap-2 text-xs text-green-600 font-bold">
+            <div className="lg:col-span-1 bg-[var(--card-bg)] p-6 rounded-3xl shadow-sm border border-[var(--border-color)]">
+              <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">Total Bookings</p>
+              <h3 className="text-3xl font-bold text-[var(--text-primary)]">{appointments.length}</h3>
+              <div className="mt-4 flex items-center gap-2 text-xs text-green-500 font-bold">
                 <CheckCircle2 size={14} /> System Online
               </div>
             </div>
 
-            <div className="lg:col-span-3 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-4 items-center">
+            <div className="lg:col-span-3 bg-[var(--card-bg)] p-6 rounded-3xl shadow-sm border border-[var(--border-color)] flex flex-col sm:flex-row gap-4 items-center">
               <div className="relative flex-1 w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={18} />
                 <input 
                   type="text"
                   placeholder="Search by name, email or phone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm"
+                  className="w-full pl-12 pr-4 py-3 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm"
                 />
               </div>
               <div className="flex items-center gap-3 w-full sm:w-auto">
-                <Filter className="text-gray-400" size={18} />
+                <Filter className="text-[var(--text-secondary)]" size={18} />
                 <select 
                   value={filterService}
                   onChange={(e) => setFilterService(e.target.value)}
-                  className="flex-1 sm:w-48 px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:border-primary transition-all text-sm bg-white"
+                  className="flex-1 sm:w-48 px-4 py-3 rounded-2xl border border-[var(--border-color)] outline-none focus:border-primary transition-all text-sm bg-[var(--bg-secondary)] text-[var(--text-primary)]"
                 >
                   {services.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
@@ -181,14 +181,14 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
           </div>
 
           {/* Table/List */}
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-[var(--card-bg)] rounded-3xl shadow-sm border border-[var(--border-color)] overflow-hidden">
             {loading ? (
-              <div className="py-20 flex flex-col items-center justify-center text-gray-400">
+              <div className="py-20 flex flex-col items-center justify-center text-[var(--text-secondary)]">
                 <Loader2 size={40} className="animate-spin mb-4 text-primary" />
                 <p className="font-medium">Loading appointments...</p>
               </div>
             ) : filteredAppointments.length === 0 ? (
-              <div className="py-20 flex flex-col items-center justify-center text-gray-400">
+              <div className="py-20 flex flex-col items-center justify-center text-[var(--text-secondary)]">
                 <AlertCircle size={48} className="mb-4 opacity-20" />
                 <p className="text-lg font-medium">No appointments found</p>
                 <p className="text-sm">Try adjusting your search or filters</p>
@@ -196,21 +196,21 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
             ) : (
               <>
                 {/* Mobile Card View */}
-                <div className="block lg:hidden divide-y divide-gray-100">
+                <div className="block lg:hidden divide-y divide-[var(--border-color)]">
                   {filteredAppointments.map((app) => (
                     <motion.div 
                       layout
                       key={app.id}
-                      className="p-6 hover:bg-gray-50 transition-colors"
+                      className="p-6 hover:bg-[var(--bg-secondary)] transition-colors"
                     >
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary font-bold text-lg">
+                          <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-primary font-bold text-lg">
                             {app.name.charAt(0)}
                           </div>
                           <div>
-                            <p className="font-bold text-gray-900 text-lg">{app.name}</p>
-                            <p className="text-xs text-gray-500">ID: {app.id.slice(0, 8)}</p>
+                            <p className="font-bold text-[var(--text-primary)] text-lg">{app.name}</p>
+                            <p className="text-xs text-[var(--text-secondary)]">ID: {app.id.slice(0, 8)}</p>
                           </div>
                         </div>
                         <span className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold">
@@ -220,34 +220,34 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
 
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="space-y-1">
-                          <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Schedule</p>
-                          <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                            <Calendar size={14} className="text-gray-400" />
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-[var(--text-secondary)]">Schedule</p>
+                          <div className="flex items-center gap-2 text-sm text-[var(--text-primary)] font-medium">
+                            <Calendar size={14} className="text-[var(--text-secondary)]" />
                             {formatDate(app.date)}
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-gray-500">
-                            <Clock size={14} className="text-gray-400" />
+                          <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+                            <Clock size={14} className="text-[var(--text-secondary)]" />
                             {app.time}
                           </div>
                         </div>
                         <div className="space-y-1">
-                          <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Contact</p>
-                          <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                            <Phone size={14} className="text-gray-400" />
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-[var(--text-secondary)]">Contact</p>
+                          <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-[var(--text-primary)] font-medium">
+                            <Phone size={14} className="text-[var(--text-secondary)]" />
                             {app.phone}
                           </a>
-                          <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-gray-500 truncate max-w-[120px]">
-                            <Mail size={14} className="text-gray-400" />
+                          <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-[var(--text-secondary)] truncate max-w-[120px]">
+                            <Mail size={14} className="text-[var(--text-secondary)]" />
                             {app.email}
                           </a>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-50">
+                      <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--border-color)]">
                         {app.message && (
                           <button 
                             onClick={() => alert(`Message: ${app.message}`)}
-                            className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-slate-50 text-slate-600 rounded-xl font-bold text-sm"
+                            className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-xl font-bold text-sm"
                           >
                             <MessageSquare size={18} /> View Message
                           </button>
@@ -255,7 +255,7 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                         <button 
                           disabled={deletingId === app.id}
                           onClick={() => handleDelete(app.id)}
-                          className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-600 rounded-xl font-bold text-sm"
+                          className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-500/10 text-red-500 rounded-xl font-bold text-sm"
                         >
                           {deletingId === app.id ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
                           Delete
@@ -269,29 +269,29 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                 <div className="hidden lg:block overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-gray-50/50 border-b border-gray-100">
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Patient</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Service</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Schedule</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contact</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                      <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
+                        <th className="px-6 py-4 text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Patient</th>
+                        <th className="px-6 py-4 text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Service</th>
+                        <th className="px-6 py-4 text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Schedule</th>
+                        <th className="px-6 py-4 text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Contact</th>
+                        <th className="px-6 py-4 text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50">
+                    <tbody className="divide-y divide-[var(--border-color)]">
                       {filteredAppointments.map((app) => (
                         <motion.tr 
                           layout
                           key={app.id}
-                          className="hover:bg-gray-50/80 transition-colors group"
+                          className="hover:bg-[var(--bg-secondary)] transition-colors group"
                         >
                           <td className="px-6 py-5">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary font-bold">
+                              <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-primary font-bold">
                                 {app.name.charAt(0)}
                               </div>
                               <div>
-                                <p className="font-bold text-gray-900">{app.name}</p>
-                                <p className="text-xs text-gray-500">ID: {app.id.slice(0, 8)}</p>
+                                <p className="font-bold text-[var(--text-primary)]">{app.name}</p>
+                                <p className="text-xs text-[var(--text-secondary)]">ID: {app.id.slice(0, 8)}</p>
                               </div>
                             </div>
                           </td>
@@ -302,24 +302,24 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                           </td>
                           <td className="px-6 py-5">
                             <div className="space-y-1">
-                              <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                                <Calendar size={14} className="text-gray-400" />
+                              <div className="flex items-center gap-2 text-sm text-[var(--text-primary)] font-medium">
+                                <Calendar size={14} className="text-[var(--text-secondary)]" />
                                 {formatDate(app.date)}
                               </div>
-                              <div className="flex items-center gap-2 text-xs text-gray-500">
-                                <Clock size={14} className="text-gray-400" />
+                              <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+                                <Clock size={14} className="text-[var(--text-secondary)]" />
                                 {app.time}
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-5">
                             <div className="space-y-1">
-                              <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-gray-700 hover:text-primary transition-colors font-medium">
-                                <Phone size={14} className="text-gray-400" />
+                              <a href={`tel:${app.phone}`} className="flex items-center gap-2 text-sm text-[var(--text-primary)] hover:text-primary transition-colors font-medium">
+                                <Phone size={14} className="text-[var(--text-secondary)]" />
                                 {app.phone}
                               </a>
-                              <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-gray-500 hover:text-primary transition-colors">
-                                <Mail size={14} className="text-gray-400" />
+                              <a href={`mailto:${app.email}`} className="flex items-center gap-2 text-xs text-[var(--text-secondary)] hover:text-primary transition-colors">
+                                <Mail size={14} className="text-[var(--text-secondary)]" />
                                 {app.email}
                               </a>
                             </div>
@@ -329,7 +329,7 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                               {app.message && (
                                 <button 
                                   onClick={() => alert(`Message: ${app.message}`)}
-                                  className="p-2 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
+                                  className="p-2 text-[var(--text-secondary)] hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
                                   title="View Message"
                                 >
                                   <MessageSquare size={18} />
@@ -338,7 +338,7 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                               <button 
                                 disabled={deletingId === app.id}
                                 onClick={() => handleDelete(app.id)}
-                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all disabled:opacity-50"
+                                className="p-2 text-[var(--text-secondary)] hover:text-red-600 hover:bg-red-500/10 rounded-xl transition-all disabled:opacity-50"
                                 title="Delete Appointment"
                               >
                                 {deletingId === app.id ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
