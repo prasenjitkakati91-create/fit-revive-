@@ -234,12 +234,12 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] font-sans text-[var(--text-primary)] transition-colors duration-300 overflow-x-hidden w-full max-w-[100vw]">
       {/* NAVBAR */}
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled || mobileMenuOpen ? 'bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="h-10 w-10 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
-              <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-[var(--text-primary)]' : 'text-white drop-shadow-md'}`}>
+              <span className={`font-bold text-xl tracking-tight ${isScrolled || mobileMenuOpen ? 'text-[var(--text-primary)]' : 'text-white drop-shadow-md'}`}>
                 FitRevive
               </span>
             </div>
@@ -300,16 +300,16 @@ export default function App() {
               >
                 <div className="relative w-6 h-5 flex flex-col justify-center items-center gap-1.5 focus:outline-none">
                   <motion.span 
-                    animate={mobileMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--text-primary)]' : 'bg-white'}`}
+                    animate={mobileMenuOpen ? { rotate: 45, y: 7, backgroundColor: 'var(--text-primary)' } : { rotate: 0, y: 0, backgroundColor: (isScrolled ? 'var(--text-primary)' : '#ffffff') }}
+                    className="w-6 h-0.5 rounded-full"
                   />
                   <motion.span 
-                    animate={mobileMenuOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
-                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--text-primary)]' : 'bg-white'}`}
+                    animate={mobileMenuOpen ? { opacity: 0, x: -10, backgroundColor: 'var(--text-primary)' } : { opacity: 1, x: 0, backgroundColor: (isScrolled ? 'var(--text-primary)' : '#ffffff') }}
+                    className="w-6 h-0.5 rounded-full"
                   />
                   <motion.span 
-                    animate={mobileMenuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-                    className={`w-6 h-0.5 rounded-full transition-colors ${isScrolled || mobileMenuOpen ? 'bg-[var(--text-primary)]' : 'bg-white'}`}
+                    animate={mobileMenuOpen ? { rotate: -45, y: -7, backgroundColor: 'var(--text-primary)' } : { rotate: 0, y: 0, backgroundColor: (isScrolled ? 'var(--text-primary)' : '#ffffff') }}
+                    className="w-6 h-0.5 rounded-full"
                   />
                 </div>
               </button>
@@ -322,11 +322,12 @@ export default function App() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div 
+            key="mobile-nav"
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[150] bg-[var(--bg-primary)]/98 backdrop-blur-2xl flex flex-col p-8 lg:hidden overflow-y-auto overflow-x-hidden shadow-2xl"
+            exit={{ opacity: 0, x: '100%', transition: { duration: 0.25, ease: "easeInOut" } }}
+            transition={{ type: "spring", damping: 30, stiffness: 250 }}
+            className="fixed inset-0 z-[110] bg-[var(--bg-primary)]/98 backdrop-blur-2xl flex flex-col p-8 lg:hidden overflow-y-auto overflow-x-hidden shadow-2xl"
           >
             {/* Close Button in Overlay */}
             <div className="flex justify-end mb-8 mt-4">
