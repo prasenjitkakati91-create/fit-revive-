@@ -64,6 +64,30 @@ export default function App() {
   const galleryY2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   const galleryItems: GalleryItem[] = [
+    { 
+      url: "/treatment-thumbnail.png", 
+      videoUrl: "/treatment video.MP4", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
+    { 
+      url: "/thumbnail2.jpeg", 
+      videoUrl: "/video2.MP4", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
+    { 
+      url: "/thumbnail3.jpeg", 
+      videoUrl: "/video3.mp4", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
+    { 
+      url: "/thumbnail4.jpeg", 
+      videoUrl: "/video4.mp4", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
     // Images
     { url: "https://fit-images.vercel.app/tr1.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },
@@ -1222,17 +1246,26 @@ export default function App() {
                           <div className="absolute inset-0 bg-slate-800 animate-pulse"></div>
                           
                           {Math.abs(diff) <= 3 && (
-                            <img 
-                              src={item.url} 
-                              alt={item.category} 
-                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110 z-10"
-                              loading={Math.abs(diff) <= 1 ? "eager" : "lazy"}
-                              fetchPriority={isCenter ? "high" : "low"}
-                              decoding="async"
-                              onLoad={(e) => {
-                                (e.target as HTMLImageElement).previousElementSibling?.classList.add('hidden');
-                              }}
-                            />
+                            <>
+                              <img 
+                                src={item.url} 
+                                alt={item.category} 
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110 z-10"
+                                loading={Math.abs(diff) <= 1 ? "eager" : "lazy"}
+                                fetchPriority={isCenter ? "high" : "low"}
+                                decoding="async"
+                                onLoad={(e) => {
+                                  (e.target as HTMLImageElement).previousElementSibling?.classList.add('hidden');
+                                }}
+                              />
+                              {item.type === 'video' && (
+                                <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors duration-300">
+                                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-2xl transform transition-transform duration-300 group-hover:scale-110">
+                                    <Play fill="currentColor" size={32} className="ml-1" />
+                                  </div>
+                                </div>
+                              )}
+                            </>
                           )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 z-20">
                             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
@@ -1316,13 +1349,26 @@ export default function App() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {selectedGalleryItem.type === 'video' ? (
-                  <iframe 
-                    src={selectedGalleryItem.videoUrl} 
-                    title={selectedGalleryItem.title || "Treatment Video"}
-                    className="w-full h-full border-none"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowFullScreen
-                  ></iframe>
+                  selectedGalleryItem.videoUrl.includes('youtube') || selectedGalleryItem.videoUrl.includes('vimeo') ? (
+                    <iframe 
+                      src={selectedGalleryItem.videoUrl} 
+                      title={selectedGalleryItem.title || "Treatment Video"}
+                      className="w-full h-full border-none"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
+                    <video 
+                      src={selectedGalleryItem.videoUrl} 
+                      controls 
+                      autoPlay 
+                      muted
+                      playsInline
+                      className="w-full h-full max-h-[85vh] outline-none"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  )
                 ) : (
                   <img 
                     src={selectedGalleryItem.url} 
