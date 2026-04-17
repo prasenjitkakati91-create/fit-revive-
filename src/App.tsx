@@ -1397,11 +1397,14 @@ export default function App() {
                         <div className="flex gap-2">
                           <button 
                             onClick={() => {
-                              const v = document.querySelector('video');
-                              if (v) { 
-                                console.log("Forcing manual reload...");
-                                v.load(); 
-                                v.play().catch(err => console.error("Manual play failed:", err)); 
+                              const video = document.querySelector('video');
+                              if (video) { 
+                                console.log("Forcing manual reload with cache buster...");
+                                const currentSrc = video.src.split('?')[0];
+                                const cacheBuster = `?t=${Date.now()}`;
+                                video.src = currentSrc + cacheBuster;
+                                video.load(); 
+                                video.play().catch(err => console.error("Manual play failed:", err)); 
                               }
                             }}
                             className="text-white hover:text-primary transition-colors bg-white/5 px-2 py-1 rounded border border-white/10"
