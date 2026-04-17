@@ -66,13 +66,13 @@ export default function App() {
   const galleryItems: GalleryItem[] = [
     { 
       url: "/treatment-thumbnail.png", 
-      videoUrl: "/treatment-video.MP4", 
+      videoUrl: "/treatment-video.mp4", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail2.jpeg", 
-      videoUrl: "/video2.MP4", 
+      videoUrl: "/video2.mp4", 
       category: "Treatment", 
       type: "video" as const 
     },
@@ -1360,6 +1360,7 @@ export default function App() {
                   ) : (
                     <video 
                       key={selectedGalleryItem.videoUrl} 
+                      src={selectedGalleryItem.videoUrl}
                       controls 
                       autoPlay 
                       muted
@@ -1367,7 +1368,6 @@ export default function App() {
                       preload="auto"
                       className="w-full h-full max-h-[85vh] outline-none"
                     >
-                      <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   )
