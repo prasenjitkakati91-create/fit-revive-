@@ -7,19 +7,29 @@ import {
   Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
   Target, Microscope, HeartHandshake, Quote, BadgeCheck,
-  Sun, Moon
+  Sun, Moon, Play, Video, Smartphone
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
+import SuccessModal from './components/SuccessModal';
 import AdminDashboard from './components/AdminDashboard';
 import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+
+interface GalleryItem {
+  url: string;
+  category: string;
+  type: 'image' | 'video';
+  videoUrl?: string;
+  title?: string;
+}
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [legalType, setLegalType] = useState<'privacy' | 'terms'>('privacy');
   const [isAdminView, setIsAdminView] = useState(false);
@@ -27,7 +37,7 @@ export default function App() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
   const [galleryIndex, setGalleryIndex] = useState(0);
-  const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
+  const [selectedGalleryItem, setSelectedGalleryItem] = useState<{ url: string; type: 'image' | 'video'; videoUrl?: string; title?: string } | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
     if (saved) return saved === 'dark';
@@ -53,32 +63,37 @@ export default function App() {
   const galleryY1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
   const galleryY2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
-  const galleryItems = [
-    { url: "https://fit-images.vercel.app/exterior.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/inog.jpeg?v=2", category: "Event" },
-    { url: "https://fit-images.vercel.app/inog2.jpeg?v=2", category: "Event" },
-    { url: "https://fit-images.vercel.app/interiora.jpeg?v=2", category: "Recovery" },
-    { url: "https://fit-images.vercel.app/inog3.jpeg?v=2", category: "Event" },
-    { url: "https://fit-images.vercel.app/team.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/inog4.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/gust.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/image.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/me.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/me2.jpeg?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/12.webp?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/14.webp?v=2", category: "Clinic" },
-    { url: "https://fit-images.vercel.app/1.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/2.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/3.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/4.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/5.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/6.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/7.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/8.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/9.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/10.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/11.webp?v=2", category: "Equipment" },
-    { url: "https://fit-images.vercel.app/13.webp?v=2", category: "Equipment" },
+  const galleryItems: GalleryItem[] = [
+    // Images
+    { url: "https://fit-images.vercel.app/tr1.webp?v=2", category: "Treatment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/tr3.webp?v=2", category: "Treatment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/tr4.webp?v=2", category: "Treatment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/exterior.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog.jpeg?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog2.jpeg?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/interiora.jpeg?v=2", category: "Recovery", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog3.jpeg?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/team.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog4.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/gust.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/image.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/me.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/me2.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/12.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/14.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/1.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/2.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/3.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/4.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/5.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/6.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/7.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/8.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/9.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/10.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/11.webp?v=2", category: "Equipment", type: "image" as const },
+    { url: "https://fit-images.vercel.app/13.webp?v=2", category: "Equipment", type: "image" as const },
   ];
 
   const filters = ["All", "Treatment", "Clinic", "Equipment", "Event", "Recovery"];
@@ -227,6 +242,7 @@ export default function App() {
     { name: 'About Us', href: '#about' },
     { name: 'Our Team', href: '#team' },
     { name: 'Services', href: '#services' },
+    { name: 'Gallery', href: '#gallery' },
     { name: 'Testimonials', href: '#testimonials' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -1189,7 +1205,7 @@ export default function App() {
                         }}
                         className={`absolute w-[240px] h-[320px] md:w-[400px] md:h-[520px] rounded-[2rem] md:rounded-[3rem] overflow-visible ${isCenter ? 'cursor-zoom-in' : 'cursor-pointer'}`}
                         onClick={() => {
-                          if (isCenter) setSelectedGalleryImage(item.url);
+                          if (isCenter) setSelectedGalleryItem(item);
                           else setGalleryIndex(index);
                         }}
                         style={{
@@ -1222,10 +1238,10 @@ export default function App() {
                             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
                               <div>
                                 <span className="text-xs font-bold text-primary uppercase tracking-widest mb-2 block">{item.category}</span>
-                                <h4 className="text-white font-bold text-xl">FitRevive Moments</h4>
+                                <h4 className="text-white font-bold text-xl">{item.type === 'video' ? (item.title || 'Treatment Video') : 'FitRevive Moments'}</h4>
                               </div>
                               <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
-                                <Maximize2 size={20} />
+                                {item.type === 'video' ? <Play size={20} fill="currentColor" /> : <Maximize2 size={20} />}
                               </div>
                             </div>
                           </div>
@@ -1275,19 +1291,19 @@ export default function App() {
 
         {/* Lightbox Modal */}
         <AnimatePresence>
-          {selectedGalleryImage && (
+          {selectedGalleryItem && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-12 bg-secondary/95 backdrop-blur-md"
-              onClick={() => setSelectedGalleryImage(null)}
+              onClick={() => setSelectedGalleryItem(null)}
             >
               <motion.button
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all z-10"
-                onClick={() => setSelectedGalleryImage(null)}
+                onClick={() => setSelectedGalleryItem(null)}
               >
                 <X size={24} />
               </motion.button>
@@ -1296,16 +1312,26 @@ export default function App() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="relative max-w-5xl w-full max-h-full rounded-3xl overflow-hidden shadow-2xl"
+                className={`relative max-w-5xl w-full max-h-full rounded-3xl overflow-hidden shadow-2xl ${selectedGalleryItem.type === 'video' ? 'aspect-video bg-black' : ''}`}
                 onClick={(e) => e.stopPropagation()}
               >
-                <img 
-                  src={selectedGalleryImage} 
-                  alt="Gallery View" 
-                  className="w-full h-auto max-h-[85vh] object-contain bg-black/20"
-                  loading="eager"
-                  fetchPriority="high"
-                />
+                {selectedGalleryItem.type === 'video' ? (
+                  <iframe 
+                    src={selectedGalleryItem.videoUrl} 
+                    title={selectedGalleryItem.title || "Treatment Video"}
+                    className="w-full h-full border-none"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <img 
+                    src={selectedGalleryItem.url} 
+                    alt="Gallery View" 
+                    className="w-full h-auto max-h-[85vh] object-contain bg-black/20"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                )}
               </motion.div>
             </motion.div>
           )}
@@ -1649,7 +1675,17 @@ export default function App() {
       </footer>
 
       {/* Appointment Modal */}
-      <AppointmentForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+      <AppointmentForm 
+        isOpen={isFormOpen} 
+        onClose={() => setIsFormOpen(false)} 
+        onSuccess={() => setIsSuccessModalOpen(true)}
+      />
+
+      {/* Success Modal */}
+      <SuccessModal 
+        isOpen={isSuccessModalOpen} 
+        onClose={() => setIsSuccessModalOpen(false)} 
+      />
 
       {/* Legal Modals */}
       <LegalModal 

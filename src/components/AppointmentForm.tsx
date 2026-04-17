@@ -7,6 +7,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 interface AppointmentFormProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 const services = [
@@ -27,7 +28,7 @@ const timeSlots = [
   "07:00 PM", "07:30 PM", "08:00 PM"
 ];
 
-export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProps) {
+export default function AppointmentForm({ isOpen, onClose, onSuccess }: AppointmentFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -60,6 +61,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
       setTimeout(() => {
         setIsSuccess(false);
         onClose();
+        if (onSuccess) onSuccess();
         setFormData({
           name: '',
           email: '',
@@ -69,7 +71,7 @@ export default function AppointmentForm({ isOpen, onClose }: AppointmentFormProp
           time: '',
           message: ''
         });
-      }, 3000);
+      }, 2000);
     } catch (err) {
       console.error("Error booking appointment:", err);
       setError("Something went wrong. Please try again later.");
