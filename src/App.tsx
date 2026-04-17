@@ -1358,41 +1358,55 @@ export default function App() {
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <div className="flex flex-col w-full h-full">
+                    <div className="flex flex-col w-full h-full bg-black">
                       <video 
                         key={selectedGalleryItem.videoUrl} 
                         controls 
                         autoPlay 
                         muted
                         playsInline
-                        preload="metadata"
+                        preload="auto"
                         poster={selectedGalleryItem.url}
-                        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none bg-black"
+                        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
                         onLoadedMetadata={(e) => {
                           const video = e.currentTarget;
-                          console.log("Video metadata loaded. Duration:", video.duration);
+                          console.log("Success: Video loaded", video.duration);
                         }}
                         onError={(e) => {
-                          console.error("Video error detected:", e);
+                          console.error("Video failed to load. Check if the filename in GitHub exactly matches (lowercase):", selectedGalleryItem.videoUrl);
                         }}
                       >
                         <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
-                      <div className="bg-slate-900/80 backdrop-blur-sm p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
-                        <span className="flex items-center gap-2">
-                          <Video size={12} className="text-primary" />
-                          Streaming via manual range handler
-                        </span>
-                        <a 
-                          href={selectedGalleryItem.videoUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline flex items-center gap-1 font-medium bg-primary/10 px-3 py-1.5 rounded-lg transition-colors hover:bg-primary/20"
-                        >
-                          Open direct link
-                          <ExternalLink size={12} />
-                        </a>
+                      <div className="bg-slate-900 p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
+                        <div className="flex flex-col">
+                          <span className="flex items-center gap-2 text-white/70 font-medium">
+                            <Shield size={12} className="text-primary" />
+                            Secure Static Delivery (Vercel)
+                          </span>
+                          <span className="mt-1 opacity-60 italic">If video is blank, ensure GitHub filename is correct.</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => {
+                              const v = document.querySelector('video');
+                              if (v) { v.load(); v.play().catch(console.error); }
+                            }}
+                            className="text-white hover:text-primary transition-colors bg-white/5 px-2 py-1 rounded border border-white/10"
+                          >
+                            Retry
+                          </button>
+                          <a 
+                            href={selectedGalleryItem.videoUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors"
+                          >
+                            Direct Link
+                            <ExternalLink size={12} />
+                          </a>
+                        </div>
                       </div>
                     </div>
                   )
