@@ -17,23 +17,35 @@ async function startServer() {
   // Dedicated Video Stream Handler for MP4 files
   // This handles Range requests manually which is more robust for Safari/iOS
   app.get("/*.mp4", (req, res, next) => {
-    const filePath = path.join(process.cwd(), 'public', req.path);
+    // Sanitize path by removing leading slash if present
+    const cleanPath = req.path.startsWith('/') ? req.path.substring(1) : req.path;
+    const filePath = path.join(process.cwd(), 'public', cleanPath);
     
-    // Check if file exists in public first
+    let activeFilePath = filePath;
+    
+    // Check if file exists in public
     if (!fs.existsSync(filePath)) {
-      return next(); // Fall through to other static handlers or 404
+      // Try dist as fallback if we are in production
+      const fallbackPath = path.join(process.cwd(), 'dist', cleanPath);
+      if (!fs.existsSync(fallbackPath)) {
+        console.log(`Video file not found in public or dist: ${cleanPath}`);
+        return next();
+      }
+      activeFilePath = fallbackPath;
     }
 
-    const stat = fs.statSync(filePath);
+    const stat = fs.statSync(activeFilePath);
     const fileSize = stat.size;
     const range = req.headers.range;
 
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      // Handle "bytes=0-" case where parts[1] is empty
+      const end = (parts[1] && parts[1] !== "") ? parseInt(parts[1], 10) : fileSize - 1;
+      
       const chunksize = (end - start) + 1;
-      const file = fs.createReadStream(filePath, { start, end });
+      const file = fs.createReadStream(activeFilePath, { start, end });
       const head = {
         'Content-Range': `bytes ${start}-${end}/${fileSize}`,
         'Accept-Ranges': 'bytes',
@@ -49,7 +61,7 @@ async function startServer() {
         'Accept-Ranges': 'bytes',
       };
       res.writeHead(200, head);
-      fs.createReadStream(filePath).pipe(res);
+      fs.createReadStream(activeFilePath).pipe(res);
     }
   });
 

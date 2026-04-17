@@ -7,7 +7,7 @@ import {
   Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
   Target, Microscope, HeartHandshake, Quote, BadgeCheck,
-  Sun, Moon, Play, Video, Smartphone
+  Sun, Moon, Play, Video, Smartphone, ExternalLink
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import SuccessModal from './components/SuccessModal';
@@ -1358,18 +1358,43 @@ export default function App() {
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <video 
-                      key={selectedGalleryItem.videoUrl} 
-                      controls 
-                      autoPlay 
-                      muted
-                      playsInline
-                      preload="auto"
-                      className="w-full h-full max-h-[85vh] outline-none"
-                    >
-                      <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                    <div className="flex flex-col w-full h-full">
+                      <video 
+                        key={selectedGalleryItem.videoUrl} 
+                        controls 
+                        autoPlay 
+                        muted
+                        playsInline
+                        preload="metadata"
+                        poster={selectedGalleryItem.url}
+                        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none bg-black"
+                        onLoadedMetadata={(e) => {
+                          const video = e.currentTarget;
+                          console.log("Video metadata loaded. Duration:", video.duration);
+                        }}
+                        onError={(e) => {
+                          console.error("Video error detected:", e);
+                        }}
+                      >
+                        <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <div className="bg-slate-900/80 backdrop-blur-sm p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
+                        <span className="flex items-center gap-2">
+                          <Video size={12} className="text-primary" />
+                          Streaming via manual range handler
+                        </span>
+                        <a 
+                          href={selectedGalleryItem.videoUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline flex items-center gap-1 font-medium bg-primary/10 px-3 py-1.5 rounded-lg transition-colors hover:bg-primary/20"
+                        >
+                          Open direct link
+                          <ExternalLink size={12} />
+                        </a>
+                      </div>
+                    </div>
                   )
                 ) : (
                   <img 
