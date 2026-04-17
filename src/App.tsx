@@ -66,25 +66,25 @@ export default function App() {
   const galleryItems: GalleryItem[] = [
     { 
       url: "/treatment-thumbnail.png", 
-      videoUrl: "/treatment-video.mp4?v=2", 
+      videoUrl: "/treatment-video.mp4", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail2.jpeg", 
-      videoUrl: "/video2.mp4?v=2", 
+      videoUrl: "/video2.mp4", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail3.jpeg", 
-      videoUrl: "/video3.mp4?v=2", 
+      videoUrl: "/video3.mp4", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
       url: "/thumbnail4.jpeg", 
-      videoUrl: "/video4.mp4?v=2", 
+      videoUrl: "/video4.mp4", 
       category: "Treatment", 
       type: "video" as const 
     },
@@ -1361,13 +1361,11 @@ export default function App() {
                     <div className="flex flex-col w-full h-full bg-black">
                       <video 
                         key={selectedGalleryItem.videoUrl} 
-                        src={selectedGalleryItem.videoUrl}
                         controls 
                         autoPlay 
                         muted
                         playsInline
                         preload="auto"
-                        crossOrigin="anonymous"
                         poster={selectedGalleryItem.url}
                         className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
                         onLoadedMetadata={(e) => {
@@ -1390,34 +1388,28 @@ export default function App() {
                         <div className="flex flex-col">
                           <span className="flex items-center gap-2 text-white/70 font-medium">
                             <Shield size={12} className="text-primary" />
-                            Vercel Edge Streaming Active
+                            Vercel Static Delivery
                           </span>
-                          <span className="mt-1 opacity-60 italic">If black, check capitalization of files in GitHub.</span>
+                          <span className="mt-1 opacity-60 italic">Ensure files are in the "public" folder on GitHub.</span>
                         </div>
                         <div className="flex gap-2">
                           <button 
                             onClick={() => {
-                              const video = document.querySelector('video');
-                              if (video) { 
-                                console.log("Forcing manual reload with cache buster...");
-                                const currentSrc = video.src.split('?')[0];
-                                const cacheBuster = `?t=${Date.now()}`;
-                                video.src = currentSrc + cacheBuster;
-                                video.load(); 
-                                video.play().catch(err => console.error("Manual play failed:", err)); 
-                              }
+                              const v = document.querySelector('video');
+                              if (v) { v.load(); v.play().catch(console.error); }
                             }}
                             className="text-white hover:text-primary transition-colors bg-white/5 px-2 py-1 rounded border border-white/10"
                           >
-                            Force Reload
+                            Reload Player
                           </button>
                           <a 
                             href={selectedGalleryItem.videoUrl} 
                             target="_blank" 
                             rel="noopener noreferrer"
+                            download
                             className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors"
                           >
-                            Open File Directly
+                            Download/Direct File
                             <ExternalLink size={12} />
                           </a>
                         </div>
