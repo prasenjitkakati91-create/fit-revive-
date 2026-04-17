@@ -17,6 +17,9 @@
   --border-color: var(--color-border);
   --button-bg: var(--color-button-bg);
   --button-text: var(--color-button-text);
+  
+  --glass-bg: var(--color-glass-bg);
+  --glass-border: var(--color-glass-border);
 }
 
 :root {
@@ -28,6 +31,9 @@
   --color-border: #e2e8f0;
   --color-button-bg: #0284c7;
   --color-button-text: #ffffff;
+  
+  --color-glass-bg: rgba(255, 255, 255, 0.7);
+  --color-glass-border: rgba(255, 255, 255, 0.4);
 }
 
 .dark {
@@ -39,6 +45,16 @@
   --color-border: #334155;
   --color-button-bg: #0ea5e9;
   --color-button-text: #ffffff;
+  
+  --color-glass-bg: rgba(15, 23, 42, 0.7);
+  --color-glass-border: rgba(255, 255, 255, 0.05);
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl border-none;
+    background-color: var(--glass-bg);
+  }
 }
 
 html, body {

@@ -250,7 +250,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] font-sans text-[var(--text-primary)] transition-colors duration-300 overflow-x-hidden w-full max-w-[100vw]">
       {/* NAVBAR */}
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled || mobileMenuOpen ? 'bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled || mobileMenuOpen ? 'glass shadow-lg py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
@@ -514,7 +514,7 @@ export default function App() {
           whileInView={{ opacity: 0.1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 2, ease: "easeOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20rem] font-black text-[var(--text-primary)] opacity-5 select-none -z-20 tracking-tighter"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] md:text-[20rem] font-black text-[var(--text-primary)] opacity-5 select-none -z-20 tracking-tighter"
         >
           RECOVERY
         </motion.div>
@@ -548,7 +548,7 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2, duration: 0.4 }}
-                className="absolute -bottom-6 right-0 md:-right-10 bg-[var(--card-bg)] p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[var(--border-color)] z-20"
+                className="absolute -bottom-6 right-0 md:-right-10 glass p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] z-20"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-[var(--text-primary)] rounded-xl flex items-center justify-center text-[var(--bg-primary)] shrink-0 shadow-lg">
@@ -726,7 +726,7 @@ export default function App() {
                 className="relative group h-full cursor-pointer"
               >
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-2xl -z-10 scale-95" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))` }}></div>
-                <div className="bg-[var(--bg-secondary)] hover:bg-[var(--card-bg)] p-8 md:p-10 rounded-3xl border border-[var(--border-color)] hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
+                <div className="glass hover:bg-[var(--card-bg)] p-8 md:p-10 rounded-3xl border border-[var(--border-color)] hover:border-transparent transition-all duration-500 h-full shadow-sm hover:shadow-2xl flex flex-col">
                 <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
                     {feature.icon}
                   </div>
@@ -793,7 +793,7 @@ export default function App() {
                 whileTap={{ scale: 0.98, y: -5 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-[var(--card-bg)] rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-[var(--border-color)] overflow-hidden flex flex-col cursor-pointer"
+                className="group glass rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-[var(--border-color)] overflow-hidden flex flex-col cursor-pointer"
               >
                 <div className="relative aspect-[4/5] overflow-hidden m-3 rounded-2xl">
                   <img 
@@ -1048,14 +1048,14 @@ export default function App() {
       </section>
 
       {/* 6. TESTIMONIAL SECTION */}
-      <section id="testimonials" className="py-24 bg-gradient-to-b from-secondary to-[#152a42] text-white relative overflow-hidden">
+      <section id="testimonials" className="py-24 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold mb-16"
+            className="font-display text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] mb-16"
           >
             Client Testimonials
           </motion.h2>
@@ -1068,10 +1068,10 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl relative group hover:bg-white/10 transition-all duration-500 flex flex-col text-left shadow-2xl hover:-translate-y-2"
+                className="glass p-8 rounded-3xl relative group hover:bg-[var(--card-bg)] transition-all duration-500 flex flex-col text-left shadow-xl hover:shadow-2xl hover:-translate-y-2 border-[var(--border-color)]"
               >
                 {/* Quote Icon Background */}
-                <div className="absolute top-6 right-6 text-white/5 group-hover:text-white/10 transition-colors duration-500">
+                <div className="absolute top-6 right-6 text-primary/[0.03] group-hover:text-primary/[0.08] transition-colors duration-500">
                   <Quote size={80} />
                 </div>
 
@@ -1081,11 +1081,11 @@ export default function App() {
                   ))}
                 </div>
 
-                <p className="text-lg text-gray-200 italic mb-8 flex-grow relative z-10 font-light leading-relaxed">
+                <p className="text-lg text-[var(--text-secondary)] italic mb-8 flex-grow relative z-10 font-medium leading-relaxed">
                   "{testimonial.text}"
                 </p>
 
-                <div className="flex items-center gap-4 relative z-10 mt-auto pt-6 border-t border-white/10">
+                <div className="flex items-center gap-4 relative z-10 mt-auto pt-6 border-t border-[var(--border-color)]">
                   <div className="relative">
                     <img 
                       src={testimonial.img} 
@@ -1101,7 +1101,7 @@ export default function App() {
                     </div>
                   </div>
                   <div>
-                    <h5 className="font-bold text-white">{testimonial.name}</h5>
+                    <h5 className="font-bold text-[var(--text-primary)]">{testimonial.name}</h5>
                     <p className="text-primary text-xs uppercase tracking-wider font-semibold">Verified Patient</p>
                   </div>
                 </div>
@@ -1122,7 +1122,7 @@ export default function App() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Main Card Container */}
-          <div className="bg-[var(--card-bg)] rounded-[3rem] shadow-2xl border border-[var(--border-color)] p-6 md:p-12 relative overflow-hidden">
+          <div className="glass rounded-[3rem] shadow-2xl border border-[var(--border-color)] p-6 md:p-12 relative overflow-hidden">
             
             {/* Ambient Glow */}
             <motion.div style={{ y: galleryY1 }} className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-primary/5 blur-[120px] rounded-full pointer-events-none"></motion.div>

@@ -98,7 +98,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-[var(--bg-primary)] rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-color)]"
+            className="relative w-full max-w-2xl glass rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-color)]"
           >
             <button 
               onClick={onClose}
