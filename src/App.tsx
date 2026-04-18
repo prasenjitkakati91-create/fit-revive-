@@ -18,22 +18,32 @@ import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'f
 // Helper component for robust video playback
 function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [playRequested, setPlayRequested] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
 
   // Use a key based on src to force a complete re-mount when source changes
-  // This is the most reliable way to reset video state in React
   const videoKey = src || 'no-src';
 
-  const togglePlay = () => {
-    if (!videoRef.current) return;
+  const togglePlay = (e: React.MouseEvent) => {
+    if (!videoRef.current || hasError) return;
+    
+    // Heuristic: Avoid toggling if clicking the control bar area (approx bottom 15%)
+    // This allows native controls to work without being blocked or double-triggered
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const relativeY = (e.clientY - rect.top) / rect.height;
+      if (relativeY > 0.85) return;
+    }
+
     if (videoRef.current.paused) {
-      videoRef.current.play().then(() => setIsPaused(false)).catch(() => setPlayRequested(true));
+      videoRef.current.play().catch(err => {
+        if (err.name === 'NotAllowedError') setPlayRequested(true);
+      });
     } else {
       videoRef.current.pause();
-      setIsPaused(true);
     }
   };
 
@@ -47,40 +57,39 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       if (!videoRef.current || !src) return;
       
       try {
-        // Attempt play. Muted autoplay is highly supported.
         const playPromise = videoRef.current.play();
         if (playPromise !== undefined) {
           await playPromise;
-          setIsLoading(false);
-          setIsPaused(false);
         }
       } catch (error: any) {
-        setIsLoading(false);
         if (error.name === 'NotAllowedError') {
           setPlayRequested(true);
-          setIsPaused(true);
-        } else if (error.name !== 'AbortError' && error.name !== 'NotSupportedError') {
-          console.warn("Video playback issue:", error.name, error.message);
+        } else if (error.name !== 'AbortError') {
+          console.warn("Autoplay check:", error.name);
         }
       }
     };
 
-    // Give the browser a moment to acknowledge the new DOM element
-    const timer = setTimeout(checkAutoplay, 150);
+    const timer = setTimeout(checkAutoplay, 200);
     return () => clearTimeout(timer);
   }, [src]);
 
   return (
     <div 
-      className="flex flex-col w-full h-full bg-black relative min-h-[300px] cursor-pointer group"
+      ref={containerRef}
+      className="flex flex-col w-full h-full bg-black relative min-h-[300px] cursor-pointer group select-none"
       onClick={togglePlay}
     >
-      {isLoading && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-sm pointer-events-none">
+      {/* Cinematic Overlays */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-black/20 z-[1]" />
+      
+      {/* Modern Loading State */}
+      {(isLoading || videoRef.current?.seeking) && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-[2px] pointer-events-none">
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full"
+            className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full"
           />
         </div>
       )}
@@ -92,7 +101,7 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
           </div>
           <h3 className="text-white font-display text-xl font-bold mb-2">Playback Issue</h3>
           <p className="text-white/50 text-sm mb-8 max-w-xs leading-relaxed">
-            We're having trouble loading this video. This might be due to a connection issue or format compatibility.
+            The video could not be loaded. Please try again.
           </p>
           <button 
             onClick={() => {
@@ -112,14 +121,14 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       )}
 
       {/* Center Play Button Overlay */}
-      {(playRequested || (isPaused && !isLoading)) && !hasError && (
+      {(playRequested || isPaused) && !hasError && !isLoading && (
         <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-16 h-16 md:w-24 md:h-24 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20 backdrop-blur-md"
+            className="w-20 h-20 md:w-28 md:h-28 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(14,165,233,0.3)] border-4 border-white/20 backdrop-blur-md"
           >
-            <Play size={40} className="ml-1 md:w-12 md:h-12" fill="currentColor" />
+            <Play size={44} className="ml-1.5 md:w-14 md:h-14" fill="currentColor" />
           </motion.div>
         </div>
       )}
@@ -138,14 +147,20 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         className="w-full h-full max-h-[70vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
-        onPlay={() => {
-          setPlayRequested(false);
+        onWaiting={() => setIsLoading(true)}
+        onPlaying={() => {
+          setIsLoading(false);
           setIsPaused(false);
+          setPlayRequested(false);
+        }}
+        onPlay={() => {
+          setIsPaused(false);
+          setPlayRequested(false);
         }}
         onPause={() => setIsPaused(true)}
         onError={(e) => {
           if (!src) return;
-          console.error("Video element reported error:", e);
+          console.error("Video error:", e);
           setIsLoading(false);
           setHasError(true);
         }}
