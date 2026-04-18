@@ -129,9 +129,9 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         muted 
         autoPlay
         playsInline
-        preload="auto"
+        preload="metadata"
         crossOrigin="anonymous"
-        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
+        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none bg-black"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
         onError={(e) => {
@@ -218,8 +218,26 @@ export default function App() {
 
   const galleryItems: GalleryItem[] = [
     { 
+      url: "/treatment-thumbnail.png", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/v9w4hhrbrw074e6gf1w6i/treatment-video.MP4?rlkey=8zqjmyif3vpyh6asanmk62w5q&raw=1", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
+    { 
+      url: "/thumbnail2.jpeg", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/zlekjhwh25x2e50hxyw7r/video2.MP4?rlkey=x6e2fsr08awbyffq9bj031rtc&raw=1", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
+    { 
       url: "/thumbnail3.jpeg", 
-      videoUrl: "/video3.mp4", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/x0h07kmhv5q3uvf38f5ew/video3.mp4?rlkey=fq4cm4rxxnieff4e7qddoy3k9&raw=1", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
+    { 
+      url: "/thumbnail4.jpeg", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/ikkemujiig9ggjhbwvskz/video4.mp4?rlkey=celzmt9z43su9qiuynrujxl2u&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
