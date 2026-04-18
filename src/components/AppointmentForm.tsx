@@ -58,23 +58,27 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
         createdAt: serverTimestamp()
       });
       setIsSuccess(true);
+      if (onSuccess) onSuccess();
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        service: '',
+        date: '',
+        time: '',
+        message: ''
+      });
+      
+      // Close modal after success message is shown
       setTimeout(() => {
         setIsSuccess(false);
         onClose();
-        if (onSuccess) onSuccess();
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: '',
-          date: '',
-          time: '',
-          message: ''
-        });
-      }, 2000);
+      }, 3000);
     } catch (err) {
       console.error("Error booking appointment:", err);
-      setError("Something went wrong. Please try again later.");
+      setError("An error occurred while booking your appointment. Please try again or contact us directly.");
     } finally {
       setIsSubmitting(false);
     }
@@ -103,6 +107,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
             <button 
               onClick={onClose}
               className="absolute top-6 right-6 p-2 rounded-full hover:bg-[var(--bg-secondary)] transition-colors z-10"
+              aria-label="Close modal"
             >
               <X size={24} className="text-[var(--text-secondary)]" />
             </button>
@@ -134,159 +139,183 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
 
               {/* Right Side - Form */}
               <div className="flex-1 p-8 sm:p-10 max-h-[90vh] overflow-y-auto">
-                {isSuccess ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center py-10">
+                <AnimatePresence mode="wait">
+                  {isSuccess ? (
                     <motion.div 
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"
+                      key="success"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="h-full flex flex-col items-center justify-center text-center py-10"
                     >
-                      <CheckCircle2 size={40} />
-                    </motion.div>
-                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Booking Successful!</h3>
-                    <p className="text-[var(--text-secondary)]">
-                      We've received your request. Our team will contact you shortly to confirm your appointment.
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="mb-8">
-                      <h2 className="text-2xl font-bold text-[var(--text-primary)]">Appointment Request</h2>
-                      <p className="text-[var(--text-secondary)] text-sm mt-1">Please fill in your details below.</p>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                            <User size={14} /> Full Name
-                          </label>
-                          <input 
-                            required
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="John Doe"
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                            <Mail size={14} /> Email Address
-                          </label>
-                          <input 
-                            required
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="john@example.com"
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                            <Phone size={14} /> Phone Number
-                          </label>
-                          <input 
-                            required
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="+91 98765 43210"
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                            <Activity size={14} /> Service
-                          </label>
-                          <select 
-                            required
-                            name="service"
-                            value={formData.service}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          >
-                            <option value="">Select a service</option>
-                            {services.map(s => <option key={s} value={s}>{s}</option>)}
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                            <Calendar size={14} /> Preferred Date
-                          </label>
-                          <input 
-                            required
-                            type="date"
-                            name="date"
-                            value={formData.date}
-                            onChange={handleChange}
-                            min={new Date().toISOString().split('T')[0]}
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                            <Clock size={14} /> Preferred Time
-                          </label>
-                          <select 
-                            required
-                            name="time"
-                            value={formData.time}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                          >
-                            <option value="">Select a time</option>
-                            {timeSlots.map(t => <option key={t} value={t}>{t}</option>)}
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                          <MessageSquare size={14} /> Additional Message (Optional)
-                        </label>
-                        <textarea 
-                          name="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          placeholder="Tell us about your symptoms or any specific requirements..."
-                          rows={3}
-                          className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
-                        />
-                      </div>
-
-                      {error && (
-                        <p className="text-red-500 text-xs font-medium">{error}</p>
-                      )}
-
-                      <button 
-                        disabled={isSubmitting}
-                        type="submit"
-                        className="w-full bg-primary hover:bg-blue-600 text-white py-4 rounded-xl font-bold text-base transition-all shadow-lg hover:shadow-primary/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                      <motion.div 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"
                       >
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 size={20} className="animate-spin" /> Processing...
-                          </>
-                        ) : (
-                          <>
-                            Confirm Booking <ChevronRight size={20} />
-                          </>
+                        <CheckCircle2 size={40} />
+                      </motion.div>
+                      <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Booking Successful!</h3>
+                      <p className="text-[var(--text-secondary)]">
+                        We've received your request. Our team will contact you shortly to confirm your appointment.
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="form"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <div className="mb-8">
+                        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Appointment Request</h2>
+                        <p className="text-[var(--text-secondary)] text-sm mt-1">Please fill in your details below.</p>
+                      </div>
+
+                      <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                              <User size={14} /> Full Name
+                            </label>
+                            <input 
+                              required
+                              type="text"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              placeholder="John Doe"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                              <Mail size={14} /> Email Address
+                            </label>
+                            <input 
+                              required
+                              type="email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              placeholder="john@example.com"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                              <Phone size={14} /> Phone Number
+                            </label>
+                            <input 
+                              required
+                              type="tel"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                              placeholder="+91 98765 43210"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                              <Activity size={14} /> Service
+                            </label>
+                            <select 
+                              required
+                              name="service"
+                              value={formData.service}
+                              onChange={handleChange}
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            >
+                              <option value="">Select a service</option>
+                              {services.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                              <Calendar size={14} /> Preferred Date
+                            </label>
+                            <input 
+                              required
+                              type="date"
+                              name="date"
+                              value={formData.date}
+                              onChange={handleChange}
+                              min={new Date().toISOString().split('T')[0]}
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                              <Clock size={14} /> Preferred Time
+                            </label>
+                            <select 
+                              required
+                              name="time"
+                              value={formData.time}
+                              onChange={handleChange}
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                            >
+                              <option value="">Select a time</option>
+                              {timeSlots.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                            <MessageSquare size={14} /> Additional Message (Optional)
+                          </label>
+                          <textarea 
+                            name="message"
+                            value={formData.message}
+                            onChange={handleChange}
+                            placeholder="Tell us about your symptoms or any specific requirements..."
+                            rows={3}
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                          />
+                        </div>
+
+                        {error && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="p-3 rounded-lg bg-red-100/50 border border-red-200"
+                          >
+                            <p className="text-red-600 text-xs font-bold flex items-center gap-2">
+                              <Activity size={12} /> {error}
+                            </p>
+                          </motion.div>
                         )}
-                      </button>
-                    </form>
-                  </>
-                )}
+
+                        <button 
+                          disabled={isSubmitting}
+                          type="submit"
+                          className="w-full bg-primary hover:bg-blue-600 text-white py-4 rounded-xl font-bold text-base transition-all shadow-lg hover:shadow-primary/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 size={20} className="animate-spin" /> 
+                              <span>Processing Booking...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>Confirm Booking</span>
+                              <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </>
+                          )}
+                        </button>
+                      </form>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>

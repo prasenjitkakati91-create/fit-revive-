@@ -7,14 +7,93 @@ import {
   Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
   Target, Microscope, HeartHandshake, Quote, BadgeCheck,
-  Sun, Moon, Play, Video, Smartphone, ExternalLink
+  Sun, Moon, Play, Video, Smartphone, ExternalLink, AlertCircle
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
-import SuccessModal from './components/SuccessModal';
 import AdminDashboard from './components/AdminDashboard';
 import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+
+// Helper component for robust video playback
+function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const playVideo = async () => {
+      if (!videoRef.current || !src) return;
+      
+      try {
+        videoRef.current.load();
+        const playPromise = videoRef.current.play();
+        
+        if (playPromise !== undefined) {
+          await playPromise;
+        }
+      } catch (error: any) {
+        // Silently handle common autoplay/abort errors to keep console clean
+        if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
+          console.warn("Video playback issue:", error.name, error.message);
+        }
+      }
+    };
+
+    if (src) {
+      playVideo();
+    }
+  }, [src]);
+
+  return (
+    <div className="flex flex-col w-full h-full bg-black">
+      <video 
+        ref={videoRef}
+        src={src}
+        controls 
+        muted 
+        playsInline
+        preload="auto"
+        poster={poster}
+        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
+      >
+        Your browser does not support the video tag.
+      </video>
+      <div className="bg-slate-900 p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
+        <div className="flex flex-col">
+          <span className="flex items-center gap-2 text-white/70 font-medium">
+            <Video size={12} className="text-primary" />
+            Direct Stream
+          </span>
+          <span className="mt-1 opacity-60 italic">If video doesn't play, try reloading or use direct link.</span>
+        </div>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => {
+              if (videoRef.current) { 
+                videoRef.current.load(); 
+                videoRef.current.play().catch(err => {
+                  if (err.name !== 'AbortError') console.error("Play error:", err);
+                }); 
+              }
+            }}
+            className="bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-white hover:bg-white/10 transition-colors"
+          >
+            Reload
+          </button>
+          {src && (
+            <a 
+              href={src} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors font-bold"
+            >
+              Direct link <ExternalLink size={12} />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface GalleryItem {
   url: string;
@@ -29,12 +108,12 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [legalType, setLegalType] = useState<'privacy' | 'terms'>('privacy');
   const [isAdminView, setIsAdminView] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState('All');
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<{ url: string; type: 'image' | 'video'; videoUrl?: string; title?: string } | null>(null);
@@ -162,6 +241,7 @@ export default function App() {
   }, []);
 
   const handleAdminLogin = async () => {
+    setLoginError(null);
     if (user && user.email === ADMIN_EMAIL) {
       setIsAdminView(true);
       return;
@@ -177,14 +257,14 @@ export default function App() {
       if (result.user.email === ADMIN_EMAIL) {
         setIsAdminView(true);
       } else {
-        alert("Access Denied: You are not authorized to access the admin dashboard.");
+        setLoginError("Access Denied: You are not authorized to access the admin dashboard.");
       }
     } catch (error: any) {
       console.error("Login error:", error);
       if (error.code === 'auth/unauthorized-domain') {
-        alert(`Domain not authorized.\n\nPlease go to Firebase Console -> Authentication -> Settings -> Authorized Domains and add exactly this text:\n\n${window.location.hostname}`);
+        setLoginError(`Domain not authorized. Please check Firebase console settings.`);
       } else if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-        alert("Login failed: " + error.message);
+        setLoginError("Login failed: " + error.message);
       }
     } finally {
       setIsLoggingIn(false);
@@ -385,6 +465,11 @@ export default function App() {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 -z-10"></div>
 
             <div className="flex flex-col items-start justify-center space-y-8 w-full flex-grow">
+              {loginError && (
+                <div className="w-full p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm font-bold flex items-center gap-2">
+                  <AlertCircle size={18} /> {loginError}
+                </div>
+              )}
               {navLinks.map((link, i) => (
                 <motion.a 
                   key={link.name} 
@@ -1349,7 +1434,7 @@ export default function App() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {selectedGalleryItem.type === 'video' ? (
-                  selectedGalleryItem.videoUrl.includes('youtube') || selectedGalleryItem.videoUrl.includes('vimeo') ? (
+                  selectedGalleryItem.videoUrl && (selectedGalleryItem.videoUrl.includes('youtube') || selectedGalleryItem.videoUrl.includes('vimeo')) ? (
                     <iframe 
                       src={selectedGalleryItem.videoUrl} 
                       title={selectedGalleryItem.title || "Treatment Video"}
@@ -1358,63 +1443,10 @@ export default function App() {
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <div className="flex flex-col w-full h-full bg-black">
-                      <video 
-                        key={selectedGalleryItem.videoUrl} 
-                        controls 
-                        autoPlay 
-                        muted
-                        playsInline
-                        preload="auto"
-                        poster={selectedGalleryItem.url}
-                        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
-                        onLoadedMetadata={(e) => {
-                          const video = e.currentTarget;
-                          console.log("SUCCESS: Video metadata loaded. Duration:", video.duration);
-                        }}
-                        onPlay={() => console.log("Video started playing")}
-                        onError={(e) => {
-                          const video = e.currentTarget;
-                          console.error("CRITICAL ERROR: Video failed to load.");
-                          console.error("URL Attempted:", selectedGalleryItem.videoUrl);
-                          console.error("Exact Error Code:", video.error?.code);
-                          console.error("Error Message:", video.error?.message);
-                        }}
-                      >
-                        <source src={selectedGalleryItem.videoUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                      <div className="bg-slate-900 p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
-                        <div className="flex flex-col">
-                          <span className="flex items-center gap-2 text-white/70 font-medium">
-                            <Shield size={12} className="text-primary" />
-                            Vercel Static Delivery
-                          </span>
-                          <span className="mt-1 opacity-60 italic">Ensure files are in the "public" folder on GitHub.</span>
-                        </div>
-                        <div className="flex gap-2">
-                          <button 
-                            onClick={() => {
-                              const v = document.querySelector('video');
-                              if (v) { v.load(); v.play().catch(console.error); }
-                            }}
-                            className="text-white hover:text-primary transition-colors bg-white/5 px-2 py-1 rounded border border-white/10"
-                          >
-                            Reload Player
-                          </button>
-                          <a 
-                            href={selectedGalleryItem.videoUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            download
-                            className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors"
-                          >
-                            Download/Direct File
-                            <ExternalLink size={12} />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                    <VideoPlayer 
+                      src={selectedGalleryItem.videoUrl} 
+                      poster={selectedGalleryItem.url} 
+                    />
                   )
                 ) : (
                   <img 
@@ -1771,13 +1803,10 @@ export default function App() {
       <AppointmentForm 
         isOpen={isFormOpen} 
         onClose={() => setIsFormOpen(false)} 
-        onSuccess={() => setIsSuccessModalOpen(true)}
-      />
-
-      {/* Success Modal */}
-      <SuccessModal 
-        isOpen={isSuccessModalOpen} 
-        onClose={() => setIsSuccessModalOpen(false)} 
+        onSuccess={() => {
+          // Success is handled internally by AppointmentForm
+          console.log("Appointment successfully booked.");
+        }}
       />
 
       {/* Legal Modals */}
