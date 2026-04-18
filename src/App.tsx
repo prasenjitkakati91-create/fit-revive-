@@ -129,11 +129,19 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         muted 
         autoPlay
         playsInline
-        preload="metadata"
+        webkit-playsinline="true"
+        preload="auto"
         crossOrigin="anonymous"
-        className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none bg-black"
+        className="w-full h-full max-h-[70vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
+        onPlay={() => setPlayRequested(false)}
+        onClick={() => {
+          if (videoRef.current) {
+            if (videoRef.current.paused) videoRef.current.play();
+            else videoRef.current.pause();
+          }
+        }}
         onError={(e) => {
           // If src is empty, don't trigger error
           if (!src) return;
@@ -144,13 +152,13 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       >
         Your browser does not support the video tag.
       </video>
-      <div className="bg-slate-900 p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
-        <div className="flex flex-col">
+      <div className="bg-slate-900/95 p-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-white/50 text-xs border-t border-white/5 backdrop-blur-md">
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
           <span className="flex items-center gap-2 text-white/70 font-medium">
             <Video size={12} className="text-primary" />
-            Media Stream
+            Optimized Media Stream
           </span>
-          <span className="mt-1 opacity-60">If playback fails, use the direct link.</span>
+          <span className="mt-1 opacity-60">If playback is slow on mobile, use the direct link.</span>
         </div>
         <div className="flex gap-2">
           {src && (
@@ -1134,6 +1142,7 @@ export default function App() {
                     loading="lazy"
                     fetchPriority="low"
                     decoding="async"
+                    referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
                   <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8">
@@ -1503,7 +1512,7 @@ export default function App() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className={`relative max-w-5xl w-full max-h-full rounded-3xl overflow-hidden shadow-2xl ${selectedGalleryItem.type === 'video' ? 'aspect-video bg-black' : ''}`}
+                className={`relative max-w-5xl w-full max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl ${selectedGalleryItem.type === 'video' ? 'bg-black flex items-center justify-center' : ''}`}
                 onClick={(e) => e.stopPropagation()}
               >
                 {selectedGalleryItem.type === 'video' ? (
@@ -1528,6 +1537,7 @@ export default function App() {
                     className="w-full h-auto max-h-[85vh] object-contain bg-black/20"
                     loading="eager"
                     fetchPriority="high"
+                    referrerPolicy="no-referrer"
                   />
                 )}
               </motion.div>
