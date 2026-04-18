@@ -7,7 +7,7 @@ import {
   Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
   Target, Microscope, HeartHandshake, Quote, BadgeCheck,
-  Sun, Moon, Play, Video, Smartphone, ExternalLink, AlertCircle
+  Sun, Moon, Play, Video, Smartphone, ExternalLink, AlertCircle, RotateCcw
 } from 'lucide-react';
 import AppointmentForm from './components/AppointmentForm';
 import AdminDashboard from './components/AdminDashboard';
@@ -18,67 +18,140 @@ import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'f
 // Helper component for robust video playback
 function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [playRequested, setPlayRequested] = useState(false);
+
+  // Use a key based on src to force a complete re-mount when source changes
+  // This is the most reliable way to reset video state in React
+  const videoKey = src || 'no-src';
 
   useEffect(() => {
-    const playVideo = async () => {
+    setHasError(false);
+    setIsLoading(true);
+    setPlayRequested(false);
+
+    const checkAutoplay = async () => {
       if (!videoRef.current || !src) return;
       
       try {
-        videoRef.current.load();
+        // Attempt play. Muted autoplay is highly supported.
         const playPromise = videoRef.current.play();
-        
         if (playPromise !== undefined) {
           await playPromise;
+          setIsLoading(false);
         }
       } catch (error: any) {
-        // Silently handle common autoplay/abort errors to keep console clean
-        if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
+        setIsLoading(false);
+        if (error.name === 'NotAllowedError') {
+          setPlayRequested(true);
+        } else if (error.name !== 'AbortError' && error.name !== 'NotSupportedError') {
+          // We intentionally ignore NotSupportedError here because it might be transient
+          // during the initial source load. The onError handler on the video tag
+          // will catch persistent failures.
           console.warn("Video playback issue:", error.name, error.message);
         }
       }
     };
 
-    if (src) {
-      playVideo();
-    }
+    // Give the browser a moment to acknowledge the new DOM element
+    const timer = setTimeout(checkAutoplay, 150);
+    return () => clearTimeout(timer);
   }, [src]);
 
   return (
-    <div className="flex flex-col w-full h-full bg-black">
+    <div className="flex flex-col w-full h-full bg-black relative min-h-[300px]">
+      {isLoading && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 backdrop-blur-sm">
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      )}
+
+      {hasError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-slate-900 px-6 text-center">
+          <AlertCircle size={48} className="text-red-500 mb-4" />
+          <h3 className="text-white font-bold mb-2">Unsupported Video Format</h3>
+          <p className="text-white/60 text-sm mb-6 max-w-xs">
+            The video could not be loaded in this browser. You can try the direct link or switch to YouTube hosting for better compatibility.
+          </p>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => {
+                setHasError(false);
+                setIsLoading(true);
+                if (videoRef.current) {
+                  videoRef.current.load();
+                  videoRef.current.play().catch(() => setHasError(true));
+                }
+              }}
+              className="bg-white/10 text-white px-6 py-2 rounded-xl font-bold hover:bg-white/20 transition-all border border-white/10"
+            >
+              Retry
+            </button>
+            {src && (
+              <a 
+                href={src}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-white px-6 py-2 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg shadow-primary/20"
+              >
+                Open Direct
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
+      {playRequested && !hasError && !isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
+          <button 
+            onClick={() => {
+              if (videoRef.current) {
+                videoRef.current.play().then(() => setPlayRequested(false)).catch(console.error);
+              }
+            }}
+            className="w-20 h-20 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform ring-4 ring-white/10"
+          >
+            <Play size={40} className="ml-1" fill="currentColor" />
+          </button>
+        </div>
+      )}
+
       <video 
+        key={videoKey}
         ref={videoRef}
-        src={src}
         controls 
         muted 
+        autoPlay
         playsInline
-        preload="auto"
-        poster={poster}
         className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
+        poster={poster}
+        onLoadedData={() => setIsLoading(false)}
+        onError={(e) => {
+          // If src is empty, don't trigger error
+          if (!src) return;
+          console.error("Video element reported error:", e);
+          setIsLoading(false);
+          setHasError(true);
+        }}
       >
+        <source src={src} type="video/mp4" />
+        <source src={src} type="video/quicktime" />
         Your browser does not support the video tag.
       </video>
       <div className="bg-slate-900 p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">
         <div className="flex flex-col">
           <span className="flex items-center gap-2 text-white/70 font-medium">
             <Video size={12} className="text-primary" />
-            Direct Stream
+            Media Stream
           </span>
-          <span className="mt-1 opacity-60 italic">If video doesn't play, try reloading or use direct link.</span>
+          <span className="mt-1 opacity-60">If playback fails, use the direct link.</span>
         </div>
         <div className="flex gap-2">
-          <button 
-            onClick={() => {
-              if (videoRef.current) { 
-                videoRef.current.load(); 
-                videoRef.current.play().catch(err => {
-                  if (err.name !== 'AbortError') console.error("Play error:", err);
-                }); 
-              }
-            }}
-            className="bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-white hover:bg-white/10 transition-colors"
-          >
-            Reload
-          </button>
           {src && (
             <a 
               href={src} 
@@ -86,7 +159,7 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
               rel="noopener noreferrer"
               className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors font-bold"
             >
-              Direct link <ExternalLink size={12} />
+              {src.includes('youtube.com') || src.includes('vimeo.com') ? 'Watch External' : 'Direct Video Link'} <ExternalLink size={12} />
             </a>
           )}
         </div>
@@ -143,30 +216,6 @@ export default function App() {
   const galleryY2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   const galleryItems: GalleryItem[] = [
-    { 
-      url: "/treatment-thumbnail.png", 
-      videoUrl: "/treatment-video.mp4", 
-      category: "Treatment", 
-      type: "video" as const 
-    },
-    { 
-      url: "/thumbnail2.jpeg", 
-      videoUrl: "/video2.mp4", 
-      category: "Treatment", 
-      type: "video" as const 
-    },
-    { 
-      url: "/thumbnail3.jpeg", 
-      videoUrl: "/video3.mp4", 
-      category: "Treatment", 
-      type: "video" as const 
-    },
-    { 
-      url: "/thumbnail4.jpeg", 
-      videoUrl: "/video4.mp4", 
-      category: "Treatment", 
-      type: "video" as const 
-    },
     // Images
     { url: "https://fit-images.vercel.app/tr1.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },

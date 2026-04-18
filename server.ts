@@ -16,7 +16,7 @@ async function startServer() {
 
   // Dedicated Video Stream Handler for MP4 files
   // This handles Range requests manually which is more robust for Safari/iOS
-  app.get("/*.mp4", (req, res, next) => {
+  app.get(/\.(mp4|MP4)$/, (req, res, next) => {
     // Sanitize path by removing leading slash if present
     const cleanPath = req.path.startsWith('/') ? req.path.substring(1) : req.path;
     const filePath = path.join(process.cwd(), 'public', cleanPath);
@@ -41,7 +41,6 @@ async function startServer() {
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
-      // Handle "bytes=0-" case where parts[1] is empty
       const end = (parts[1] && parts[1] !== "") ? parseInt(parts[1], 10) : fileSize - 1;
       
       const chunksize = (end - start) + 1;
@@ -51,6 +50,8 @@ async function startServer() {
         'Accept-Ranges': 'bytes',
         'Content-Length': chunksize,
         'Content-Type': 'video/mp4',
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': 'public, max-age=31536000'
       };
       res.writeHead(206, head);
       file.pipe(res);
@@ -59,6 +60,8 @@ async function startServer() {
         'Content-Length': fileSize,
         'Content-Type': 'video/mp4',
         'Accept-Ranges': 'bytes',
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': 'public, max-age=31536000'
       };
       res.writeHead(200, head);
       fs.createReadStream(activeFilePath).pipe(res);
