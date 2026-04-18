@@ -97,18 +97,28 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         </div>
       )}
 
-      {playRequested && !hasError && !isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-          <button 
-            onClick={() => {
+      {/* Center Play Button Overlay */}
+      {(playRequested || (videoRef.current?.paused && !isLoading)) && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/10">
+          <motion.button 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={(e) => {
+              e.stopPropagation();
               if (videoRef.current) {
-                videoRef.current.play().then(() => setPlayRequested(false)).catch(console.error);
+                videoRef.current.play().then(() => {
+                  setPlayRequested(false);
+                }).catch(err => {
+                  console.error("Manual play failed:", err);
+                });
               }
             }}
-            className="w-20 h-20 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform ring-4 ring-white/10"
+            className="w-16 h-16 md:w-24 md:h-24 bg-primary/90 text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(0,0,0,0.5)] border-4 border-white/20 backdrop-blur-sm"
           >
-            <Play size={40} className="ml-1" fill="currentColor" />
-          </button>
+            <Play size={40} className="ml-1 md:w-12 md:h-12" fill="currentColor" />
+          </motion.button>
         </div>
       )}
 
@@ -123,14 +133,18 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         webkit-playsinline="true"
         preload="auto"
         crossOrigin="anonymous"
-        className="w-full h-full max-h-[70vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1"
+        className="w-full h-full max-h-[70vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
         onPlay={() => setPlayRequested(false)}
+        onPause={() => setPlayRequested(true)}
         onClick={() => {
           if (videoRef.current) {
-            if (videoRef.current.paused) videoRef.current.play();
-            else videoRef.current.pause();
+            if (videoRef.current.paused) {
+              videoRef.current.play().catch(() => setPlayRequested(true));
+            } else {
+              videoRef.current.pause();
+            }
           }
         }}
         onError={(e) => {
