@@ -72,37 +72,28 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       )}
 
       {hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-slate-900 px-6 text-center">
-          <AlertCircle size={48} className="text-red-500 mb-4" />
-          <h3 className="text-white font-bold mb-2">Unsupported Video Format</h3>
-          <p className="text-white/60 text-sm mb-6 max-w-xs">
-            The video could not be loaded in this browser. You can try the direct link or switch to YouTube hosting for better compatibility.
-          </p>
-          <div className="flex gap-4">
-            <button 
-              onClick={() => {
-                setHasError(false);
-                setIsLoading(true);
-                if (videoRef.current) {
-                  videoRef.current.load();
-                  videoRef.current.play().catch(() => setHasError(true));
-                }
-              }}
-              className="bg-white/10 text-white px-6 py-2 rounded-xl font-bold hover:bg-white/20 transition-all border border-white/10"
-            >
-              Retry
-            </button>
-            {src && (
-              <a 
-                href={src}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary text-white px-6 py-2 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg shadow-primary/20"
-              >
-                Open Direct
-              </a>
-            )}
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-slate-950/90 backdrop-blur-xl px-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-6 ring-8 ring-red-500/10">
+            <AlertCircle size={32} className="text-red-500" />
           </div>
+          <h3 className="text-white font-display text-xl font-bold mb-2">Playback Issue</h3>
+          <p className="text-white/50 text-sm mb-8 max-w-xs leading-relaxed">
+            We're having trouble loading this video. This might be due to a connection issue or format compatibility.
+          </p>
+          <button 
+            onClick={() => {
+              setHasError(false);
+              setIsLoading(true);
+              if (videoRef.current) {
+                videoRef.current.load();
+                videoRef.current.play().catch(() => setHasError(true));
+              }
+            }}
+            className="group flex items-center gap-2 bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-primary hover:text-white transition-all shadow-xl active:scale-95"
+          >
+            <RotateCcw size={18} className="group-hover:rotate-180 transition-transform duration-500" />
+            Try Again
+          </button>
         </div>
       )}
 
@@ -152,27 +143,25 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       >
         Your browser does not support the video tag.
       </video>
-      <div className="bg-slate-900/95 p-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-white/50 text-xs border-t border-white/5 backdrop-blur-md">
-        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-          <span className="flex items-center gap-2 text-white/70 font-medium">
-            <Video size={12} className="text-primary" />
-            Optimized Media Stream
-          </span>
-          <span className="mt-1 opacity-60">If playback is slow on mobile, use the direct link.</span>
+      
+      {/* Subtle Overlay Shadow for Depth */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/20 z-0"></div>
+
+      {/* Modern Loading Glassmorphism */}
+      {isLoading && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-[2px]">
+          <div className="relative">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full shadow-[0_0_15px_rgba(14,165,233,0.3)]"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          {src && (
-            <a 
-              href={src} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/30 transition-colors font-bold"
-            >
-              {src.includes('youtube.com') || src.includes('vimeo.com') ? 'Watch External' : 'Direct Video Link'} <ExternalLink size={12} />
-            </a>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
