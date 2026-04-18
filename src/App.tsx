@@ -124,10 +124,13 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       <video 
         key={videoKey}
         ref={videoRef}
+        src={src}
         controls 
         muted 
         autoPlay
         playsInline
+        preload="auto"
+        crossOrigin="anonymous"
         className="w-full h-full max-h-[75vh] md:max-h-[85vh] outline-none"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
@@ -139,8 +142,6 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
           setHasError(true);
         }}
       >
-        <source src={src} type="video/mp4" />
-        <source src={src} type="video/quicktime" />
         Your browser does not support the video tag.
       </video>
       <div className="bg-slate-900 p-4 flex justify-between items-center text-white/50 text-xs border-t border-white/5">

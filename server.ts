@@ -51,7 +51,9 @@ async function startServer() {
         'Content-Length': chunksize,
         'Content-Type': 'video/mp4',
         'X-Content-Type-Options': 'nosniff',
-        'Cache-Control': 'public, max-age=31536000'
+        'Cache-Control': 'public, max-age=31536000',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Content-Range, Content-Length, Accept-Ranges'
       };
       res.writeHead(206, head);
       file.pipe(res);
@@ -61,7 +63,8 @@ async function startServer() {
         'Content-Type': 'video/mp4',
         'Accept-Ranges': 'bytes',
         'X-Content-Type-Options': 'nosniff',
-        'Cache-Control': 'public, max-age=31536000'
+        'Cache-Control': 'public, max-age=31536000',
+        'Access-Control-Allow-Origin': '*'
       };
       res.writeHead(200, head);
       fs.createReadStream(activeFilePath).pipe(res);
