@@ -216,6 +216,12 @@ export default function App() {
   const galleryY2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   const galleryItems: GalleryItem[] = [
+    { 
+      url: "/thumbnail3.jpeg", 
+      videoUrl: "/video3.mp4", 
+      category: "Treatment", 
+      type: "video" as const 
+    },
     // Images
     { url: "https://fit-images.vercel.app/tr1.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },
