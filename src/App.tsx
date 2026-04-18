@@ -750,7 +750,7 @@ export default function App() {
               </motion.div>
 
               {/* Decorative Dots */}
-              <div className="absolute -top-10 -left-10 w-32 h-32 bg-[radial-gradient(#3b82f6_2px,transparent_2px)] [background-size:16px_16px] opacity-20 -z-10"></div>
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-[radial-gradient(#3b82f6_2px,transparent_2px)] [background-size:16px_16px] opacity-20 dark:opacity-50 -z-10"></div>
             </motion.div>
 
             {/* Text Content (Right Side) */}
@@ -838,7 +838,7 @@ export default function App() {
                     whileHover={{ x: 5 }}
                     className="flex items-start gap-4 group/item cursor-default"
                   >
-                    <div className="mt-1 bg-primary/10 p-2 rounded-xl text-primary shrink-0 group-hover/item:bg-primary group-hover/item:text-white transition-colors duration-300">
+                    <div className="mt-1 bg-primary/10 dark:bg-primary/25 p-2 rounded-xl text-primary shrink-0 group-hover/item:bg-primary group-hover/item:text-white transition-colors duration-300">
                       <CheckCircle size={20} strokeWidth={2.5} />
                     </div>
                     <div>
