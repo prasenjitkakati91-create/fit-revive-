@@ -218,25 +218,25 @@ export default function App() {
 
   const galleryItems: GalleryItem[] = [
     { 
-      url: "/treatment-thumbnail.png", 
+      url: "/treatment-thumbnail.png?v=1", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/v9w4hhrbrw074e6gf1w6i/treatment-video.MP4?rlkey=8zqjmyif3vpyh6asanmk62w5q&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
-      url: "/thumbnail2.jpeg", 
+      url: "/thumbnail2.jpeg?v=1", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/zlekjhwh25x2e50hxyw7r/video2.MP4?rlkey=x6e2fsr08awbyffq9bj031rtc&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
-      url: "/thumbnail3.jpeg", 
+      url: "/thumbnail3.jpeg?v=1", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/x0h07kmhv5q3uvf38f5ew/video3.mp4?rlkey=fq4cm4rxxnieff4e7qddoy3k9&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
-      url: "/thumbnail4.jpeg", 
+      url: "/thumbnail4.jpeg?v=1", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/ikkemujiig9ggjhbwvskz/video4.mp4?rlkey=celzmt9z43su9qiuynrujxl2u&raw=1", 
       category: "Treatment", 
       type: "video" as const 
@@ -432,7 +432,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="h-10 w-10 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
+              <div className="h-10 w-10 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(/fitrevive-brand-logo.jpg)' }} role="img" aria-label="FitRevive Logo" />
               <span className={`font-bold text-xl tracking-tight ${isScrolled || mobileMenuOpen ? 'text-[var(--text-primary)]' : 'text-white drop-shadow-md'}`}>
                 FitRevive
               </span>
@@ -1401,20 +1401,19 @@ export default function App() {
                           whileHover={isCenter ? { scale: 1.02, boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.6)" } : {}}
                           className={`relative w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 bg-slate-800 ${isCenter ? 'ring-4 ring-primary/50 shadow-[0_0_40px_rgba(14,165,233,0.3)]' : ''}`}
                         >
-                          {/* Loading Skeleton */}
-                          <div className="absolute inset-0 bg-slate-800 animate-pulse"></div>
-                          
                           {Math.abs(diff) <= 3 && (
                             <>
                               <img 
                                 src={item.url} 
-                                alt={item.category} 
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110 z-10"
+                                alt={item.title || item.category || "FitRevive Gallery"} 
+                                className="absolute inset-0 w-full h-full object-cover z-30 block"
                                 loading={Math.abs(diff) <= 1 ? "eager" : "lazy"}
                                 fetchPriority={isCenter ? "high" : "low"}
                                 decoding="async"
-                                onLoad={(e) => {
-                                  (e.target as HTMLImageElement).previousElementSibling?.classList.add('hidden');
+                                referrerPolicy="no-referrer"
+                                onError={(e) => {
+                                  console.error("Gallery image load error:", item.url);
+                                  e.currentTarget.src = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=75";
                                 }}
                               />
                               {item.type === 'video' && (
