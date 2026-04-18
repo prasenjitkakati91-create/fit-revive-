@@ -18,90 +18,64 @@ import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'f
 // Helper component for robust video playback
 function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [playRequested, setPlayRequested] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
 
-  // Use a key based on src to force a complete re-mount when source changes
+  // Use a key based on src for clean reset
   const videoKey = src || 'no-src';
-
-  const togglePlay = (e: React.MouseEvent) => {
-    if (!videoRef.current || hasError) return;
-    
-    // Heuristic: Avoid toggling if clicking the control bar area (approx bottom 15%)
-    // This allows native controls to work without being blocked or double-triggered
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const relativeY = (e.clientY - rect.top) / rect.height;
-      if (relativeY > 0.85) return;
-    }
-
-    if (videoRef.current.paused) {
-      videoRef.current.play().catch(err => {
-        if (err.name === 'NotAllowedError') setPlayRequested(true);
-      });
-    } else {
-      videoRef.current.pause();
-    }
-  };
 
   useEffect(() => {
     setHasError(false);
     setIsLoading(true);
-    setPlayRequested(false);
     setIsPaused(true);
 
     const checkAutoplay = async () => {
       if (!videoRef.current || !src) return;
-      
       try {
         const playPromise = videoRef.current.play();
         if (playPromise !== undefined) {
           await playPromise;
         }
       } catch (error: any) {
-        if (error.name === 'NotAllowedError') {
-          setPlayRequested(true);
-        } else if (error.name !== 'AbortError') {
+        if (error.name !== 'NotAllowedError' && error.name !== 'AbortError') {
           console.warn("Autoplay check:", error.name);
         }
       }
     };
 
-    const timer = setTimeout(checkAutoplay, 200);
+    const timer = setTimeout(checkAutoplay, 250);
     return () => clearTimeout(timer);
   }, [src]);
 
   return (
-    <div 
-      ref={containerRef}
-      className="flex flex-col w-full h-full bg-black relative min-h-[300px] cursor-pointer group select-none"
-      onClick={togglePlay}
-    >
-      {/* Cinematic Overlays */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-black/20 z-[1]" />
+    <div className="group flex flex-col w-full h-full bg-black relative min-h-[300px] md:min-h-[400px] overflow-hidden select-none">
+      {/* Cinematic Overlays (Recipe 7) */}
+      <div className="absolute inset-0 pointer-events-none z-[1]">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_50%_40%,rgba(14,165,233,0.15),transparent_70%)]" />
+      </div>
       
-      {/* Modern Loading State */}
-      {(isLoading || videoRef.current?.seeking) && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-[2px] pointer-events-none">
+      {/* Modern Loading State (Glassmorphism) */}
+      {isLoading && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-[4px] pointer-events-none">
           <motion.div 
             animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full"
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            className="w-14 h-14 border-[3px] border-primary/20 border-t-primary rounded-full shadow-[0_0_20px_rgba(14,165,233,0.2)]"
           />
         </div>
       )}
 
+      {/* Polish Error State */}
       {hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-40 bg-slate-950/90 backdrop-blur-xl px-6 text-center" onClick={(e) => e.stopPropagation()}>
-          <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-6 ring-8 ring-red-500/10">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-40 bg-slate-950/95 backdrop-blur-xl px-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-6 ring-8 ring-red-500/5">
             <AlertCircle size={32} className="text-red-500" />
           </div>
-          <h3 className="text-white font-display text-xl font-bold mb-2">Playback Issue</h3>
-          <p className="text-white/50 text-sm mb-8 max-w-xs leading-relaxed">
-            The video could not be loaded. Please try again.
+          <h3 className="text-white font-display text-xl font-bold mb-2">Video Unavailable</h3>
+          <p className="text-white/40 text-sm mb-8 max-w-xs leading-relaxed">
+            We couldn't load the requested media. Please check your connection and try again.
           </p>
           <button 
             onClick={() => {
@@ -112,24 +86,29 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
                 videoRef.current.play().catch(() => setHasError(true));
               }
             }}
-            className="group flex items-center gap-2 bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-primary hover:text-white transition-all shadow-xl active:scale-95"
+            className="bg-white text-black px-10 py-3 rounded-full font-bold hover:bg-primary hover:text-white transition-all transform active:scale-95 shadow-xl"
           >
-            <RotateCcw size={18} className="group-hover:rotate-180 transition-transform duration-500" />
-            Try Again
+            Retry Loading
           </button>
         </div>
       )}
 
-      {/* Center Play Button Overlay */}
-      {(playRequested || isPaused) && !hasError && !isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
+      {/* Logic: Big Play Overlay (Clickable only when paused) */}
+      {isPaused && !isLoading && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-20">
+          <motion.button 
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-20 h-20 md:w-28 md:h-28 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(14,165,233,0.3)] border-4 border-white/20 backdrop-blur-md"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              videoRef.current?.play();
+            }}
+            className="w-20 h-20 md:w-28 md:h-28 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(14,165,233,0.3)] border-2 border-white/20 backdrop-blur-md transition-all active:bg-primary/80"
           >
-            <Play size={44} className="ml-1.5 md:w-14 md:h-14" fill="currentColor" />
-          </motion.div>
+            <Play size={48} className="ml-1.5 md:w-16 md:h-16" fill="currentColor" />
+          </motion.button>
         </div>
       )}
 
@@ -144,20 +123,17 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         webkit-playsinline="true"
         preload="auto"
         crossOrigin="anonymous"
-        className="w-full h-full max-h-[70vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
+        className="w-full h-full max-h-[75vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
         onWaiting={() => setIsLoading(true)}
         onPlaying={() => {
           setIsLoading(false);
           setIsPaused(false);
-          setPlayRequested(false);
         }}
-        onPlay={() => {
-          setIsPaused(false);
-          setPlayRequested(false);
-        }}
+        onPlay={() => setIsPaused(false)}
         onPause={() => setIsPaused(true)}
+        onEnded={() => setIsPaused(true)}
         onError={(e) => {
           if (!src) return;
           console.error("Video error:", e);
@@ -167,25 +143,6 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       >
         Your browser does not support the video tag.
       </video>
-      
-      {/* Subtle Overlay Shadow for Depth */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/20 z-0"></div>
-
-      {/* Modern Loading Glassmorphism */}
-      {isLoading && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-[2px]">
-          <div className="relative">
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-              className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full shadow-[0_0_15px_rgba(14,165,233,0.3)]"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
