@@ -21,15 +21,27 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [playRequested, setPlayRequested] = useState(false);
+  const [isPaused, setIsPaused] = useState(true);
 
   // Use a key based on src to force a complete re-mount when source changes
   // This is the most reliable way to reset video state in React
   const videoKey = src || 'no-src';
 
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play().then(() => setIsPaused(false)).catch(() => setPlayRequested(true));
+    } else {
+      videoRef.current.pause();
+      setIsPaused(true);
+    }
+  };
+
   useEffect(() => {
     setHasError(false);
     setIsLoading(true);
     setPlayRequested(false);
+    setIsPaused(true);
 
     const checkAutoplay = async () => {
       if (!videoRef.current || !src) return;
@@ -40,15 +52,14 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         if (playPromise !== undefined) {
           await playPromise;
           setIsLoading(false);
+          setIsPaused(false);
         }
       } catch (error: any) {
         setIsLoading(false);
         if (error.name === 'NotAllowedError') {
           setPlayRequested(true);
+          setIsPaused(true);
         } else if (error.name !== 'AbortError' && error.name !== 'NotSupportedError') {
-          // We intentionally ignore NotSupportedError here because it might be transient
-          // during the initial source load. The onError handler on the video tag
-          // will catch persistent failures.
           console.warn("Video playback issue:", error.name, error.message);
         }
       }
@@ -60,9 +71,12 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   }, [src]);
 
   return (
-    <div className="flex flex-col w-full h-full bg-black relative min-h-[300px]">
+    <div 
+      className="flex flex-col w-full h-full bg-black relative min-h-[300px] cursor-pointer group"
+      onClick={togglePlay}
+    >
       {isLoading && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 backdrop-blur-sm">
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-sm pointer-events-none">
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -72,7 +86,7 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       )}
 
       {hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-slate-950/90 backdrop-blur-xl px-6 text-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-40 bg-slate-950/90 backdrop-blur-xl px-6 text-center" onClick={(e) => e.stopPropagation()}>
           <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-6 ring-8 ring-red-500/10">
             <AlertCircle size={32} className="text-red-500" />
           </div>
@@ -98,27 +112,15 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       )}
 
       {/* Center Play Button Overlay */}
-      {(playRequested || (videoRef.current?.paused && !isLoading)) && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/10">
-          <motion.button 
+      {(playRequested || (isPaused && !isLoading)) && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+          <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (videoRef.current) {
-                videoRef.current.play().then(() => {
-                  setPlayRequested(false);
-                }).catch(err => {
-                  console.error("Manual play failed:", err);
-                });
-              }
-            }}
-            className="w-16 h-16 md:w-24 md:h-24 bg-primary/90 text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(0,0,0,0.5)] border-4 border-white/20 backdrop-blur-sm"
+            className="w-16 h-16 md:w-24 md:h-24 bg-primary/95 text-white rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20 backdrop-blur-md"
           >
             <Play size={40} className="ml-1 md:w-12 md:h-12" fill="currentColor" />
-          </motion.button>
+          </motion.div>
         </div>
       )}
 
@@ -136,19 +138,12 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         className="w-full h-full max-h-[70vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
-        onPlay={() => setPlayRequested(false)}
-        onPause={() => setPlayRequested(true)}
-        onClick={() => {
-          if (videoRef.current) {
-            if (videoRef.current.paused) {
-              videoRef.current.play().catch(() => setPlayRequested(true));
-            } else {
-              videoRef.current.pause();
-            }
-          }
+        onPlay={() => {
+          setPlayRequested(false);
+          setIsPaused(false);
         }}
+        onPause={() => setIsPaused(true)}
         onError={(e) => {
-          // If src is empty, don't trigger error
           if (!src) return;
           console.error("Video element reported error:", e);
           setIsLoading(false);
