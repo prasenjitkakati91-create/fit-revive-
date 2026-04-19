@@ -1450,7 +1450,7 @@ export default function App() {
 
                     return (
                       <motion.div
-                        key={item.url}
+                        key={item.videoUrl || item.url}
                         initial={{ opacity: 0, scale: 0.5, x: diff > 0 ? 500 : -500 }}
                         animate={{ 
                           x: diff * xOffset,
