@@ -247,7 +247,7 @@ export default function App() {
     },
     { 
       url: "", 
-      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/kwqasz9p7fewxdcuk8cxf/video7.mp4?rlkey=3f7ywev8f4mcg16ax03qjoa4&st=8kmdjhr0&raw=1", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/kwqasz9p7fewxdcuk8cxf/video7.mp4?rlkey=3f7ywev8f4mcg16dax03qjoa4&st=kysmmghz&raw=1", 
       category: "Recovery", 
       type: "video" as const 
     },
