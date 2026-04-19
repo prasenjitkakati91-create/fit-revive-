@@ -15,91 +15,97 @@ import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 
+// Simple cache for video thumbnails to speed up loading
+const thumbnailCache = new Map<string, string>();
+
 // Component to automatically generate and display a video thumbnail from a URL
 function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string; className?: string }) {
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [thumbnail, setThumbnail] = useState<string | null>(thumbnailCache.get(src) || null);
+  const [loading, setLoading] = useState(!thumbnailCache.has(src));
 
   useEffect(() => {
-    if (!src) return;
+    if (!src || thumbnailCache.has(src)) return;
 
+    setLoading(true);
     const video = document.createElement('video');
     
-    // Ensure the video URL has the correct direct Link format for Dropbox/Metadata extraction
+    // Using Dropbox direct link + CORS header
     video.src = src;
-    video.crossOrigin = 'anonymous'; // CRITICAL for canvas extraction
-    video.currentTime = 1.0; // Capturing at 1 second mark
+    video.crossOrigin = 'anonymous';
     video.muted = true;
     video.playsInline = true;
+    video.preload = "metadata";
 
-    const handleLoadedData = () => {
-      // Seek to the time to capture
-      video.currentTime = 1.0;
-    };
-
-    const handleSeeked = () => {
+    const captureFrame = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
+      // Use a smaller canvas for faster extraction and better performance
+      const ratio = video.videoWidth / video.videoHeight;
+      canvas.width = 480; 
+      canvas.height = 480 / ratio;
       
-      if (ctx && canvas.width > 0) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         try {
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          thumbnailCache.set(src, dataUrl);
           setThumbnail(dataUrl);
         } catch (error) {
-          console.error("AutoThumbnail error:", error);
-          // If canvas fails (CORS), we'll stay in loading/fallback state
+          console.error("Thumbnail capture failed:", error);
         }
       }
       setLoading(false);
-      
-      // Cleanup
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('seeked', handleSeeked);
+      video.removeEventListener('seeked', captureFrame);
     };
 
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('seeked', handleSeeked);
+    const onMetadataLoaded = () => {
+      // Seek to 1 second to get a good frame
+      video.currentTime = 1.0;
+      video.addEventListener('seeked', captureFrame);
+    };
+
+    video.addEventListener('loadedmetadata', onMetadataLoaded);
     
-    // Fallback if it takes too long
+    // Timeout fallback
     const timeout = setTimeout(() => {
-      if (!thumbnail) setLoading(false);
-    }, 6000);
+      if (loading) setLoading(false);
+    }, 5000);
 
     return () => {
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('seeked', handleSeeked);
+      video.removeEventListener('loadedmetadata', onMetadataLoaded);
+      video.removeEventListener('seeked', captureFrame);
       clearTimeout(timeout);
     };
   }, [src]);
 
-  if (thumbnail) {
-    return (
-      <img 
-        src={thumbnail} 
-        alt={alt} 
-        className={className}
-        referrerPolicy="no-referrer"
-      />
-    );
-  }
-
   return (
-    <div className={`${className} bg-slate-900 flex items-center justify-center`}>
-      {loading ? (
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          className="w-10 h-10 border-[3px] border-primary/20 border-t-primary rounded-full shadow-[0_0_15px_rgba(14,165,233,0.2)]"
+    <div className={`${className} bg-slate-900 relative flex items-center justify-center overflow-hidden`}>
+      {thumbnail ? (
+        <img 
+          src={thumbnail} 
+          alt={alt} 
+          className="w-full h-full object-cover transition-opacity duration-300"
+          referrerPolicy="no-referrer"
         />
       ) : (
-        <div className="flex flex-col items-center gap-3">
-          <Video className="text-white/20 w-12 h-12" />
-          <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Video Frame</span>
+        <div className="flex flex-col items-center gap-2">
+          {loading ? (
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full"
+            />
+          ) : (
+            <Video className="text-white/20 w-8 h-8" />
+          )}
         </div>
       )}
+      {/* Play Button Overlay as requested */}
+      <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/10 group-hover:bg-black/30 transition-colors">
+        <div className="w-12 h-12 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+          <Play size={24} fill="currentColor" className="ml-1" />
+        </div>
+      </div>
     </div>
   );
 }
@@ -108,108 +114,45 @@ function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string
 function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  // Use a key based on src for clean reset
-  const videoKey = src || 'no-src';
 
   useEffect(() => {
-    setHasError(false);
     setIsLoading(true);
-    setIsPlaying(false);
     
     // Pause any other playing videos on the page when this one mounts
     const otherVideos = document.querySelectorAll('video');
     otherVideos.forEach(v => {
-      if (v !== videoRef.current) v.pause();
+      if (videoRef.current && v !== videoRef.current) v.pause();
     });
   }, [src]);
 
   const handlePlay = () => {
-    setIsPlaying(true);
-    // Pause other videos when this one starts playing (double check)
+    // Pause other videos when this one starts playing
     const otherVideos = document.querySelectorAll('video');
     otherVideos.forEach(v => {
-      if (v !== videoRef.current) v.pause();
+      if (videoRef.current && v !== videoRef.current) v.pause();
     });
   };
 
   return (
-    <div 
-      className="group flex flex-col w-full h-full bg-black relative min-h-[300px] md:min-h-[400px] overflow-hidden select-none"
-    >
-      {/* Cinematic Overlays - Ensure they don't block clicks on native controls */}
-      <div className="absolute inset-x-0 top-0 h-1/2 pointer-events-none z-[1]">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent" />
-      </div>
-      
-      {/* Modern Loading State */}
-      {isLoading && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/40 backdrop-blur-[4px] pointer-events-none">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-            className="w-14 h-14 border-[3px] border-primary/20 border-t-primary rounded-full"
-          />
-        </div>
-      )}
-
-      {hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-40 bg-slate-950/95 backdrop-blur-xl px-6 text-center">
-          <AlertCircle size={48} className="text-red-500 mb-4" />
-          <h3 className="text-white font-bold mb-2">Video Unavailable</h3>
-          <button 
-            onClick={() => {
-              setHasError(false);
-              setIsLoading(true);
-              videoRef.current?.load();
-            }}
-            className="bg-white text-black px-8 py-2 rounded-full font-bold"
-          >
-            Retry
-          </button>
-        </div>
-      )}
-
-      {/* Play Overlay (Purely visual fallback, native controls handle actual play) */}
-      {!isPlaying && !isLoading && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="w-20 h-20 md:w-28 md:h-28 bg-primary/90 text-white rounded-full flex items-center justify-center shadow-2xl border-2 border-white/20 backdrop-blur-md"
-          >
-            <Play size={48} className="ml-1.5 md:w-16 md:h-16" fill="currentColor" />
-          </motion.div>
+    <div className="flex flex-col w-full h-full bg-black relative min-h-[300px] md:min-h-[400px] overflow-hidden">
+      {/* Loading indicator that doesn't block interaction */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center z-0 animate-pulse bg-slate-900/50">
+          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
         </div>
       )}
 
       <video 
-        key={videoKey}
         ref={videoRef}
         src={src}
-        controls 
-        muted 
-        playsInline
-        webkit-playsinline="true"
-        preload="metadata"
-        className="w-full h-full max-h-[75vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
+        controls 
+        playsInline
+        preload="metadata"
+        className="w-full h-full max-h-[85vh] object-contain outline-none relative z-10"
         onLoadedData={() => setIsLoading(false)}
-        onWaiting={() => setIsLoading(true)}
-        onPlaying={() => {
-          setIsLoading(false);
-          handlePlay();
-        }}
         onPlay={handlePlay}
-        onPause={() => setIsPlaying(false)}
-        onEnded={() => setIsPlaying(false)}
-        onError={(e) => {
-          if (!src) return;
-          setIsLoading(false);
-          setHasError(true);
-        }}
+        onPlaying={() => setIsLoading(false)}
       >
         Your browser does not support the video tag.
       </video>
@@ -304,7 +247,7 @@ export default function App() {
     },
     { 
       url: "", 
-      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/kwqasz9p7fewxdcuk8cxf/video7.mp4?rlkey=3f7ywev8f4mcg16dax03qjoa4&st=8kmdjhr0&raw=1", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/kwqasz9p7fewxdcuk8cxf/video7.mp4?rlkey=3f7ywev8f4mcg16ax03qjoa4&st=8kmdjhr0&raw=1", 
       category: "Recovery", 
       type: "video" as const 
     },
@@ -1489,10 +1432,9 @@ export default function App() {
                                     <AutoVideoThumbnail 
                                       src={item.videoUrl} 
                                       alt={item.title || item.category} 
-                                      className="w-full h-full object-cover opacity-90 transition-opacity duration-700 hover:opacity-100"
+                                      className="w-full h-full object-cover"
                                     />
                                   )}
-                                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-500"></div>
                                 </div>
                               ) : (
                                 <img 
@@ -1510,10 +1452,8 @@ export default function App() {
                                 />
                               )}
                               {item.type === 'video' && (
-                                <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors duration-300">
-                                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-2xl transform transition-transform duration-300 group-hover:scale-110">
-                                    <Play fill="currentColor" size={32} className="ml-1" />
-                                  </div>
+                                <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                                  {/* The play button is now inside AutoVideoThumbnail for cleaner grouping */}
                                 </div>
                               )}
                             </>
