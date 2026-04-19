@@ -114,56 +114,34 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   // Use a key based on src for clean reset
   const videoKey = src || 'no-src';
 
-  const togglePlay = (e: React.MouseEvent) => {
-    // Prevent interaction if we're in an error state
-    if (!videoRef.current || hasError) return;
-
-    // Check if we're clicking the button or the video area
-    // (excluding bottom area where native controls usually live)
-    const rect = e.currentTarget.getBoundingClientRect();
-    const relativeY = (e.clientY - rect.top) / rect.height;
-    
-    // If clicking near the bottom (controls), let the native behavior take over
-    if (relativeY > 0.82) return;
-
-    if (videoRef.current.paused) {
-      videoRef.current.play().catch(console.warn);
-    } else {
-      videoRef.current.pause();
-    }
-  };
-
   useEffect(() => {
     setHasError(false);
     setIsLoading(true);
     setIsPlaying(false);
-
-    const checkAutoplay = async () => {
-      if (!videoRef.current || !src) return;
-      try {
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          await playPromise;
-        }
-      } catch (error: any) {
-        if (error.name !== 'NotAllowedError' && error.name !== 'AbortError') {
-          console.warn("Autoplay check:", error.name);
-        }
-      }
-    };
-
-    const timer = setTimeout(checkAutoplay, 250);
-    return () => clearTimeout(timer);
+    
+    // Pause any other playing videos on the page when this one mounts
+    const otherVideos = document.querySelectorAll('video');
+    otherVideos.forEach(v => {
+      if (v !== videoRef.current) v.pause();
+    });
   }, [src]);
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+    // Pause other videos when this one starts playing (double check)
+    const otherVideos = document.querySelectorAll('video');
+    otherVideos.forEach(v => {
+      if (v !== videoRef.current) v.pause();
+    });
+  };
 
   return (
     <div 
-      className="group flex flex-col w-full h-full bg-black relative min-h-[300px] md:min-h-[400px] overflow-hidden select-none cursor-pointer"
-      onClick={togglePlay}
+      className="group flex flex-col w-full h-full bg-black relative min-h-[300px] md:min-h-[400px] overflow-hidden select-none"
     >
-      {/* Cinematic Overlays */}
-      <div className="absolute inset-0 pointer-events-none z-[1]">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+      {/* Cinematic Overlays - Ensure they don't block clicks on native controls */}
+      <div className="absolute inset-x-0 top-0 h-1/2 pointer-events-none z-[1]">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent" />
       </div>
       
       {/* Modern Loading State */}
@@ -178,7 +156,7 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
       )}
 
       {hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-40 bg-slate-950/95 backdrop-blur-xl px-6 text-center" onClick={(e) => e.stopPropagation()}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-40 bg-slate-950/95 backdrop-blur-xl px-6 text-center">
           <AlertCircle size={48} className="text-red-500 mb-4" />
           <h3 className="text-white font-bold mb-2">Video Unavailable</h3>
           <button 
@@ -194,7 +172,7 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         </div>
       )}
 
-      {/* Play Overlay (Visible when NOT playing) */}
+      {/* Play Overlay (Purely visual fallback, native controls handle actual play) */}
       {!isPlaying && !isLoading && !hasError && (
         <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
           <motion.div 
@@ -207,35 +185,24 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         </div>
       )}
 
-      {/* Background Poster Fallback (Auto-generated if no poster provided) */}
-      {!isPlaying && !poster && src && (
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <AutoVideoThumbnail 
-            src={src} 
-            className="w-full h-full object-contain opacity-50 blur-sm" 
-          />
-        </div>
-      )}
-
       <video 
         key={videoKey}
         ref={videoRef}
         src={src}
         controls 
         muted 
-        autoPlay
         playsInline
         webkit-playsinline="true"
-        preload="auto"
+        preload="metadata"
         className="w-full h-full max-h-[75vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
         onWaiting={() => setIsLoading(true)}
         onPlaying={() => {
           setIsLoading(false);
-          setIsPlaying(true);
+          handlePlay();
         }}
-        onPlay={() => setIsPlaying(true)}
+        onPlay={handlePlay}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
         onError={(e) => {
