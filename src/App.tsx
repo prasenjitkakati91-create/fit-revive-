@@ -15,6 +15,95 @@ import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 
+// Component to automatically generate and display a video thumbnail from a URL
+function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string; className?: string }) {
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!src) return;
+
+    const video = document.createElement('video');
+    
+    // Ensure the video URL has the correct direct Link format for Dropbox/Metadata extraction
+    video.src = src;
+    video.crossOrigin = 'anonymous'; // CRITICAL for canvas extraction
+    video.currentTime = 1.0; // Capturing at 1 second mark
+    video.muted = true;
+    video.playsInline = true;
+
+    const handleLoadedData = () => {
+      // Seek to the time to capture
+      video.currentTime = 1.0;
+    };
+
+    const handleSeeked = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      
+      if (ctx && canvas.width > 0) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        try {
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          setThumbnail(dataUrl);
+        } catch (error) {
+          console.error("AutoThumbnail error:", error);
+          // If canvas fails (CORS), we'll stay in loading/fallback state
+        }
+      }
+      setLoading(false);
+      
+      // Cleanup
+      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('seeked', handleSeeked);
+    };
+
+    video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('seeked', handleSeeked);
+    
+    // Fallback if it takes too long
+    const timeout = setTimeout(() => {
+      if (!thumbnail) setLoading(false);
+    }, 6000);
+
+    return () => {
+      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('seeked', handleSeeked);
+      clearTimeout(timeout);
+    };
+  }, [src]);
+
+  if (thumbnail) {
+    return (
+      <img 
+        src={thumbnail} 
+        alt={alt} 
+        className={className}
+        referrerPolicy="no-referrer"
+      />
+    );
+  }
+
+  return (
+    <div className={`${className} bg-slate-900 flex items-center justify-center`}>
+      {loading ? (
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+          className="w-10 h-10 border-[3px] border-primary/20 border-t-primary rounded-full shadow-[0_0_15px_rgba(14,165,233,0.2)]"
+        />
+      ) : (
+        <div className="flex flex-col items-center gap-3">
+          <Video className="text-white/20 w-12 h-12" />
+          <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Video Frame</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Helper component for robust video playback
 function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -118,6 +207,16 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         </div>
       )}
 
+      {/* Background Poster Fallback (Auto-generated if no poster provided) */}
+      {!isPlaying && !poster && src && (
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <AutoVideoThumbnail 
+            src={src} 
+            className="w-full h-full object-contain opacity-50 blur-sm" 
+          />
+        </div>
+      )}
+
       <video 
         key={videoKey}
         ref={videoRef}
@@ -128,7 +227,6 @@ function VideoPlayer({ src, poster }: { src?: string, poster?: string }) {
         playsInline
         webkit-playsinline="true"
         preload="auto"
-        crossOrigin="anonymous"
         className="w-full h-full max-h-[75vh] md:max-h-[85vh] object-contain outline-none bg-black flex-1 relative z-10"
         poster={poster}
         onLoadedData={() => setIsLoading(false)}
@@ -201,27 +299,58 @@ export default function App() {
 
   const galleryItems: GalleryItem[] = [
     { 
-      url: "/treatment-thumbnail.png?v=2", 
+      url: "", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/v9w4hhrbrw074e6gf1w6i/treatment-video.MP4?rlkey=8zqjmyif3vpyh6asanmk62w5q&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
-      url: "/thumbnail2.jpeg?v=2", 
+      url: "", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/zlekjhwh25x2e50hxyw7r/video2.MP4?rlkey=x6e2fsr08awbyffq9bj031rtc&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
-      url: "/thumbnail3.jpeg?v=2", 
+      url: "", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/x0h07kmhv5q3uvf38f5ew/video3.mp4?rlkey=fq4cm4rxxnieff4e7qddoy3k9&raw=1", 
       category: "Treatment", 
       type: "video" as const 
     },
     { 
-      url: "/thumbnail4.jpeg?v=2", 
+      url: "", 
       videoUrl: "https://dl.dropboxusercontent.com/scl/fi/ikkemujiig9ggjhbwvskz/video4.mp4?rlkey=celzmt9z43su9qiuynrujxl2u&raw=1", 
       category: "Treatment", 
+      type: "video" as const 
+    },
+    // Recovery Videos
+    { 
+      url: "", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/tmcgnt7gwp593f0e5ci7w/video5.mp4?rlkey=bx5f43zqo59vdbgql5usvwamn&st=uhtxl8wo&raw=1", 
+      category: "Recovery", 
+      type: "video" as const 
+    },
+    { 
+      url: "", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/ox0vj86j6rgv12ak5hoqw/video6.mp4?rlkey=9lj985r7gdle0ga4z5aaw1wc7&st=a2bgujwu&raw=1", 
+      category: "Recovery", 
+      type: "video" as const 
+    },
+    { 
+      url: "", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/kwqasz9p7fewxdcuk8cxf/video7.mp4?rlkey=3f7ywev8f4mcg16dax03qjoa4&st=8kmdjhr0&raw=1", 
+      category: "Recovery", 
+      type: "video" as const 
+    },
+    { 
+      url: "", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/o3zz3jqvo9nl1nkxjl432/video8.mp4?rlkey=zlbso1w7v0wts9blkerhamrt6&st=u5axhvjt&raw=1", 
+      category: "Recovery", 
+      type: "video" as const 
+    },
+    { 
+      url: "", 
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/l2qmaxslkn25eansedavg/video9.mp4?rlkey=pk7xdy4s6y4z8juxethn8cd5l&st=mqz5yf5j&raw=1", 
+      category: "Recovery", 
       type: "video" as const 
     },
     // Images
@@ -1387,19 +1516,32 @@ export default function App() {
                         >
                           {Math.abs(diff) <= 3 && (
                             <>
-                              <img 
-                                src={item.url} 
-                                alt={item.title || item.category || "FitRevive Gallery"} 
-                                className="absolute inset-0 w-full h-full object-cover z-10 block"
-                                loading={Math.abs(diff) <= 1 ? "eager" : "lazy"}
-                                fetchPriority={isCenter ? "high" : "low"}
-                                decoding="async"
-                                referrerPolicy="no-referrer"
-                                onError={(e) => {
-                                  console.error("Gallery image load error:", item.url);
-                                  e.currentTarget.src = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=75";
-                                }}
-                              />
+                              {item.type === 'video' ? (
+                                <div className="absolute inset-0 w-full h-full z-10 block bg-slate-900 overflow-hidden">
+                                  {item.videoUrl && (
+                                    <AutoVideoThumbnail 
+                                      src={item.videoUrl} 
+                                      alt={item.title || item.category} 
+                                      className="w-full h-full object-cover opacity-90 transition-opacity duration-700 hover:opacity-100"
+                                    />
+                                  )}
+                                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-500"></div>
+                                </div>
+                              ) : (
+                                <img 
+                                  src={item.url} 
+                                  alt={item.title || item.category || "FitRevive Gallery"} 
+                                  className="absolute inset-0 w-full h-full object-cover z-10 block"
+                                  loading={Math.abs(diff) <= 1 ? "eager" : "lazy"}
+                                  fetchPriority={isCenter ? "high" : "low"}
+                                  decoding="async"
+                                  referrerPolicy="no-referrer"
+                                  onError={(e) => {
+                                    console.error("Gallery image load error:", item.url);
+                                    e.currentTarget.src = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=75";
+                                  }}
+                                />
+                              )}
                               {item.type === 'video' && (
                                 <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors duration-300">
                                   <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-2xl transform transition-transform duration-300 group-hover:scale-110">
