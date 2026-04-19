@@ -454,15 +454,15 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="h-10 w-10 relative rounded-full overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+              <div className="h-10 w-10 relative rounded-full overflow-hidden border border-white/40 shadow-sm bg-white">
                 <img 
-                  src="/fitrevive-brand-logo.jpg" 
+                  src="https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg" 
                   alt="FitRevive Logo" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
-                    // Fallback if local image fails
-                    (e.target as HTMLImageElement).src = 'https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg';
+                    // Fallback to local if CDN fails
+                    (e.target as HTMLImageElement).src = '/fitrevive-brand-logo.jpg';
                   }}
                 />
               </div>
@@ -559,9 +559,9 @@ export default function App() {
             {/* Mobile Header in Overlay */}
             <div className="flex justify-between items-center mb-8 mt-4">
               <div className="flex items-center gap-2">
-                <div className="h-10 w-10 relative rounded-full overflow-hidden border border-[var(--border-color)]">
+                <div className="h-10 w-10 relative rounded-full overflow-hidden border border-[var(--border-color)] bg-white">
                   <img 
-                    src="/fitrevive-brand-logo.jpg" 
+                    src="https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg" 
                     alt="FitRevive Logo" 
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
@@ -1805,9 +1805,9 @@ export default function App() {
             {/* Column 1: Brand */}
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 relative rounded-full overflow-hidden border border-[var(--border-color)]">
+                <div className="h-12 w-12 relative rounded-full overflow-hidden border border-[var(--border-color)] bg-white">
                   <img 
-                    src="/fitrevive-brand-logo.jpg" 
+                    src="https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg" 
                     alt="FitRevive Logo" 
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
