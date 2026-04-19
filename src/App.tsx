@@ -454,7 +454,18 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="h-10 w-10 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(/fitrevive-brand-logo.jpg)' }} role="img" aria-label="FitRevive Logo" />
+              <div className="h-10 w-10 relative rounded-full overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+                <img 
+                  src="/fitrevive-brand-logo.jpg" 
+                  alt="FitRevive Logo" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    // Fallback if local image fails
+                    (e.target as HTMLImageElement).src = 'https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg';
+                  }}
+                />
+              </div>
               <span className={`font-bold text-xl tracking-tight ${isScrolled || mobileMenuOpen ? 'text-[var(--text-primary)]' : 'text-white drop-shadow-md'}`}>
                 FitRevive
               </span>
@@ -545,8 +556,21 @@ export default function App() {
             transition={{ type: "spring", damping: 30, stiffness: 250 }}
             className="fixed inset-0 z-[110] bg-[var(--bg-primary)]/98 backdrop-blur-2xl flex flex-col p-8 lg:hidden overflow-y-auto overflow-x-hidden shadow-2xl"
           >
-            {/* Close Button in Overlay */}
-            <div className="flex justify-end mb-8 mt-4">
+            {/* Mobile Header in Overlay */}
+            <div className="flex justify-between items-center mb-8 mt-4">
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 relative rounded-full overflow-hidden border border-[var(--border-color)]">
+                  <img 
+                    src="/fitrevive-brand-logo.jpg" 
+                    alt="FitRevive Logo" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <span className="font-bold text-xl tracking-tight text-[var(--text-primary)]">
+                  FitRevive
+                </span>
+              </div>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-3 rounded-full bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)] shadow-lg active:scale-90 transition-transform"
@@ -1781,7 +1805,14 @@ export default function App() {
             {/* Column 1: Brand */}
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 bg-contain bg-no-repeat bg-center rounded-full overflow-hidden" style={{ backgroundImage: 'url(https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg)' }} role="img" aria-label="FitRevive Logo" />
+                <div className="h-12 w-12 relative rounded-full overflow-hidden border border-[var(--border-color)]">
+                  <img 
+                    src="/fitrevive-brand-logo.jpg" 
+                    alt="FitRevive Logo" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
                 <span className="font-display font-black text-2xl tracking-tight text-[var(--text-primary)]">FitRevive</span>
               </div>
               <p className="text-[var(--text-secondary)] text-sm leading-relaxed font-medium">
