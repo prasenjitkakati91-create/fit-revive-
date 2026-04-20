@@ -485,7 +485,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="flex-shrink-0 h-10 w-10 relative rounded-full overflow-hidden border border-white/40 shadow-sm bg-white">
+              <div className={`flex-shrink-0 h-10 w-10 relative rounded-full overflow-hidden border ${isScrolled || mobileMenuOpen ? 'border-[var(--border-color)]' : 'border-white/40'} shadow-sm bg-white`}>
                 <img 
                   src="https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg" 
                   alt="FitRevive Logo" 
@@ -709,9 +709,6 @@ export default function App() {
                 index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
               referrerPolicy="no-referrer"
-              loading={index === 0 ? "eager" : "lazy"}
-              fetchPriority={index === 0 ? "high" : "low"}
-              decoding="async"
             />
           ))}
           {/* Dark gradient overlay for text readability on the left */}
@@ -1002,7 +999,7 @@ export default function App() {
       </section>
 
       {/* 2.5 OUR TEAM SECTION */}
-      <section id="team" className="py-24 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
+      <section id="team" className="py-24 bg-[var(--bg-secondary)] relative overflow-hidden transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -1090,7 +1087,7 @@ export default function App() {
         </div>
       </section>
       {/* 3. SERVICES SECTION */}
-      <section id="services" className="py-32 bg-[var(--bg-secondary)] relative overflow-hidden transition-colors duration-300">
+      <section id="services" className="py-32 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
         {/* Background Accents */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
@@ -1309,7 +1306,7 @@ export default function App() {
       </section>
 
       {/* 6. TESTIMONIAL SECTION */}
-      <section id="testimonials" className="py-24 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
+      <section id="testimonials" className="py-24 bg-[var(--bg-secondary)] relative overflow-hidden transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
@@ -1373,7 +1370,7 @@ export default function App() {
       </section>
 
       {/* 6. GALLERY SECTION */}
-      <section id="gallery" ref={galleryRef} className="py-24 relative overflow-hidden bg-[var(--bg-secondary)] transition-colors duration-300">
+      <section id="gallery" ref={galleryRef} className="py-24 relative overflow-hidden bg-[var(--bg-primary)] transition-colors duration-300">
         {/* Blurred Gradient Background */}
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 via-accent/5 to-transparent"></div>
@@ -1626,7 +1623,7 @@ export default function App() {
       </section>
 
       {/* 9. CONTACT SECTION */}
-      <section id="contact" className="py-32 bg-[var(--bg-primary)] relative overflow-hidden transition-colors duration-300">
+      <section id="contact" className="py-32 bg-[var(--bg-secondary)] relative overflow-hidden transition-colors duration-300">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -z-10"></div>
@@ -1827,7 +1824,7 @@ export default function App() {
         </div>
       </section>
       {/* 10. FOOTER */}
-      <footer className="bg-[var(--bg-secondary)] text-[var(--text-primary)] pt-20 pb-10 relative overflow-hidden transition-colors duration-300">
+      <footer className="bg-[var(--bg-primary)] text-[var(--text-primary)] pt-20 pb-10 relative overflow-hidden transition-colors duration-300">
         {/* Subtle Gradient Overlay */}
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
         

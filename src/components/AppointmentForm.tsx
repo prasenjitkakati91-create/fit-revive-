@@ -102,7 +102,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl glass rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-color)]"
+            className="relative w-full max-w-2xl bg-[var(--bg-primary)] rounded-3xl shadow-2xl overflow-hidden border border-[var(--border-color)]"
           >
             <button 
               onClick={onClose}
@@ -114,7 +114,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
 
             <div className="flex flex-col md:flex-row">
               {/* Left Side - Info */}
-              <div className="hidden md:flex md:w-1/3 bg-primary p-8 flex-col justify-between text-white">
+              <div className="hidden md:flex md:w-1/3 bg-gradient-to-br from-primary to-blue-700 p-8 flex-col justify-between text-white">
                 <div>
                   <h3 className="text-2xl font-bold mb-4">Book Your Session</h3>
                   <p className="text-blue-100 text-sm leading-relaxed">
@@ -152,7 +152,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                        className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"
+                        className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 border border-green-500/20"
                       >
                         <CheckCircle2 size={40} />
                       </motion.div>
@@ -186,7 +186,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                               value={formData.name}
                               onChange={handleChange}
                               placeholder="John Doe"
-                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm shadow-sm hover:border-slate-400 dark:hover:border-slate-500"
                             />
                           </div>
                           <div className="space-y-1.5">
@@ -200,7 +200,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                               value={formData.email}
                               onChange={handleChange}
                               placeholder="john@example.com"
-                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm shadow-sm hover:border-slate-400 dark:hover:border-slate-500"
                             />
                           </div>
                         </div>
@@ -217,7 +217,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                               value={formData.phone}
                               onChange={handleChange}
                               placeholder="+91 98765 43210"
-                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm shadow-sm hover:border-slate-400 dark:hover:border-slate-500"
                             />
                           </div>
                           <div className="space-y-1.5">
@@ -229,7 +229,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                               name="service"
                               value={formData.service}
                               onChange={handleChange}
-                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm shadow-sm hover:border-slate-400 dark:hover:border-slate-500 appearance-none pointer-events-auto"
                             >
                               <option value="">Select a service</option>
                               {services.map(s => <option key={s} value={s}>{s}</option>)}
@@ -249,7 +249,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                               value={formData.date}
                               onChange={handleChange}
                               min={new Date().toISOString().split('T')[0]}
-                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm shadow-sm hover:border-slate-400 dark:hover:border-slate-500"
                             />
                           </div>
                           <div className="space-y-1.5">
@@ -261,7 +261,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                               name="time"
                               value={formData.time}
                               onChange={handleChange}
-                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                              className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm shadow-sm hover:border-slate-400 dark:hover:border-slate-500 appearance-none pointer-events-auto"
                             >
                               <option value="">Select a time</option>
                               {timeSlots.map(t => <option key={t} value={t}>{t}</option>)}
@@ -279,7 +279,7 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                             onChange={handleChange}
                             placeholder="Tell us about your symptoms or any specific requirements..."
                             rows={3}
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                            className="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-white dark:bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-sm resize-none shadow-sm hover:border-slate-400 dark:hover:border-slate-500"
                           />
                         </div>
 
@@ -287,9 +287,9 @@ export default function AppointmentForm({ isOpen, onClose, onSuccess }: Appointm
                           <motion.div 
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
-                            className="p-3 rounded-lg bg-red-100/50 border border-red-200"
+                            className="p-3 rounded-xl bg-red-500/10 border border-red-500/20"
                           >
-                            <p className="text-red-600 text-xs font-bold flex items-center gap-2">
+                            <p className="text-red-500 text-xs font-bold flex items-center gap-2">
                               <Activity size={12} /> {error}
                             </p>
                           </motion.div>
