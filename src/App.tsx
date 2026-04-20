@@ -263,6 +263,37 @@ export default function App() {
       category: "Recovery", 
       type: "video" as const 
     },
+    // Clinic Videos
+    {
+      url: "",
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/df25zhttpo9ge3urbkggx/IMG_9120.MOV?rlkey=5bbw8sqqcu8icnmx308o8eqkv&raw=1",
+      category: "Clinic",
+      type: "video" as const
+    },
+    {
+      url: "",
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/aui0kyfk42wtmh2u1st1e/IMG_9121.MOV?rlkey=t8gbvddsam8yhbxn0mqn3geq7&raw=1",
+      category: "Clinic",
+      type: "video" as const
+    },
+    {
+      url: "",
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/oim1bjsup1gsrcci4mpic/IMG_9123.mov?rlkey=t26kua6nxvhiu4t6caqd33abf&raw=1",
+      category: "Clinic",
+      type: "video" as const
+    },
+    {
+      url: "",
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/rd6by4j54298zwcxtet0l/IMG_9124.mov?rlkey=rzpnvpv2dalfz8qx6nny278br&raw=1",
+      category: "Clinic",
+      type: "video" as const
+    },
+    {
+      url: "",
+      videoUrl: "https://dl.dropboxusercontent.com/scl/fi/ui6ma0agfzbmz9spiaabg/IMG_9125.mov?rlkey=vwkvjknjipslx933kxi5yr9o7&raw=1",
+      category: "Clinic",
+      type: "video" as const
+    },
     // Images
     { url: "https://fit-images.vercel.app/tr1.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },
@@ -454,7 +485,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="h-10 w-10 relative rounded-full overflow-hidden border border-white/40 shadow-sm bg-white">
+              <div className="flex-shrink-0 h-10 w-10 relative rounded-full overflow-hidden border border-white/40 shadow-sm bg-white">
                 <img 
                   src="https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg" 
                   alt="FitRevive Logo" 
@@ -559,7 +590,7 @@ export default function App() {
             {/* Mobile Header in Overlay */}
             <div className="flex justify-between items-center mb-8 mt-4">
               <div className="flex items-center gap-2">
-                <div className="h-10 w-10 relative rounded-full overflow-hidden border border-[var(--border-color)] bg-white">
+                <div className="flex-shrink-0 h-10 w-10 relative rounded-full overflow-hidden border border-[var(--border-color)] bg-white shadow-sm">
                   <img 
                     src="https://cdn.jsdelivr.net/gh/prasenjitkakati91-create/fit-images@main/logo-2.jpg" 
                     alt="FitRevive Logo" 
