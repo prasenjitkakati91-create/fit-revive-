@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://fitrevive-physio.com/sitemap.xml
