@@ -1,35 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import { useInView } from 'react-intersection-observer';
 import { 
   Menu, X, ChevronLeft, ChevronRight, Activity, Heart, Shield, Users, 
   MapPin, Phone, Mail, Facebook, Instagram, Twitter, 
-  Star, Leaf, Calendar, CheckCircle, ArrowRight, MessageCircle,
-  Building, Award, LogIn, Settings, Eye, ZoomIn, Maximize2,
+  Star, Calendar, CheckCircle, ArrowRight, 
+  Award, Settings, Maximize2,
   Brain, Baby, Dumbbell, Bone, Bandage, PersonStanding,
   Target, Microscope, HeartHandshake, Quote, BadgeCheck,
-  Sun, Moon, Play, Video, Smartphone, ExternalLink, AlertCircle, RotateCcw
+  Sun, Moon, Play, Video, AlertCircle
 } from 'lucide-react';
-import AppointmentForm from './components/AppointmentForm';
-import AdminDashboard from './components/AdminDashboard';
-import LegalModal from './components/LegalModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+
+// Lazy load heavy components for performance
+const AppointmentForm = lazy(() => import('./components/AppointmentForm'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const LegalModal = lazy(() => import('./components/LegalModal'));
 
 // Simple cache for video thumbnails to speed up loading
 const thumbnailCache = new Map<string, string>();
 
 // Component to automatically generate and display a video thumbnail from a URL
 function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string; className?: string }) {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    rootMargin: '200px 0px',
+  });
+  
   const [thumbnail, setThumbnail] = useState<string | null>(thumbnailCache.get(src) || null);
-  const [loading, setLoading] = useState(!thumbnailCache.has(src));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!src || thumbnailCache.has(src)) return;
+    if (!src || !inView || thumbnailCache.has(src)) return;
 
     setLoading(true);
     const video = document.createElement('video');
     
-    // Using Dropbox direct link + CORS header
     video.src = src;
     video.crossOrigin = 'anonymous';
     video.muted = true;
@@ -38,7 +45,6 @@ function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string
 
     const captureFrame = () => {
       const canvas = document.createElement('canvas');
-      // Use a smaller canvas for faster extraction and better performance
       const ratio = video.videoWidth / video.videoHeight;
       canvas.width = 480; 
       canvas.height = 480 / ratio;
@@ -47,7 +53,7 @@ function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         try {
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
           thumbnailCache.set(src, dataUrl);
           setThumbnail(dataUrl);
         } catch (error) {
@@ -59,33 +65,32 @@ function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string
     };
 
     const onMetadataLoaded = () => {
-      // Seek to 1 second to get a good frame
       video.currentTime = 1.0;
       video.addEventListener('seeked', captureFrame);
     };
 
     video.addEventListener('loadedmetadata', onMetadataLoaded);
     
-    // Timeout fallback
     const timeout = setTimeout(() => {
-      if (loading) setLoading(false);
-    }, 5000);
+      setLoading(false);
+    }, 8000);
 
     return () => {
       video.removeEventListener('loadedmetadata', onMetadataLoaded);
       video.removeEventListener('seeked', captureFrame);
       clearTimeout(timeout);
     };
-  }, [src]);
+  }, [src, inView]);
 
   return (
-    <div className={`${className} bg-slate-900 relative flex items-center justify-center overflow-hidden`}>
+    <div ref={ref} className={`${className} bg-slate-900 relative flex items-center justify-center overflow-hidden`}>
       {thumbnail ? (
         <img 
           src={thumbnail} 
           alt={alt} 
           className="w-full h-full object-cover transition-opacity duration-300"
           referrerPolicy="no-referrer"
+          loading="lazy"
         />
       ) : (
         <div className="flex flex-col items-center gap-2">
@@ -100,7 +105,6 @@ function AutoVideoThumbnail({ src, alt, className }: { src: string; alt?: string
           )}
         </div>
       )}
-      {/* Play Button Overlay as requested */}
       <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/10 group-hover:bg-black/30 transition-colors">
         <div className="w-12 h-12 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
           <Play size={24} fill="currentColor" className="ml-1" />
@@ -299,17 +303,17 @@ export default function App() {
     { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr3.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr4.webp?v=2", category: "Treatment", type: "image" as const },
-    { url: "https://fit-images.vercel.app/exterior.jpeg?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog.jpeg?v=2", category: "Event", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog2.jpeg?v=2", category: "Event", type: "image" as const },
-    { url: "https://fit-images.vercel.app/interiora.jpeg?v=2", category: "Recovery", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog3.jpeg?v=2", category: "Event", type: "image" as const },
-    { url: "https://fit-images.vercel.app/team.jpeg?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog4.jpeg?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/gust.jpeg?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/image.jpeg?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/me.jpeg?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/me2.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/exterior.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog.webp?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog2.webp?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/interiora.webp?v=2", category: "Recovery", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog3.webp?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/team.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog4.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/gust.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/image.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/me.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/me2.webp?v=2", category: "Clinic", type: "image" as const },
     { url: "https://fit-images.vercel.app/12.webp?v=2", category: "Clinic", type: "image" as const },
     { url: "https://fit-images.vercel.app/14.webp?v=2", category: "Clinic", type: "image" as const },
     { url: "https://fit-images.vercel.app/1.webp?v=2", category: "Equipment", type: "image" as const },
@@ -332,18 +336,8 @@ export default function App() {
     ? galleryItems 
     : galleryItems.filter(item => item.category === activeFilter);
 
-  // Preload images for faster gallery viewing
-  useEffect(() => {
-    const preloadImages = () => {
-      filteredGallery.forEach((item) => {
-        const img = new Image();
-        img.src = item.url;
-      });
-    };
-    // Delay preloading slightly to prioritize initial page load
-    const timeoutId = setTimeout(preloadImages, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [filteredGallery]);
+  // Removed preloadImages hook as it was eager and high-bloat for mobile.
+  // Relying on IntersectionObserver in Gallery items and standard browser lazy-loading.
 
   useEffect(() => {
     setGalleryIndex(0);
@@ -402,26 +396,26 @@ export default function App() {
     {
       name: "Bikash Sarma",
       text: "The team at FitRevive completely cured my chronic back pain. I can finally play with my kids again without wincing.",
-      img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200"
+      img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
     },
     {
       name: "Rimpi Das",
       text: "Post-surgery rehab was tough, but my physiotherapist was incredibly patient and motivating. Highly recommended!",
-      img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200"
+      img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
     },
     {
       name: "Pallabi Kalita",
       text: "Very professional clinic with modern equipment. They explained my injury clearly and gave me great exercises.",
-      img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200"
+      img: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
     }
   ];
 
   const heroImages = [
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=75",
-    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
-    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
-    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75",
-    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75"
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1600&q=80",
+    "https://images.pexels.com/photos/19388383/pexels-photo-19388383.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80",
+    "https://images.pexels.com/photos/8219057/pexels-photo-8219057.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80",
+    "https://images.pexels.com/photos/14797760/pexels-photo-14797760.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80",
+    "https://images.pexels.com/photos/6111591/pexels-photo-6111591.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80"
   ];
 
   useEffect(() => {
@@ -706,10 +700,13 @@ export default function App() {
               key={index}
               src={img} 
               alt={`Physiotherapy session ${index + 1}`} 
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
                 index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
               referrerPolicy="no-referrer"
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "low"}
+              decoding={index === 0 ? "sync" : "async"}
             />
           ))}
           {/* Dark gradient overlay for text readability on the left */}
@@ -873,40 +870,8 @@ export default function App() {
                 <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Discover FitRevive</span>
               </motion.div>
               
-              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-[var(--text-primary)] overflow-hidden">
-                {"Your journey to a ".split(" ").map((word, i) => (
-                  <motion.span
-                    key={i}
-                    variants={{
-                      hidden: { opacity: 0, y: 40 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: i * 0.05 } }
-                    }}
-                    className="inline-block mr-3"
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-                <motion.span
-                  variants={{
-                    hidden: { opacity: 0, scale: 0.8 },
-                    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }
-                  }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 inline-block mr-3"
-                >
-                  pain-free
-                </motion.span>
-                {"life starts here.".split(" ").map((word, i) => (
-                  <motion.span
-                    key={i}
-                    variants={{
-                      hidden: { opacity: 0, y: 40 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.3 + (i * 0.05) } }
-                    }}
-                    className="inline-block mr-3"
-                  >
-                    {word}
-                  </motion.span>
-                ))}
+              <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-8 leading-[1.1] text-[var(--text-primary)]">
+                Your journey to a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 inline-block mr-3">pain-free</span> life starts here.
               </h2>
               
               <motion.div 
@@ -1970,26 +1935,35 @@ export default function App() {
       </footer>
 
       {/* Appointment Modal */}
-      <AppointmentForm 
-        isOpen={isFormOpen} 
-        onClose={() => setIsFormOpen(false)} 
-        onSuccess={() => {
-          // Success is handled internally by AppointmentForm
-          console.log("Appointment successfully booked.");
-        }}
-      />
+      <Suspense fallback={null}>
+        {isFormOpen && (
+          <AppointmentForm 
+            isOpen={isFormOpen} 
+            onClose={() => setIsFormOpen(false)} 
+            onSuccess={() => {
+              console.log("Appointment successfully booked.");
+            }}
+          />
+        )}
+      </Suspense>
 
       {/* Legal Modals */}
-      <LegalModal 
-        isOpen={isLegalOpen} 
-        onClose={() => setIsLegalOpen(false)} 
-        type={legalType} 
-      />
+      <Suspense fallback={null}>
+        {isLegalOpen && (
+          <LegalModal 
+            isOpen={isLegalOpen} 
+            onClose={() => setIsLegalOpen(false)} 
+            type={legalType} 
+          />
+        )}
+      </Suspense>
 
       {/* Admin Dashboard */}
       <AnimatePresence>
         {isAdminView && (
-          <AdminDashboard onClose={() => setIsAdminView(false)} />
+          <Suspense fallback={null}>
+            <AdminDashboard onClose={() => setIsAdminView(false)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </div>
