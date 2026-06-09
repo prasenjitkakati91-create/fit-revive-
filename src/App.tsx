@@ -985,19 +985,13 @@ export default function App() {
             <div className="w-24 h-1.5 bg-primary mx-auto mt-8 rounded-full"></div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               {
                 name: "Dr. Trishnamoni Haloi (P.T.)",
                 role: "Founder cum Consultant Physiotherapist",
                 desc: "Specializes in neurological rehabilitation.",
                 img: "https://fit-images.vercel.app/trishna.jpeg?v=2"
-              },
-              {
-                name: "Dr. Dorothy Mazumdar (P.T.)",
-                role: "Consultant Physiotherapist",
-                desc: "Expert in orthopedic and sports rehabilitation.",
-                img: "https://fit-images.vercel.app/dorothy.jpg?v=2"
               },
               {
                 name: "Dr. Anjuma Akhtar (P.T.)",
