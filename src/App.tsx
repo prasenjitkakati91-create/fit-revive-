@@ -303,17 +303,17 @@ export default function App() {
     { url: "https://fit-images.vercel.app/tr2.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr3.webp?v=2", category: "Treatment", type: "image" as const },
     { url: "https://fit-images.vercel.app/tr4.webp?v=2", category: "Treatment", type: "image" as const },
-    { url: "https://fit-images.vercel.app/exterior.webp?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog.webp?v=2", category: "Event", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog2.webp?v=2", category: "Event", type: "image" as const },
-    { url: "https://fit-images.vercel.app/interiora.webp?v=2", category: "Recovery", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog3.webp?v=2", category: "Event", type: "image" as const },
-    { url: "https://fit-images.vercel.app/team.webp?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/inog4.webp?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/gust.webp?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/image.webp?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/me.webp?v=2", category: "Clinic", type: "image" as const },
-    { url: "https://fit-images.vercel.app/me2.webp?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/exterior.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog.jpeg?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog2.jpeg?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/interiora.jpeg?v=2", category: "Recovery", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog3.jpeg?v=2", category: "Event", type: "image" as const },
+    { url: "https://fit-images.vercel.app/team.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/inog4.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/gust.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/image.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/me.jpeg?v=2", category: "Clinic", type: "image" as const },
+    { url: "https://fit-images.vercel.app/me2.jpeg?v=2", category: "Clinic", type: "image" as const },
     { url: "https://fit-images.vercel.app/12.webp?v=2", category: "Clinic", type: "image" as const },
     { url: "https://fit-images.vercel.app/14.webp?v=2", category: "Clinic", type: "image" as const },
     { url: "https://fit-images.vercel.app/1.webp?v=2", category: "Equipment", type: "image" as const },
@@ -384,6 +384,8 @@ export default function App() {
       console.error("Login error:", error);
       if (error.code === 'auth/unauthorized-domain') {
         setLoginError(`Domain not authorized. Please check Firebase console settings.`);
+      } else if (error.code === 'auth/network-request-failed') {
+        setLoginError("Network connection failed. If you are using an adblocker (like uBlock), Brave browser, or a strict privacy extension, it may block the login window. Please disable it for this site and try again.");
       } else if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
         setLoginError("Login failed: " + error.message);
       }
